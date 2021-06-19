@@ -1,0 +1,22 @@
+{
+  "name": "js-learner",
+  "version": "1.0.0",
+  "description": "JavaScript Learning Game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dooyeong20/js-learner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dooyeong20/js-learner/issues"
+  },
+  "homepage": "https://github.com/dooyeong20/js-learner#readme",
+  "dependencies": {
+    "i": "^0.3.6"
+  }
+}
