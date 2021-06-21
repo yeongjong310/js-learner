@@ -1,84 +1,337 @@
-// html,
-// html * {
-//   padding: 0;
-//   margin: 0;
-// }
+body.main {
+  $ocean: #9f9fff;
+  $land: #f0d492;
+  $tree: #b45f08;
+  $leaf: #69bf27;
+  $sun: #ffde7b;
+  $sky: #c0dfef;
+  $moon: #ffefb5;
+  $moonborder: #caba94;
+  $stars: #96cae5;
+  $boat: #cb3a37;
+  $cabin: #f5f5f5;
+  $gray: #8b9a97;
+  $dark-blue: #194a63;
 
-// .a11y-hidden {
-//   /* 임시 */
-//   display: none;
-// }
+  position: relative;
+  width: 100%;
+  min-width: 520px;
+  height: 100vh;
+  background: $sky;
+  overflow: scroll;
 
-// /* main */
+  &.night {
+    background-color: $dark-blue;
+  }
 
-// body.main {
-//   display: flex;
-// }
+  .btn {
+    position: absolute;
+    cursor: pointer;
+    width: 70px;
+    text-align: center;
+    background: #cc5c5c;
+    border-radius: 8px;
+    padding: 1.2em;
+    font-size: 12px;
+    font-family: arial;
+    color: #f0f0f0;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+  }
 
-// body.main .btn {
-//   padding: 5px 20px;
-//   border: 2px solid black;
-//   border-radius: 5px;
-//   margin: 0 10px;
-// }
+  .profile-container {
+    position: absolute;
+    top: 30px;
+    left: 60px;
+  }
 
-// body.main .title {
-//   text-align: center;
-//   margin-bottom: 10px;
-// }
+  #profile {
+    &:checked + .user {
+      position: absolute;
+      top: 10px;
+      width: 400px;
+      height: 300px;
+      background-color: #fff;
+      border-radius: 20px;
+      z-index: -1;
+    }
+  }
 
-// /* main - stage */
+  .profile {
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #cc5c5c;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: background-color ease 0.2s;
 
-// body.main .stage {
-//   position: relative;
-//   width: 60vw;
-//   height: 100vh;
-//   overflow: scroll;
-// }
+    &:hover {
+      background-color: darken(#cc5c5c, 10%);
 
-// body.main .stage__sky {
-//   height: 20vh;
-//   background: linear-gradient(#aed9ff, #c2e0f9 30%, #d7e8f8 50%);
-// }
+      & .line {
+        background-color: darken(#fff, 10%);
+      }
+    }
 
-// body.main .stage__sea {
-//   position: relative;
-//   height: 400vh;
-//   background: linear-gradient(#c2e1ff 10%, #83add2 30%, #153550);
-// }
+    & .line {
+      width: 20px;
+      height: 4px;
+      background-color: #fff;
+      margin: 2px 0;
+      border-radius: 3px;
+    }
+  }
 
-// body.main .stage__sea-level {
-//   position: absolute;
-//   left: 50%;
-//   transform: translate3d(-50%, 0, 0);
-//   width: 50px;
-//   height: 50px;
-//   border: 2px solid rgb(38, 46, 67);
-//   border-radius: 50%;
-// }
+  .mode {
+    bottom: 10px;
+    left: 50%;
+  }
 
-// body.main .stage__boat {
-//   position: absolute;
-//   left: 50%;
-//   transform: translate3d(-50%, -100%, 0);
-//   text-align: center;
-//   color: rgb(222, 193, 193);
-//   width: 170px;
-//   height: 40px;
-//   font-size: 1.3rem;
-//   line-height: 40px;
-//   background: rgba(147, 99, 99, 0.666);
-//   border-radius: 5px 5px 30px 30px;
-// }
+  .ocean {
+    width: 100%;
+    height: 500vh;
+    position: absolute;
+    top: 70%;
+    background: linear-gradient(#58c8da, #022244);
+    z-index: -2;
+  }
 
-// /* main - user info */
+  @keyframes rise {
+    to {
+      bottom: 90%;
+    }
+  }
 
-// body.main .user {
-//   width: 40vw;
-// }
+  .bubble {
+    $bubbles: lighten($ocean, 10%);
+    $border: darken($ocean, 2%);
+    bottom: 0;
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    border: 1px solid $border;
+    background: $bubbles;
+    animation: rise 20s linear infinite;
+    opacity: 0.3;
+  }
 
-// body.main .user__btn-group {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
+  .boat {
+    position: absolute;
+    bottom: 28%;
+    left: 70%;
+    height: 45px;
+    width: 130px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    background: $boat;
+    z-index: 1;
+    transition: left ease 1s;
+    &.night {
+      left: 150%;
+    }
+    .cabin {
+      position: absolute;
+      top: -35px;
+      left: 40px;
+      width: 70px;
+      height: 35px;
+      background: $cabin;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        background: $gray;
+        z-index: 2;
+        box-shadow: 20px 0 $gray, -20px 0 $gray;
+      }
+    }
+    .top {
+      position: absolute;
+      top: -35px;
+      left: 40px;
+      width: 70px;
+      height: 10px;
+      background: $boat;
+    }
+    .pole {
+      position: absolute;
+      top: -50px;
+      left: 30px;
+      width: 10px;
+      height: 50px;
+      background: $gray;
+      &::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        top: 0;
+        left: -5px;
+        background: $gray;
+      }
+    }
+  }
+  .land {
+    position: absolute;
+    width: 180px;
+    height: 50px;
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border: 3px solid #d8be83;
+    background: $land;
+    bottom: 25%;
+    left: 25%;
+    .tree {
+      position: absolute;
+      width: 30px;
+      height: 100px;
+      background: $tree;
+      top: -100px;
+      left: 50%;
+      transform: translate3d(-50%, 10%, 0);
+      z-index: -1;
+      .leaf {
+        position: absolute;
+        top: -30px;
+        left: 10px;
+        width: 100px;
+        height: 100px;
+        border-radius: 100%;
+        border-top: 30px solid $leaf;
+        z-index: -2;
+        &::after {
+          content: '';
+          position: absolute;
+          top: -60px;
+          left: 0px;
+          width: 100px;
+          height: 100px;
+          border-radius: 100%;
+          border-top: 30px solid $leaf;
+          transform: rotate(-30deg);
+        }
+        &.left {
+          left: -80px;
+          &::after {
+            transform: rotate(30deg);
+          }
+        }
+      }
+    }
+  }
+  .bird {
+    position: absolute;
+    top: 10%;
+    left: 30%;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    border-top: 5px solid black;
+    transform: rotate(10deg);
+    z-index: -3;
+    transition: top ease 0.5s;
+    &::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 28px;
+      height: 30px;
+      width: 30px;
+      border-radius: 100%;
+      border-top: 5px solid black;
+      transform: rotate(-10deg);
+    }
+    &.two {
+      top: 14%;
+      left: 34%;
+    }
+    &.three {
+      top: 40%;
+      left: 80%;
+    }
+    &.night {
+      top: 100%;
+    }
+  }
+  .sun {
+    position: absolute;
+    background: $sun;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    border: 8px solid #debd56;
+    top: 8%;
+    right: 20%;
+    transition: top ease 0.35s;
+    z-index: -3;
+    transition-delay: 0.25s;
+    &::after {
+      content: '';
+      position: absolute;
+      left: -5%;
+      top: 50%;
+      width: 60px;
+      height: calc(50px * 0.3);
+      border-radius: 2em;
+      box-shadow: -25px -8px white, -50px 0 white;
+      background: white;
+    }
+    &.night {
+      top: 90%;
+    }
+  }
+  .moon {
+    position: absolute;
+    background: $moon;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    border: 8px solid $moonborder;
+    top: -20%;
+    right: 20%;
+    transition: all ease 0.25s;
+    transition-delay: 0.25s;
+    background-image: radial-gradient(
+        circle at 60% 10%,
+        #caba94 15%,
+        transparent 0
+      ),
+      radial-gradient(circle at 30% 50%, #caba94 10%, transparent 0),
+      radial-gradient(circle at 60% 70%, #caba94 13%, transparent 0);
+    &.night {
+      top: 8%;
+    }
+  }
+  .stars {
+    background: $stars;
+    position: absolute;
+    top: -400px;
+    left: 40%;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    transition: top ease 0.25s;
+    transition-delay: 0.25s;
+    box-shadow: 70px 70px 0 $stars, -100px 80px 0 $stars, 200px 10px 0 $stars,
+      130px 180px 0 $stars, -120px -10px 0 $stars, -200px 170px 0 $stars,
+      -280px 110px 0 $stars, -320px 20px 0 $stars, 320px 170px 0 $stars,
+      430px 60px 0 $stars, 480px 190px 0 $stars;
+    z-index: -3;
+    &.night {
+      top: 30px;
+    }
+  }
+}
