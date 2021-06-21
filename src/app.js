@@ -102,6 +102,42 @@ const mainPage = (function () {
 
 mainPage.render();
 
+const backgroundModule = (() => {
+  const $body = document.querySelector('body');
+  const setOcean = () => {
+    const $ocean = document.createElement('div');
+    $ocean.classList.add('ocean');
+    $ocean.innerHTML = `
+      <div class="bubbles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="fish">
+        <!-- eyes -->
+        <span></span>
+        <span></span>
+        <!-- mouth -->
+        <span></span>
+        <!-- bubbles -->
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      `;
+    $body.appendChild($ocean);
+  };
+  return {
+    setOcean
+  };
+})();
+backgroundModule.setOcean();
+
 const gamePage = (function () {
   const PROBLEM_TYPES = {
     MULTIPLE_SINGLE: 0,

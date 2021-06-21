@@ -1,0 +1,373 @@
+body.game {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+  margin: 0;
+  &::after {
+    content: '';
+    width: 200px;
+    height: 200px;
+    background-color: inherit;
+    position:absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0) rotate(45deg);
+    border-top-left-radius: 30%;
+  }
+  .ocean {
+    position: absolute;
+    width: 93vw;
+    height: 90vh;
+    overflow: hidden;
+    background-image: linear-gradient(0deg, #022244, #58c8da);
+    z-index: -2;
+    top:50%;
+    left:50%;
+    transform: translate3d(-50%, -50%, 0);
+    border-radius: 160px;
+  }
+
+  // 상단 물결, 타원을 그리고 absolute로 배치
+  .ocean::after,
+  .ocean::before {
+    background-color: white;
+    width: 120%;
+    height: 120px;
+    position: absolute;
+    content: '';
+    top: -80px;
+    left: -10%;
+    border-radius: 100%;
+    animation: waves 10s ease infinite;
+    opacity: 0.2;
+  }
+
+  .ocean::before {
+    top: -60px;
+    animation-delay: 5s;
+    opacity: 0.1;
+    left: -5%;
+  }
+
+  // rotate로 -2deg 부터 2deg 까지 조금씩 회전
+  @keyframes waves {
+    0%,
+    100% {
+      transform: rotate(-2deg);
+    }
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+
+  // bubble들이 있을 화면
+  .bubbles {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  //
+
+  .bubbles span {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    position: absolute;
+    background-color: white;
+    bottom: -10%;
+    animation: bubble 10s ease-in-out infinite;
+  }
+
+  @keyframes bubble {
+    0% {
+      bottom: -10%;
+      opacity: 0;
+      transform: translate3d(-20px, 0, 0);
+    }
+    25% {
+      transform: translate3d(20px, 0, 0);
+    }
+    50% {
+      transform: translate3d(-20px, 0, 0);
+    }
+    75% {
+      transform: translate3d(20px, 0, 0);
+    }
+    100% {
+      bottom: 100%;
+      transform: translate3d(-20px, 0, 0);
+    }
+  }
+
+  .bubbles span:nth-child(1) {
+    width: 50px;
+    height: 50px;
+    opacity: 0.5;
+    left: 10%;
+    animation-delay: 3s;
+    animation-duration: 10s;
+    opacity: 0.2;
+  }
+
+  .bubbles span:nth-child(2) {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    left: 40%;
+    animation-delay: 1s;
+    animation-duration: 5s;
+    opacity: 0.1;
+  }
+
+  .bubbles span:nth-child(3) {
+    width: 10px;
+    height: 10px;
+    opacity: 0.5;
+    left: 30%;
+    animation-delay: 5s;
+    animation-duration: 20s;
+    opacity: 0.3;
+  }
+
+  .bubbles span:nth-child(4) {
+    width: 35px;
+    height: 35px;
+    opacity: 0.5;
+    left: 40%;
+    animation-delay: 8s;
+    animation-duration: 8s;
+    opacity: 0.2;
+  }
+
+  .bubbles span:nth-child(5) {
+    width: 45px;
+    height: 45px;
+    opacity: 0.5;
+    left: 60%;
+    animation-delay: 10s;
+    animation-duration: 15s;
+    opacity: 0.1;
+  }
+
+  .bubbles span:nth-child(6) {
+    width: 40px;
+    height: 40px;
+    opacity: 0.5;
+    left: 80%;
+    animation-delay: 3s;
+    animation-duration: 30s;
+    opacity: 0.4;
+  }
+
+  .bubbles span:nth-child(7) {
+    width: 15px;
+    height: 15px;
+    opacity: 0.5;
+    left: 90%;
+    animation-duration: 25s;
+    opacity: 0.3;
+  }
+
+  .bubbles span:nth-child(8) {
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+    left: 50%;
+    animation-duration: 10s;
+    opacity: 0.2;
+  }
+
+  .fish {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: orange;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
+    animation: fish 40s ease-in infinite;
+  }
+  @keyframes fish {
+    0% {
+      left: calc(100% + 30px);
+      top: 60%;
+    }
+    50% {
+      top: 40%;
+    }
+    100% {
+      left: -20%;
+      top: 50%;
+    }
+  }
+  /* fish tail */
+  .fish::after {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: inherit;
+    content: '';
+    position: absolute;
+    top: 30%;
+    right: -20px;
+    transform: rotate(-20deg);
+    animation: tail 2s ease infinite;
+    z-index: -1;
+  }
+  @keyframes tail {
+    0%,
+    100% {
+      right: -13px;
+    }
+    50% {
+      right: -7px;
+    }
+  }
+
+  /* rest(eyes, mouth) of the fish */
+
+  .fish span {
+    content: '';
+    position: absolute;
+  }
+
+  /* eyes(white) - white part */
+  .fish span:nth-child(1),
+  .fish span:nth-child(2) {
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.1);
+    top: 10px;
+    z-index: -2;
+  }
+
+  .fish span:nth-child(1) {
+    left: -2px;
+  }
+
+  .fish span:nth-child(2) {
+    z-index: 0;
+    left: 15px;
+  }
+
+  /* eyes(black) */
+  .fish span:nth-child(2)::after {
+    border-radius: 100%;
+    width: 8px;
+    height: 8px;
+    background-color: #2a2a2a;
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: 6px;
+    left: 6px;
+    box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.5);
+    animation: eyes 4s ease infinite;
+  }
+
+  @keyframes eyes {
+    0%,
+    100% {
+      top: 4px;
+    }
+    50% {
+      top: 10px;
+    }
+  }
+
+  /* mouth */
+  .fish span:nth-child(3) {
+    border-radius: 100%;
+    background-color: brown;
+    box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
+    top: 20px;
+    left: -5px;
+    z-index: 1;
+    transform: rotate(5deg);
+    border: solid 5px orange;
+    animation: mouth 4s ease infinite;
+  }
+
+  @keyframes mouth {
+    0%,
+    100% {
+      height: 15px;
+      width: 9px;
+    }
+    50% {
+      height: 9px;
+      width: 5px;
+    }
+  }
+
+  // // fished
+  // @keyframes fishMove {
+  //   0% {
+  //     transform: translate3d(0, 0, 0);
+  //   }
+
+  //   100% {
+  //     transform: translate3d(100px, 0, 0);
+  //   }
+  // }
+
+  // .fish1,
+  // .fish2,
+  // .fish3,
+  // .fish4,
+  // .fish5 {
+  //   position: absolute;
+  //   width: 40px;
+  //   height: 20px;
+  //   border-radius: 50%;
+  //   opacity: 0.8;
+  // }
+
+  // .fish1:after,
+  // .fish2:after,
+  // .fish3:after,
+  // .fish4:after,
+  // .fish5:after {
+  //   content: '';
+  //   position: absolute;
+  //   width: 20px;
+  //   height: 15px;
+  //   left: 35px;
+  //   top: 4px;
+  //   background-color: inherit;
+  // }
+
+  // .fish1 {
+  //   background-color: #e87112;
+  //   animation: fishMove 15s ease forwards;
+  // }
+
+  // .fish2 {
+  //   left: 20px;
+  //   background-color: #01014c;
+  //   animation: fishMove 15s ease-out forwards;
+  //   top: 30px;
+  // }
+
+  // .fish3 {
+  //   top: 60px;
+  //   left: 20px;
+  //   background-color: #d82973;
+  //   animation: fishMove 15s ease-in-out forwards;
+  // }
+
+  // .fish4 {
+  //   top:20px;
+  //   left: 90px;
+  //   background-color: #5a357d;
+  //   animation: fishMove 15s ease-in forwards;
+  // }
+}
