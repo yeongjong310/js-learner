@@ -1,0 +1,84 @@
+// html,
+// html * {
+//   padding: 0;
+//   margin: 0;
+// }
+
+// .a11y-hidden {
+//   /* 임시 */
+//   display: none;
+// }
+
+// /* main */
+
+// body.main {
+//   display: flex;
+// }
+
+// body.main .btn {
+//   padding: 5px 20px;
+//   border: 2px solid black;
+//   border-radius: 5px;
+//   margin: 0 10px;
+// }
+
+// body.main .title {
+//   text-align: center;
+//   margin-bottom: 10px;
+// }
+
+// /* main - stage */
+
+// body.main .stage {
+//   position: relative;
+//   width: 60vw;
+//   height: 100vh;
+//   overflow: scroll;
+// }
+
+// body.main .stage__sky {
+//   height: 20vh;
+//   background: linear-gradient(#aed9ff, #c2e0f9 30%, #d7e8f8 50%);
+// }
+
+// body.main .stage__sea {
+//   position: relative;
+//   height: 400vh;
+//   background: linear-gradient(#c2e1ff 10%, #83add2 30%, #153550);
+// }
+
+// body.main .stage__sea-level {
+//   position: absolute;
+//   left: 50%;
+//   transform: translate3d(-50%, 0, 0);
+//   width: 50px;
+//   height: 50px;
+//   border: 2px solid rgb(38, 46, 67);
+//   border-radius: 50%;
+// }
+
+// body.main .stage__boat {
+//   position: absolute;
+//   left: 50%;
+//   transform: translate3d(-50%, -100%, 0);
+//   text-align: center;
+//   color: rgb(222, 193, 193);
+//   width: 170px;
+//   height: 40px;
+//   font-size: 1.3rem;
+//   line-height: 40px;
+//   background: rgba(147, 99, 99, 0.666);
+//   border-radius: 5px 5px 30px 30px;
+// }
+
+// /* main - user info */
+
+// body.main .user {
+//   width: 40vw;
+// }
+
+// body.main .user__btn-group {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
