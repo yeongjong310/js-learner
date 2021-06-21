@@ -1,0 +1,85 @@
+body.game {
+  background-color: black;
+  .problem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 300px;
+    min-width: 500px;
+    max-width: 700px;
+    background-color: #7b9cb0;
+    margin: auto;
+    padding: 2em;
+
+    &-links {
+      display: flex;
+      justify-content: space-between;
+      list-style: none;
+      min-width: 1.25em;
+      margin: 0;
+      padding: 0;
+
+      & > li {
+        & > button {
+          padding: 0.8em;
+          width: 3em;
+          height: 3em;
+          text-align: center;
+          background-color: rebeccapurple;
+          border-radius: 50%;
+          cursor: pointer;
+          border: none;
+          position: relative;
+        }
+
+        & > button:disabled::after {
+          content: 'clear';
+          position: absolute;
+          background-color: blue;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #fff;
+          cursor: not-allowed;
+          width: 3em;
+          height: 3em;
+          border-radius: 50%;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
+
+    .form {
+      & > fieldset {
+        padding: 0;
+        margin: 0;
+        border: none;
+        color: #fff;
+        font-size: 1.5em;
+
+        & > input[type='radio'] {
+          opacity: 0;
+
+          & ~ label {
+            text-align: center;
+            display: block;
+            border: 1px solid #fff;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 0.8em;
+          }
+        }
+
+        & > input[type='radio']:checked + label {
+          background-color: pink;
+        }
+
+        & > button[type='submit'] {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}
