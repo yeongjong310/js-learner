@@ -10,7 +10,7 @@ const mainPage = (function () {
       this.fetch();
 
       const gameModeBtn = document.querySelector('#checkbox');
-      const btn = document.querySelector('.btn');
+      const modeBtn = document.querySelector('.mode');
       const birds = document.querySelectorAll('.bird');
       const sun = document.querySelector('.sun');
       const moon = document.querySelector('.moon');
@@ -22,7 +22,7 @@ const mainPage = (function () {
         if (!gameModeBtn.checked) {
           // EASY MODE
           document.body.classList.remove('night');
-          btn.textContent = 'HARD';
+          modeBtn.textContent = 'HARD';
           sun.classList.remove('night');
           moon.classList.remove('night');
           stars.classList.remove('night');
@@ -33,7 +33,7 @@ const mainPage = (function () {
         }
         // HARD MODE
         document.body.classList.add('night');
-        btn.textContent = 'EASY';
+        modeBtn.textContent = 'EASY';
         birds.forEach(bird => bird.classList.add('night'));
         sun.classList.add('night');
         moon.classList.add('night');
