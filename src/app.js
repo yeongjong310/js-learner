@@ -47,3 +47,10 @@ const mainPage = (function () {
 })();
 
 mainPage.render();
+
+const gamePage = (function () {
+  return {
+    start() {},
+    end() {}
+  };
+})();
