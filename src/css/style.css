@@ -1,3 +1,708 @@
+@charset "UTF-8";
+body.game {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+  margin: 0;
+  /* fish tail */
+  /* rest(eyes, mouth) of the fish */
+  /* eyes(white) - white part */
+  /* eyes(black) */
+  /* mouth */
+}
+body.game::after {
+  content: "";
+  width: 200px;
+  height: 200px;
+  background-color: inherit;
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0) rotate(45deg);
+  border-top-left-radius: 30%;
+}
+body.game .ocean {
+  position: absolute;
+  width: 93vw;
+  height: 90vh;
+  overflow: hidden;
+  background-image: linear-gradient(0deg, #022244, #58c8da);
+  z-index: -2;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 160px;
+}
+body.game .ocean::after,
+body.game .ocean::before {
+  background-color: white;
+  width: 120%;
+  height: 120px;
+  position: absolute;
+  content: "";
+  top: -80px;
+  left: -10%;
+  border-radius: 100%;
+  animation: waves 10s ease infinite;
+  opacity: 0.2;
+}
+body.game .ocean::before {
+  top: -60px;
+  animation-delay: 5s;
+  opacity: 0.1;
+  left: -5%;
+}
+@keyframes waves {
+  0%, 100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+body.game .bubbles {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+body.game .bubbles span {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  position: absolute;
+  background-color: white;
+  bottom: -10%;
+  animation: bubble 10s ease-in-out infinite;
+}
+@keyframes bubble {
+  0% {
+    bottom: -10%;
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+  25% {
+    transform: translate3d(20px, 0, 0);
+  }
+  50% {
+    transform: translate3d(-20px, 0, 0);
+  }
+  75% {
+    transform: translate3d(20px, 0, 0);
+  }
+  100% {
+    bottom: 100%;
+    transform: translate3d(-20px, 0, 0);
+  }
+}
+body.game .bubbles span:nth-child(1) {
+  width: 50px;
+  height: 50px;
+  opacity: 0.5;
+  left: 10%;
+  animation-delay: 3s;
+  animation-duration: 10s;
+  opacity: 0.2;
+}
+body.game .bubbles span:nth-child(2) {
+  width: 30px;
+  height: 30px;
+  opacity: 0.5;
+  left: 40%;
+  animation-delay: 1s;
+  animation-duration: 5s;
+  opacity: 0.1;
+}
+body.game .bubbles span:nth-child(3) {
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+  left: 30%;
+  animation-delay: 5s;
+  animation-duration: 20s;
+  opacity: 0.3;
+}
+body.game .bubbles span:nth-child(4) {
+  width: 35px;
+  height: 35px;
+  opacity: 0.5;
+  left: 40%;
+  animation-delay: 8s;
+  animation-duration: 8s;
+  opacity: 0.2;
+}
+body.game .bubbles span:nth-child(5) {
+  width: 45px;
+  height: 45px;
+  opacity: 0.5;
+  left: 60%;
+  animation-delay: 10s;
+  animation-duration: 15s;
+  opacity: 0.1;
+}
+body.game .bubbles span:nth-child(6) {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+  left: 80%;
+  animation-delay: 3s;
+  animation-duration: 30s;
+  opacity: 0.4;
+}
+body.game .bubbles span:nth-child(7) {
+  width: 15px;
+  height: 15px;
+  opacity: 0.5;
+  left: 90%;
+  animation-duration: 25s;
+  opacity: 0.3;
+}
+body.game .bubbles span:nth-child(8) {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+  left: 50%;
+  animation-duration: 10s;
+  opacity: 0.2;
+}
+body.game .fish {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background-color: orange;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
+  animation: fish 40s ease-in infinite;
+}
+@keyframes fish {
+  0% {
+    left: calc(100% + 30px);
+    top: 60%;
+  }
+  50% {
+    top: 40%;
+  }
+  100% {
+    left: -20%;
+    top: 50%;
+  }
+}
+body.game .fish::after {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: inherit;
+  content: "";
+  position: absolute;
+  top: 30%;
+  right: -20px;
+  transform: rotate(-20deg);
+  animation: tail 2s ease infinite;
+  z-index: -1;
+}
+@keyframes tail {
+  0%, 100% {
+    right: -13px;
+  }
+  50% {
+    right: -7px;
+  }
+}
+body.game .fish span {
+  content: "";
+  position: absolute;
+}
+body.game .fish span:nth-child(1),
+body.game .fish span:nth-child(2) {
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.1);
+  top: 10px;
+  z-index: -2;
+}
+body.game .fish span:nth-child(1) {
+  left: -2px;
+}
+body.game .fish span:nth-child(2) {
+  z-index: 0;
+  left: 15px;
+}
+body.game .fish span:nth-child(2)::after {
+  border-radius: 100%;
+  width: 8px;
+  height: 8px;
+  background-color: #2a2a2a;
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 6px;
+  left: 6px;
+  box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.5);
+  animation: eyes 4s ease infinite;
+}
+@keyframes eyes {
+  0%, 100% {
+    top: 4px;
+  }
+  50% {
+    top: 10px;
+  }
+}
+body.game .fish span:nth-child(3) {
+  border-radius: 100%;
+  background-color: brown;
+  box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
+  top: 20px;
+  left: -5px;
+  z-index: 1;
+  transform: rotate(5deg);
+  border: solid 5px orange;
+  animation: mouth 4s ease infinite;
+}
+@keyframes mouth {
+  0%, 100% {
+    height: 15px;
+    width: 9px;
+  }
+  50% {
+    height: 9px;
+    width: 5px;
+  }
+}
 
+body.game {
+  background-color: black;
+}
+body.game .problem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 300px;
+  min-width: 500px;
+  max-width: 700px;
+  background-color: #7b9cb0;
+  margin: auto;
+  padding: 2em;
+}
+body.game .problem-links {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  min-width: 1.25em;
+  margin: 0;
+  padding: 0;
+}
+body.game .problem-links > li > button {
+  padding: 0.8em;
+  width: 3em;
+  height: 3em;
+  text-align: center;
+  background-color: rebeccapurple;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  position: relative;
+}
+body.game .problem-links > li > button:disabled::after {
+  content: "clear";
+  position: absolute;
+  background-color: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  cursor: not-allowed;
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+}
+body.game .problem .form > fieldset {
+  padding: 0;
+  margin: 0;
+  border: none;
+  color: #fff;
+  font-size: 1.5em;
+}
+body.game .problem .form > fieldset > input[type=radio] {
+  opacity: 0;
+}
+body.game .problem .form > fieldset > input[type=radio] ~ label {
+  text-align: center;
+  display: block;
+  border: 1px solid #fff;
+  padding: 10px;
+  margin-top: 8px;
+  font-size: 0.8em;
+}
+body.game .problem .form > fieldset > input[type=radio]:checked + label {
+  background-color: pink;
+}
+body.game .problem .form > fieldset > button[type=submit] {
+  opacity: 0;
+}
+
+body.main {
+  position: relative;
+  width: 100%;
+  min-width: 520px;
+  height: 100vh;
+  background: #c0dfef;
+  overflow-y: scroll;
+}
+body.main.night {
+  background-color: #194a63;
+}
+body.main .btn {
+  position: absolute;
+  cursor: pointer;
+  width: 70px;
+  text-align: center;
+  background: #cc5c5c;
+  border-radius: 8px;
+  padding: 1.2em;
+  font-size: 12px;
+  font-family: arial;
+  color: #f0f0f0;
+  transform: translateX(-50%);
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+}
+body.main .profile-container {
+  position: absolute;
+  top: 30px;
+  left: 60px;
+}
+body.main #profile:checked ~ .user {
+  display: block;
+}
+body.main #profile:checked + .profile .line {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+body.main #profile:checked + .profile .line:first-child {
+  transform: translate3d(-50%, -50%, 0) rotate(45deg);
+}
+body.main #profile:checked + .profile .line:nth-child(2) {
+  opacity: 0;
+}
+body.main #profile:checked + .profile .line:last-child {
+  transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+}
+body.main .profile {
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #cc5c5c;
+  margin: 0;
+  padding: 0;
+  transition: background-color ease 0.2s;
+}
+body.main .profile:hover {
+  background-color: #bb3a3a;
+}
+body.main .profile:hover .line {
+  background-color: #e6e6e6;
+}
+body.main .profile .line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 20px;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 3px;
+  transition: all ease 0.25s;
+}
+body.main .profile .line:first-child {
+  top: 35%;
+}
+body.main .profile .line:last-child {
+  top: 65%;
+}
+body.main .user {
+  position: absolute;
+  top: 55px;
+  left: -20px;
+  width: 400px;
+  height: 300px;
+  background-color: #fff;
+  border-radius: 20px;
+  z-index: -1;
+  opacity: 0.5;
+  overflow: hidden;
+}
+body.main .user__name {
+  padding: 15px;
+  text-align: center;
+  font-size: 2rem;
+}
+body.main .user__status {
+  top: 20px;
+  left: 20px;
+  width: 100%;
+  height: 100%;
+  background-color: #caba94;
+}
+body.main .mode {
+  bottom: 5%;
+  left: 50%;
+}
+body.main .ocean {
+  width: 100%;
+  height: 500vh;
+  position: absolute;
+  top: 70%;
+  background: linear-gradient(#58c8da, #022244);
+  z-index: -2;
+}
+@keyframes rise {
+  to {
+    bottom: 90%;
+  }
+}
+body.main .bubble {
+  bottom: 0;
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  border: 1px solid #9595ff;
+  background: #d2d2ff;
+  animation: rise 20s linear infinite;
+  opacity: 0.3;
+}
+body.main .boat {
+  position: absolute;
+  bottom: 28%;
+  left: 70%;
+  height: 45px;
+  width: 130px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  background: #cb3a37;
+  z-index: 1;
+  transition: left ease 1s;
+}
+body.main .boat.night {
+  left: 150%;
+}
+body.main .boat .cabin {
+  position: absolute;
+  top: -35px;
+  left: 40px;
+  width: 70px;
+  height: 35px;
+  background: #f5f5f5;
+}
+body.main .boat .cabin::after {
+  content: "";
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background: #8b9a97;
+  z-index: 2;
+  box-shadow: 20px 0 #8b9a97, -20px 0 #8b9a97;
+}
+body.main .boat .top {
+  position: absolute;
+  top: -35px;
+  left: 40px;
+  width: 70px;
+  height: 10px;
+  background: #cb3a37;
+}
+body.main .boat .pole {
+  position: absolute;
+  top: -50px;
+  left: 30px;
+  width: 10px;
+  height: 50px;
+  background: #8b9a97;
+}
+body.main .boat .pole::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 0;
+  left: -5px;
+  background: #8b9a97;
+}
+body.main .land {
+  position: absolute;
+  width: 180px;
+  height: 50px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border: 3px solid #d8be83;
+  background: #f0d492;
+  bottom: 25%;
+  left: 25%;
+}
+body.main .land .tree {
+  position: absolute;
+  width: 30px;
+  height: 100px;
+  background: #b45f08;
+  top: -100px;
+  left: 50%;
+  transform: translate3d(-50%, 10%, 0);
+  z-index: -1;
+}
+body.main .land .tree .leaf {
+  position: absolute;
+  top: -30px;
+  left: 10px;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border-top: 30px solid #69bf27;
+  z-index: -2;
+}
+body.main .land .tree .leaf::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  left: 0px;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border-top: 30px solid #69bf27;
+  transform: rotate(-30deg);
+}
+body.main .land .tree .leaf.left {
+  left: -80px;
+}
+body.main .land .tree .leaf.left::after {
+  transform: rotate(30deg);
+}
+body.main .bird {
+  position: absolute;
+  top: 10%;
+  left: 30%;
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border-top: 5px solid black;
+  transform: rotate(10deg);
+  z-index: -3;
+  transition: top ease 0.5s;
+}
+body.main .bird::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border-top: 5px solid black;
+  transform: rotate(-10deg);
+}
+body.main .bird.two {
+  top: 14%;
+  left: 34%;
+}
+body.main .bird.three {
+  top: 40%;
+  left: 80%;
+}
+body.main .bird.night {
+  top: 100%;
+}
+body.main .sun {
+  position: absolute;
+  background: #ffde7b;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border: 8px solid #debd56;
+  top: 8%;
+  right: 20%;
+  transition: top ease 0.35s;
+  z-index: -3;
+  transition-delay: 0.25s;
+}
+body.main .sun::after {
+  content: "";
+  position: absolute;
+  left: -5%;
+  top: 50%;
+  width: 60px;
+  height: calc(50px * 0.3);
+  border-radius: 2em;
+  box-shadow: -25px -8px white, -50px 0 white;
+  background: white;
+}
+body.main .sun.night {
+  top: 90%;
+}
+body.main .moon {
+  position: absolute;
+  background: #ffefb5;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border: 8px solid #caba94;
+  top: -20%;
+  right: 20%;
+  transition: all ease 0.25s;
+  transition-delay: 0.25s;
+  background-image: radial-gradient(circle at 60% 10%, #caba94 15%, transparent 0), radial-gradient(circle at 30% 50%, #caba94 10%, transparent 0), radial-gradient(circle at 60% 70%, #caba94 13%, transparent 0);
+}
+body.main .moon.night {
+  top: 8%;
+}
+body.main .stars {
+  background: #96cae5;
+  position: absolute;
+  top: -400px;
+  left: 40%;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  transition: top ease 0.25s;
+  transition-delay: 0.25s;
+  box-shadow: 70px 70px 0 #96cae5, -100px 80px 0 #96cae5, 200px 10px 0 #96cae5, 130px 180px 0 #96cae5, -120px -10px 0 #96cae5, -200px 170px 0 #96cae5, -280px 110px 0 #96cae5, -320px 20px 0 #96cae5, 320px 170px 0 #96cae5, 430px 60px 0 #96cae5, 480px 190px 0 #96cae5;
+  z-index: -3;
+}
+body.main .stars.night {
+  top: 30px;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html,
+html * {
+  padding: 0;
+  margin: 0;
+}
+
+.a11y-hidden {
+  /* 임시 */
+  display: none;
+}
 
 /*# sourceMappingURL=style.css.map */
