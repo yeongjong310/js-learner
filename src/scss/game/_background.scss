@@ -5,17 +5,17 @@ body.game {
   overflow: hidden;
   background-color: black;
   margin: 0;
-  &::after {
-    content: '';
-    width: 300px;
-    height: 300px;
-    background-color: inherit;
-    position:absolute;
-    bottom: -110px;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0) rotate(45deg);
-    border-top-left-radius: 30%;
-  }
+  // &::after {
+  //   position:absolute;
+  //   content: '';
+  //   width: 300px;
+  //   height: 300px;
+  //   background-color: inherit;
+  //   bottom: -110px;
+  //   left: 50%;
+  //   transform: translate3d(-50%, 0, 0) rotate(45deg);
+  //   border-top-left-radius: 30%;
+  // }
   .ocean {
     position: absolute;
     width: 93vw;
@@ -23,10 +23,25 @@ body.game {
     overflow: hidden;
     background-image: linear-gradient(0deg, #022244, #58c8da);
     z-index: -2;
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
     transform: translate3d(-50%, -50%, 0);
     border-radius: 160px;
+    box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.8);
+  }
+
+  .ocean.active {
+    @keyframes blinkRed {
+      0%, 100% {
+        box-shadow: inset 0 0 80px 5px rgba(255, 0, 0, 0.8);
+      }
+
+      50% {
+        box-shadow: inset 0 0 150px 5px rgba(255, 0, 0, 0.8);
+      }
+    }
+
+    animation: blinkRed 1s ease infinite;
   }
 
   // 상단 물결, 타원을 그리고 absolute로 배치
@@ -179,7 +194,7 @@ body.game {
     animation-duration: 10s;
     opacity: 0.2;
   }
-
+  .shark,
   .fish {
     width: 50px;
     height: 50px;
@@ -192,33 +207,67 @@ body.game {
     box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
     animation: fish 40s ease-in infinite;
   }
+
+  .shark {
+    width: 100px;
+    height: 50px;
+    background-color: rgb(25, 132, 219);
+    top: 30%;
+    left: 30%;
+    box-shadow: inset 0px -10px 0px rgba(151, 202, 236, 0.7);
+    animation: shark 20s ease-in infinite;
+  }
+
   @keyframes fish {
     0% {
       left: calc(100% + 30px);
-      top: 60%;
+      top: 30%;
     }
     50% {
-      top: 40%;
+      top: 20%;
     }
     100% {
       left: -20%;
-      top: 50%;
+      top: 30%;
     }
   }
-  /* fish tail */
+
+  @keyframes shark {
+    0% {
+      left: -30%;
+      top: 80%;
+    }
+    50% {
+      top: 70%;
+    }
+    100% {
+      left: 120%;
+      top: 80%;
+    }
+  }
+  // 꼬리
+  .shark::after,
   .fish::after {
     width: 20px;
     height: 20px;
-    border-radius: 10px;
     background-color: inherit;
     content: '';
     position: absolute;
-    top: 30%;
     right: -20px;
-    transform: rotate(-20deg);
     animation: tail 2s ease infinite;
     z-index: -1;
   }
+  .shark::after {
+    height: 40px;
+    border-radius: 0 100% 100% 0;
+    animation: sharktail 2s ease infinite;
+  }
+  .fish::after {
+    border-radius: 10px;
+    top: 30%;
+    animation: tail 2s ease infinite;
+  }
+
   @keyframes tail {
     0%,
     100% {
@@ -229,14 +278,38 @@ body.game {
     }
   }
 
-  /* rest(eyes, mouth) of the fish */
+  @keyframes sharktail {
+    0%,
+    100% {
+      left: -14px;
+    }
+    50% {
+      left: -11px;
+    }
+  }
 
+  // 샤크 스핀
+  .shark::before {
+    width: 20px;
+    height: 20px;
+    left: 30px;
+    top: -15px;
+    background-color: inherit;
+    content: '';
+    position: absolute;
+    border-top-right-radius: 100%;
+  }
+
+  // 눈 입
+  .shark span,
   .fish span {
     content: '';
     position: absolute;
   }
 
-  /* eyes(white) - white part */
+  // 눈 화이트
+  .shark span:nth-child(1),
+  .shark span:nth-child(2),
   .fish span:nth-child(1),
   .fish span:nth-child(2) {
     border-radius: 100%;
@@ -257,7 +330,24 @@ body.game {
     left: 15px;
   }
 
+  .shark span:nth-child(1),
+  .shark span:nth-child(2) {
+    width: 20px;
+    height: 30px;
+  }
+
+  .shark span:nth-child(1) {
+    left: 75px;
+    top: 7px;
+  }
+  .shark span:nth-child(2) {
+    z-index: 0;
+    left: 70px;
+    top: 8px;
+  }
+
   /* eyes(black) */
+  .shark span:nth-child(2)::after,
   .fish span:nth-child(2)::after {
     border-radius: 100%;
     width: 8px;
@@ -271,7 +361,21 @@ body.game {
     box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.5);
     animation: eyes 4s ease infinite;
   }
-
+  .shark span:nth-child(2)::after {
+    width: 6px;
+    height: 6px;
+    left: 9px;
+    animation: sharkEyes 4s ease infinite;
+  }
+  @keyframes sharkEyes {
+    0%,
+    100% {
+      top: 9px;
+    }
+    50% {
+      top: 14px;
+    }
+  }
   @keyframes eyes {
     0%,
     100% {
@@ -295,6 +399,24 @@ body.game {
     animation: mouth 4s ease infinite;
   }
 
+  .shark span:nth-child(3) {
+    background-color: white;
+    width: 10px;
+    height: 10px;
+    right: 0px;
+    top: 25px;
+    border-radius: 0 50%;
+    z-index: 0;
+  }
+  .shark span:nth-child(3)::after {
+    background-color: rgb(25, 132, 219);
+    width: 6px;
+    height: 4px;
+    border-radius: 0 0 100% 0;
+    content: '';
+    position: inherit;
+  }
+
   @keyframes mouth {
     0%,
     100% {
@@ -307,66 +429,85 @@ body.game {
     }
   }
 
-  // // fished
-  // @keyframes fishMove {
-  //   0% {
-  //     transform: translate3d(0, 0, 0);
-  //   }
+  // 엑스트라 물고기들
+  
+  .fish1,
+  .fish2,
+  .fish3,
+  .fish4,
+  .fish5 {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    border-radius: 50%;
+    opacity: 0.8;
+    z-index: -3;
+  }
+  
+  .fish1:after,
+  .fish2:after,
+  .fish3:after,
+  .fish4:after,
+  .fish5:after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    left: 35px;
+    top: 3px;
+    background-color: inherit;
+    border-radius: 100% 0 0 100%;
+  }
+  
+  .fish1 {
+    background-color: #e87112;
+    animation: infinite fishMove1 15s ease-out;
+  }
 
-  //   100% {
-  //     transform: translate3d(100px, 0, 0);
-  //   }
-  // }
+  .fish2 {
+    background-color: #01014c;
+    animation: infinite fishMove1 15s ease;
+  }
+  
+  .fish3 {
+    background-color: #d82973;
+    animation: infinite fishMove2 15s ease-out 5s;
+    transform: rotate(180deg);
+  }
 
-  // .fish1,
-  // .fish2,
-  // .fish3,
-  // .fish4,
-  // .fish5 {
-  //   position: absolute;
-  //   width: 40px;
-  //   height: 20px;
-  //   border-radius: 50%;
-  //   opacity: 0.8;
-  // }
+  .fish4 {
+    background-color: #5a357d;
+    animation: infinite fishMove2 15s ease 5s;
+    transform: rotate(180deg);
+  }
 
-  // .fish1:after,
-  // .fish2:after,
-  // .fish3:after,
-  // .fish4:after,
-  // .fish5:after {
-  //   content: '';
-  //   position: absolute;
-  //   width: 20px;
-  //   height: 15px;
-  //   left: 35px;
-  //   top: 4px;
-  //   background-color: inherit;
-  // }
+  @keyframes fishMove1 {
+    0% {
+      left: 110%;
+      top: 60%;
+    }
+    50% {
+      top: 40%;
+    }
+    100% {
+      left: -50%;
+      top: 50%;
+    }
+  }
 
-  // .fish1 {
-  //   background-color: #e87112;
-  //   animation: fishMove 15s ease forwards;
-  // }
-
-  // .fish2 {
-  //   left: 20px;
-  //   background-color: #01014c;
-  //   animation: fishMove 15s ease-out forwards;
-  //   top: 30px;
-  // }
-
-  // .fish3 {
-  //   top: 60px;
-  //   left: 20px;
-  //   background-color: #d82973;
-  //   animation: fishMove 15s ease-in-out forwards;
-  // }
-
-  // .fish4 {
-  //   top:20px;
-  //   left: 90px;
-  //   background-color: #5a357d;
-  //   animation: fishMove 15s ease-in forwards;
-  // }
+  @keyframes fishMove2 {
+    0% {
+      left: -10%;
+      top: 60%;
+    }
+    50% {
+      top: 80%;
+    }
+    100% {
+      left: 150%;
+      top: 60%;
+    }
+  }
 }
+
+

@@ -427,70 +427,93 @@ const mainPage = (function () {
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
-const renderGameBackground = () => {
-  document.body.innerHTML = `
-    <section class="ocean">
-      <div class="bubbles">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <div class="fish">
-        <!-- eyes -->
-        <span></span>
-        <span></span>
-        <!-- mouth -->
-        <span></span>
-        <!-- bubbles -->
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <aside class="oxygen-tank">
-        <div class="oxygen"></div>
-      </aside>
-    </section>`;
-};
+// yj
 
-// 산소통 구현
-const oxygenTankModule = (() => {
-  let _oxygen = 100;
-  let _inhaleValue = 0.5;
-  const $oxygenTank = document.querySelector('.oxygen-tank');
-
-  const inhaleOxygen = amount => {
-    _oxygen -= amount;
+// 게임 유틸즈
+const gameUtils = (() => {
+  const renderGameBackground = () => {
+    document.body.innerHTML = `
+      <section class="ocean">
+        <div class="bubbles">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="fish">
+          <!-- eyes -->
+          <span></span>
+          <span></span>
+          <!-- mouth -->
+          <span></span>
+        </div>
+        <div class="shark">
+          <!-- eyes -->
+          <span></span>
+          <span></span>
+          <!-- mouth -->
+          <span></span>
+        </div>
+        <div class="fishes">
+          <div class="fish1"></div>
+          <div class="fish2"></div>
+          <div class="fish3"></div>
+          <div class="fish4"></div>
+        </div>
+        <aside class="oxygen-tank">
+          <div class="oxygen"></div>
+        </aside>
+      </section>
+      `;
   };
 
-  const init = () => {
-    const intervalId = setInterval(() => {
-      inhaleOxygen(_inhaleValue);
+  const oxygenTank = (() => {
+    let _oxygen = 100;
+    let _inhaleAmount;
 
-      $oxygenTank.style.setProperty('--amount', _oxygen);
+    const minusOxygen = () => {
+      _oxygen -= 5;
+    };
 
-      if (_oxygen <= 0) {
-        clearInterval(intervalId);
-      }
-    }, 100);
-  };
+    const init = (inhaleAmount, callback) => {
+      _inhaleAmount = inhaleAmount;
 
-  const setInhaleValue = value => {
-    _inhaleValue = value;
-  };
+      const intervalId = setInterval(() => {
+        _oxygen -= _inhaleAmount;
 
+        document
+          .querySelector('.oxygen-tank')
+          .style.setProperty('--amount', _oxygen);
+
+        if (_oxygen <= 0) {
+          clearInterval(intervalId);
+          // callback(); // 게임 종료 콜백
+          document.querySelector('.ocean').classList.remove('active');
+        } else if (_oxygen <= 30) {
+          document.querySelector('.ocean').classList.add('active');
+        }
+      }, 100);
+    };
+    return {
+      init,
+      minusOxygen
+    };
+  })();
   return {
-    inhaleOxygen,
-    init,
-    setInhaleValue
+    renderGameBackground,
+    oxygenTank
   };
 })();
+
+// document.body.classList.add('game');
+// gameUtils.renderGameBackground();
+// gameUtils.oxygenTank.init(0.1);
 
 const gamePage = (function () {
   // data
@@ -606,7 +629,6 @@ const gamePage = (function () {
 
   // game initial settings
   const init = () => {
-    renderGameBackground();
     $body.className = 'game';
   };
 
