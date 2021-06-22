@@ -277,9 +277,6 @@ body.game .fish span:nth-child(3) {
   }
 }
 
-body.game {
-  background-color: black;
-}
 body.game .problem {
   display: flex;
   justify-content: center;
@@ -291,6 +288,15 @@ body.game .problem {
   background-color: #7b9cb0;
   margin: auto;
   padding: 2em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+body.game .problem.completed {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+  transition: all 0.5s;
 }
 body.game .problem-links {
   display: flex;
@@ -349,6 +355,35 @@ body.game .problem .form > fieldset > input[type=radio]:checked + label {
 }
 body.game .problem .form > fieldset > button[type=submit] {
   opacity: 0;
+}
+body.game .result-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+body.game .result-container > .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  opacity: 0.7;
+}
+body.game .result-container > .result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 600px;
+  height: 500px;
+  transition: width 0.5s;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 body.main {
@@ -435,7 +470,10 @@ body.main .profile .line:last-child {
 }
 body.main .user {
   position: absolute;
+<<<<<<< Updated upstream
   display: none;
+=======
+>>>>>>> Stashed changes
   top: 55px;
   left: -20px;
   width: 400px;
@@ -443,7 +481,11 @@ body.main .user {
   background-color: #fff;
   border-radius: 20px;
   z-index: -1;
+<<<<<<< Updated upstream
   opacity: 0.7;
+=======
+  opacity: 0.5;
+>>>>>>> Stashed changes
   overflow: hidden;
 }
 body.main .user__name {
@@ -470,6 +512,7 @@ body.main .ocean {
   background: linear-gradient(#58c8da, #022244);
   z-index: -2;
 }
+<<<<<<< Updated upstream
 body.main .category {
   position: absolute;
   width: 120px;
@@ -495,6 +538,8 @@ body.main .category__name {
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
 }
+=======
+>>>>>>> Stashed changes
 @keyframes rise {
   to {
     bottom: 90%;

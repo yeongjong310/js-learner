@@ -1,5 +1,5 @@
 const mainPage = (function () {
-  let categories = [
+  const categories = [
     {
       id: 1,
       name: 'DOM'
@@ -207,7 +207,7 @@ const mainPage = (function () {
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 const backgroundModule = (() => {
   const $body = document.querySelector('body');
@@ -246,6 +246,7 @@ const backgroundModule = (() => {
 // backgroundModule.setOcean();
 
 const gamePage = (function () {
+  // data
   const PROBLEM_TYPES = {
     MULTIPLE_SINGLE: 0,
     MULTIPLE_MULTIPLE: 1,
@@ -317,24 +318,60 @@ const gamePage = (function () {
     }
   ];
 
+  // elements
+  const $body = document.body;
+
+  // states
   let currentProblemIdx = 0;
+  let userAnswers = [];
   const problems = [...PROBLEMS].map(problem => ({
     ...problem,
     completed: false
   }));
-  let userAnswers = [];
 
-  // const $body = document.querySelector('body');
-  // $body.className = 'game';
+  // game initial settings
+  const init = () => {
+    backgroundModule.setOcean();
+    $body.className = 'game';
+  };
 
-  const render = () => {
-    const goTo = idx => {
-      if (!problems[idx] || problems[idx].completed) return;
+  const end = () => {
+    renderResult();
+  };
+
+  const renderResult = () => {
+    const $result = document.createElement('section');
+    $result.className = 'result-container';
+    $result.innerHTML = `
+      <div class="overlay"></div>
+      <div class="result">
+        <div>John</div>
+        <div>${userAnswers.filter(userAnswer => userAnswer.correct).length} / ${
+      problems.length
+    }
+      </div>
+      </div>
+    `;
+    $body.appendChild($result);
+  };
+
+  const renderProblem = () => {
+    const getProblemByIdx = idx => {
+      if (problems[idx].completed) return;
       currentProblemIdx = idx;
-      render();
+      renderProblem();
     };
 
-    $body.innerHTML = '';
+    const next = currentIdx => {
+      const nextIdx = currentIdx + 1;
+      if (!problems[nextIdx]) {
+        end();
+        return;
+      }
+      getProblemByIdx(nextIdx);
+    };
+
+    // $body.innerHTML = '';
 
     const $options = (() => {
       const { type, options } = problems[currentProblemIdx];
@@ -405,30 +442,30 @@ const gamePage = (function () {
       }
     })();
 
-    const $problemLinks = (() => {
-      const CLASS_PROBLEM_LINKS = 'problem-links';
-      const $container = document.createElement('ol');
-      $container.className = CLASS_PROBLEM_LINKS;
-      $container.innerHTML = problems
-        .map(
-          (problem, idx) => `
-          <li data-problem-idx=${idx}>
-            <button ${problem.completed ? 'disabled' : ''}>
-              ${problem.id}
-            </button>
-          </li>
-        `
-        )
-        .join('');
+    // const $problemLinks = (() => {
+    //   const CLASS_PROBLEM_LINKS = 'problem-links';
+    //   const $container = document.createElement('ol');
+    //   $container.className = CLASS_PROBLEM_LINKS;
+    //   $container.innerHTML = problems
+    //     .map(
+    //       (problem, idx) => `
+    //       <li data-problem-idx=${idx}>
+    //         <button ${problem.completed ? 'disabled' : ''}>
+    //           ${problem.id}
+    //         </button>
+    //       </li>
+    //     `
+    //     )
+    //     .join('');
 
-      $container.addEventListener('click', e => {
-        if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
-          return;
-        }
-        goTo(+e.target.parentNode.dataset.problemIdx);
-      });
-      return $container;
-    })();
+    //   $container.addEventListener('click', e => {
+    //     if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
+    //       return;
+    //     }
+    //     getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
+    //   });
+    //   return $container;
+    // })();
 
     const $container = document.createElement('section');
     $container.className = 'problem';
@@ -449,8 +486,29 @@ const gamePage = (function () {
       </fieldset>
     `;
     $container.appendChild($form);
-    $container.appendChild($problemLinks);
+    // $container.appendChild($problemLinks);
     $body.appendChild($container);
+
+    // body innerHTML
+    // $body.innerHTML += `
+    //   <section class="problem">
+    //     <form class="form">
+    //       <fieldset>
+    //         <legend>
+    //           ${problems[currentProblemIdx].question}
+    //         </legend>
+    //         <div>
+    //           ${problems[currentProblemIdx].sub}
+    //         </div>
+    //         ${$options}
+    //         <button type="submit">
+    //           제출
+    //         </button>
+    //       </fieldset>
+    //     </form>
+    //     ${$problemLinks}
+    //   </section>
+    // `;
 
     $form.addEventListener('submit', e => {
       e.preventDefault();
@@ -466,8 +524,8 @@ const gamePage = (function () {
           answer: [isShort ? $input.value : $input.dataset.optionId]
         }
       ];
-      console.log(problems);
       problems[+$input.dataset.problemId].completed = true;
+      $container.classList.add('completed');
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
       //   .filter($input => {
@@ -478,16 +536,17 @@ const gamePage = (function () {
       //     problems[+$input.dataset.problemId].completed = true;
       //   });
 
-      goTo(++currentProblemIdx);
+      next(currentProblemIdx);
     });
   };
 
   return {
     start() {
-      render();
+      init();
+      renderProblem();
     },
     end() {}
   };
 })();
 
-// gamePage.start();
+gamePage.start();
