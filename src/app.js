@@ -151,7 +151,7 @@ const mainPage = (function () {
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 const backgroundModule = (() => {
   const $body = document.querySelector('body');
@@ -404,6 +404,26 @@ const gamePage = (function () {
     $container.appendChild($problemLinks);
     $body.appendChild($container);
 
+    // $body.innerHTML += `
+    //   <section class="problem">
+    //     <form class="form">
+    //       <fieldset>
+    //         <legend>
+    //           ${problems[currentProblemIdx].question}
+    //         </legend>
+    //         <div>
+    //           ${problems[currentProblemIdx].sub}
+    //         </div>
+    //         ${$options}
+    //         <button type="submit">
+    //           제출
+    //         </button>
+    //       </fieldset>
+    //     </form>
+    //     ${$problemLinks}
+    //   </section>
+    // `;
+
     $form.addEventListener('submit', e => {
       e.preventDefault();
 
@@ -419,6 +439,8 @@ const gamePage = (function () {
         }
       ];
       problems[+$input.dataset.problemId].completed = true;
+      $container.classList.add('completed');
+      console.log($container);
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
       //   .filter($input => {
@@ -442,4 +464,4 @@ const gamePage = (function () {
   };
 })();
 
-// gamePage.start();
+gamePage.start();
