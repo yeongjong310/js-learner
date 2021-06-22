@@ -377,7 +377,31 @@ const gamePage = (function () {
     $body.className = 'game';
   };
 
+  const checkCorrectness = () => {
+    const isEqual = (array1, array2) => {
+      if (array1.length !== array2.length) return false;
+
+      array1.sort();
+      array2.sort();
+
+      for (let i = 0; i < array1.length; i++) {
+        if (array1[i] !== array2[i]) return false;
+      }
+
+      return true;
+    };
+
+    userAnswers.forEach(userAnswer => {
+      const correctAnswer = ANSWERS.find(
+        answer => answer.problemId === userAnswer.problemId
+      );
+
+      userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
+    });
+  };
+
   const renderResult = () => {
+    checkCorrectness();
     const $result = document.createElement('section');
     $result.className = 'result-container';
     $result.innerHTML = `
@@ -394,15 +418,11 @@ const gamePage = (function () {
   };
 
   const renderProblem = () => {
-    const getProblemByIdx = idx => {
-      if (problems[idx].completed) return;
-      currentProblemIdx = idx;
+    const next = idx => {
+      if (idx === problems.length) console.log('end');
+      problems[currentProblemIdx].completed = true;
+      currentProblemIdx = idx + 1;
       renderProblem();
-    };
-
-    const next = currentIdx => {
-      const nextIdx = currentIdx + 1;
-      getProblemByIdx(nextIdx);
     };
 
     // $body.innerHTML = '';
@@ -418,7 +438,7 @@ const gamePage = (function () {
               <input
                 type="radio"
                 id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx}
+                data-problem-id=${currentProblemIdx + 1}
                 data-option-id=${id}
                 name="option"
               />
@@ -434,12 +454,12 @@ const gamePage = (function () {
               ({ id, content }) => `
               <input
                 type="checkbox"
-                id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx}
+                id=problem${currentProblemIdx + 1}-option${id}
+                data-problem-id=${currentProblemIdx + 1}
                 data-option-id=${id}
                 name="option"
               />
-              <label for=question${currentProblemIdx + 1}-option${id}>
+              <label for=problem${currentProblemIdx + 1}-option${id}>
                 ${content}
               </label>
             `
@@ -451,12 +471,12 @@ const gamePage = (function () {
               ({ id, content }) => `
               <input
                 type="radio"
-                id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx}
+                id=problem${currentProblemIdx + 1}-option${id}
+                data-problem-id=${currentProblemIdx + 1}
                 data-option-id=${id}
                 name="option"
               />
-              <label for=question${currentProblemIdx + 1}-option${id}>
+              <label for=problem${currentProblemIdx + 1}-option${id}>
                 ${content}
               </label>
             `
@@ -468,7 +488,7 @@ const gamePage = (function () {
               type="text"
               placeholder="답을 입력하세요"
               id=question${currentProblemIdx + 1}
-              data-problem-id=${currentProblemIdx}
+              data-problem-id=${currentProblemIdx + 1}
             />
           `;
         default:
@@ -551,14 +571,27 @@ const gamePage = (function () {
       const $input = e.target.querySelector(
         isShort ? 'input[type=text]' : 'input[type=radio]:checked'
       );
-      userAnswers = [
-        ...userAnswers,
-        {
-          problemId: +$input.dataset.problemId,
-          answer: [isShort ? $input.value : $input.dataset.optionId]
-        }
-      ];
-      problems[+$input.dataset.problemId].completed = true;
+
+      const existingAnswer = userAnswers.find(
+        userAnswer => userAnswer.problemId === +$input.dataset.problemId
+      );
+
+      if (existingAnswer) {
+        existingAnswer.answer = [
+          ...existingAnswer.answer,
+          isShort ? $input.value : $input.dataset.optionId
+        ];
+      } else {
+        userAnswers = [
+          ...userAnswers,
+          {
+            problemId: +$input.dataset.problemId,
+            answer: [isShort ? $input.value : $input.dataset.optionId],
+            correct: false
+          }
+        ];
+      }
+
       $container.classList.add('completed');
 
       // 마지막 문제일 경우, 테스트 결과 보여주기
@@ -566,6 +599,8 @@ const gamePage = (function () {
         renderResult();
         return;
       }
+
+      problems[+$input.dataset.problemId].completed = true;
 
       // 마지막 문제가 아닐경우, 다음 문제 보여주기
       next(currentProblemIdx);
@@ -579,8 +614,6 @@ const gamePage = (function () {
       //   .forEach($input => {
       //     problems[+$input.dataset.problemId].completed = true;
       //   });
-
-      next(currentProblemIdx);
     });
   };
 
