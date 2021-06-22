@@ -338,6 +338,30 @@ const gamePage = (function () {
       question: '다음은 어떤 결과를 반환할까요?',
       sub: '[1, 2, 3, 4].reduce((acc, cur) => acc + cur ** 2, 1);',
       options: []
+    },
+    {
+      id: 5,
+      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      question: '다음 중 옳은 것을 모두 고르시오',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: '클로저는 해당 함수와 그 함수의 렉시컬 환경의 조합이다.'
+        },
+        {
+          id: 2,
+          content: '자바스크립트에서는 함수도 값이다.'
+        },
+        {
+          id: 3,
+          content: '자바스크립트의 배열은 기본적으로 희소배열이 아니다.'
+        },
+        {
+          id: 4,
+          content: '브라우저는 싱글 스레드다.'
+        }
+      ]
     }
   ];
 
@@ -357,6 +381,10 @@ const gamePage = (function () {
     {
       problemId: 4,
       answers: ['31']
+    },
+    {
+      problemId: 5,
+      answers: ['1', '2']
     }
   ];
 
@@ -377,30 +405,27 @@ const gamePage = (function () {
     $body.className = 'game';
   };
 
-  const checkCorrectness = () => {
-    const isEqual = (array1, array2) => {
-      if (array1.length !== array2.length) return false;
+  const renderResult = () => {
+    const checkCorrectness = () => {
+      const isEqual = (array1, array2) => {
+        if (array1.length !== array2.length) return false;
+        array1.sort();
+        array2.sort();
+        for (let i = 0; i < array1.length; i++) {
+          if (array1[i] !== array2[i]) return false;
+        }
 
-      array1.sort();
-      array2.sort();
+        return true;
+      };
 
-      for (let i = 0; i < array1.length; i++) {
-        if (array1[i] !== array2[i]) return false;
-      }
-
-      return true;
+      userAnswers.forEach(userAnswer => {
+        const correctAnswer = ANSWERS.find(
+          answer => answer.problemId === userAnswer.problemId
+        );
+        userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
+      });
     };
 
-    userAnswers.forEach(userAnswer => {
-      const correctAnswer = ANSWERS.find(
-        answer => answer.problemId === userAnswer.problemId
-      );
-
-      userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
-    });
-  };
-
-  const renderResult = () => {
     checkCorrectness();
     const $result = document.createElement('section');
     $result.className = 'result-container';
@@ -419,7 +444,6 @@ const gamePage = (function () {
 
   const renderProblem = () => {
     const next = idx => {
-      if (idx === problems.length) console.log('end');
       problems[currentProblemIdx].completed = true;
       currentProblemIdx = idx + 1;
       renderProblem();
@@ -496,6 +520,7 @@ const gamePage = (function () {
       }
     })();
 
+    // 문제 번호 링크
     // const $problemLinks = (() => {
     //   const CLASS_PROBLEM_LINKS = 'problem-links';
     //   const $container = document.createElement('ol');
@@ -540,57 +565,64 @@ const gamePage = (function () {
       </fieldset>
     `;
     $container.appendChild($form);
+
+    // 문제 번호 링크 DOM에 추가
     // $container.appendChild($problemLinks);
     $body.appendChild($container);
-
-    // body innerHTML
-    // $body.innerHTML += `
-    //   <section class="problem">
-    //     <form class="form">
-    //       <fieldset>
-    //         <legend>
-    //           ${problems[currentProblemIdx].question}
-    //         </legend>
-    //         <div>
-    //           ${problems[currentProblemIdx].sub}
-    //         </div>
-    //         ${$options}
-    //         <button type="submit">
-    //           제출
-    //         </button>
-    //       </fieldset>
-    //     </form>
-    //     ${$problemLinks}
-    //   </section>
-    // `;
 
     $form.addEventListener('submit', e => {
       e.preventDefault();
 
-      const isShort = problems[currentProblemIdx].type === PROBLEM_TYPES.SHORT;
-      const $input = e.target.querySelector(
-        isShort ? 'input[type=text]' : 'input[type=radio]:checked'
+      const currentProblemType = problems[currentProblemIdx].type;
+
+      let $inputs;
+      switch (currentProblemType) {
+        case PROBLEM_TYPES.SHORT:
+          $inputs = [...e.target.querySelectorAll('input[type=text]')];
+          break;
+        case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
+          $inputs = [
+            ...e.target.querySelectorAll('input[type=checkbox]:checked')
+          ];
+          break;
+        case PROBLEM_TYPES.MULTIPLE_SINGLE:
+          $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
+          break;
+        case PROBLEM_TYPES.OX:
+          $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
+          break;
+        default:
+          break;
+      }
+
+      const problemId = +$inputs[0].dataset.problemId;
+      const userAnswerForProblem = userAnswers.find(
+        userAnswer => userAnswer === problemId
       );
 
-      const existingAnswer = userAnswers.find(
-        userAnswer => userAnswer.problemId === +$input.dataset.problemId
-      );
-
-      if (existingAnswer) {
-        existingAnswer.answer = [
-          ...existingAnswer.answer,
-          isShort ? $input.value : $input.dataset.optionId
-        ];
-      } else {
-        userAnswers = [
-          ...userAnswers,
-          {
-            problemId: +$input.dataset.problemId,
-            answer: [isShort ? $input.value : $input.dataset.optionId],
-            correct: false
-          }
+      // 문제에 대한 기존의 답이 있을 경우
+      if (userAnswerForProblem) {
+        userAnswerForProblem.answer = [
+          ...userAnswerForProblem.answer,
+          ...(currentProblemType === PROBLEM_TYPES.SHORT
+            ? $inputs.map($input => $input.value)
+            : $inputs.map($input => $input.dataset.optionId))
         ];
       }
+
+      // 문제에 대한 기존의 답이 없을 경우
+      userAnswers = [
+        ...userAnswers,
+        {
+          problemId: +$inputs[0].dataset.problemId,
+          answer: [
+            ...(currentProblemType === PROBLEM_TYPES.SHORT
+              ? $inputs.map($input => $input.value)
+              : $inputs.map($input => $input.dataset.optionId))
+          ],
+          correct: false
+        }
+      ];
 
       $container.classList.add('completed');
 
@@ -600,20 +632,8 @@ const gamePage = (function () {
         return;
       }
 
-      problems[+$input.dataset.problemId].completed = true;
-
       // 마지막 문제가 아닐경우, 다음 문제 보여주기
       next(currentProblemIdx);
-
-      // 복수 정답 로직
-      // [...e.target.querySelectorAll('input[type=radio]:checked')]
-      //   .filter($input => {
-      //     console.log($input);
-      //     $input.checked;
-      //   })
-      //   .forEach($input => {
-      //     problems[+$input.dataset.problemId].completed = true;
-      //   });
     });
   };
 
