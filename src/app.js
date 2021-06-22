@@ -1,4 +1,27 @@
 const mainPage = (function () {
+  let categories = [
+    {
+      id: 1,
+      name: 'DOM'
+    },
+    {
+      id: 2,
+      name: 'THIS'
+    },
+    {
+      id: 3,
+      name: 'CLOUSER'
+    },
+    {
+      id: 4,
+      name: 'LET/CONST'
+    },
+    {
+      id: 5,
+      name: 'EVENT'
+    }
+  ];
+
   return {
     fetch() {
       document.body.className = 'main';
@@ -56,6 +79,7 @@ const mainPage = (function () {
         <label for="checkbox" class="btn mode">NIGHT</label>
       `;
     },
+
     init() {
       const gameModeBtn = document.querySelector('#checkbox');
       const modeBtn = document.querySelector('.mode');
@@ -89,58 +113,90 @@ const mainPage = (function () {
         boat.classList.add('night');
       });
 
-      // 2. bubble logic
-      const $ocean = document.querySelector('.ocean');
-      const numBubbles = 50;
-      const minSize = 20;
-      const maxSize = 40;
+      // 2. renderCategories
+      (function renderCategories() {
+        const $fragment = document.createDocumentFragment();
 
-      // Get the size of a bubble.
-      // Randomized between minSize and maxSize.
-      function bubbleSize() {
-        return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
-      }
+        categories.forEach(({ name }, idx) => {
+          const $category = document.createElement('div');
 
-      // Get the location of a bubble.
-      // Between left=2% and left=98%.
-      function bubbleLocation() {
-        return Math.floor(Math.random() * 96) + 2;
-      }
+          $category.className = 'category';
+          $category.setAttribute('role', 'button');
+          $category.innerHTML = `
+            <p class='category__name'>${name}</p>
+          `;
+          $category.style.setProperty('top', (idx + 1) * 600 + 'px');
+          $category.style.setProperty('left', Math.random() * 50 + 20 + '%');
+          $fragment.appendChild($category);
+        });
 
-      // Create a bubble using the previous two functions.
-      function createBubble() {
-        const size = bubbleSize();
-        const location = bubbleLocation();
-        const $bubble = document.createElement('div');
+        document.querySelector('.ocean').appendChild($fragment);
+      })();
 
-        $bubble.classList.add('bubble');
-        $bubble.setAttribute(
-          'style',
-          `width: ${size}px; height: ${size}px; left: ${location}%; bottom: ${
-            Math.random() * 20
-          }%`
-        );
+      // 3. bubble logic
+      (function startBubbleMaking() {
+        const $ocean = document.querySelector('.ocean');
+        const numBubbles = 30;
+        const minSize = 20;
+        const maxSize = 40;
 
-        $ocean.appendChild($bubble);
-      }
-
-      // Start adding bubbles.
-      (function startBubbles() {
-        let i = 0;
-        let timerId;
-
-        function addBubble() {
-          if (i < numBubbles) {
-            createBubble();
-            i++;
-            return;
-          }
-
-          clearInterval(timerId);
+        // Get the size of a bubble.
+        // Randomized between minSize and maxSize.
+        function bubbleSize() {
+          return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
         }
 
-        // Add a bubble every 500ms.
-        timerId = setInterval(addBubble, 500);
+        // Get the location of a bubble.
+        // Between left=2% and left=98%.
+        function bubbleLocation() {
+          return Math.floor(Math.random() * 96) + 2;
+        }
+
+        // Create a bubble using the previous two functions.
+        function createBubble() {
+          const size = bubbleSize();
+          const location = bubbleLocation();
+          const $bubble = document.createElement('div');
+
+          $bubble.classList.add('bubble');
+          $bubble.setAttribute(
+            'style',
+            `width: ${size}px; height: ${size}px; left: ${location}%; bottom: ${
+              Math.random() * 20
+            }%`
+          );
+
+          $ocean.appendChild($bubble);
+        }
+
+        // Start adding bubbles.
+        function startBubbles() {
+          let i = 0;
+          let timerId;
+
+          function addBubble() {
+            if (i < numBubbles) {
+              createBubble();
+              i++;
+              return;
+            }
+
+            clearInterval(timerId);
+          }
+
+          // Add a bubble every 500ms.
+          timerId = setInterval(addBubble, 800);
+        }
+
+        startBubbles();
+      })();
+
+      // 4. addEventListeners
+      (function bindEventListeners() {
+        document.querySelector('.ocean').addEventListener('click', e => {
+          if (!e.target.matches('.category, .category__name')) return;
+          // gamePage.start();
+        });
       })();
     },
 
@@ -268,8 +324,8 @@ const gamePage = (function () {
   }));
   let userAnswers = [];
 
-  const $body = document.querySelector('body');
-  $body.className = 'game';
+  // const $body = document.querySelector('body');
+  // $body.className = 'game';
 
   const render = () => {
     const goTo = idx => {

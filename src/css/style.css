@@ -435,6 +435,7 @@ body.main .profile .line:last-child {
 }
 body.main .user {
   position: absolute;
+  display: none;
   top: 55px;
   left: -20px;
   width: 400px;
@@ -442,7 +443,7 @@ body.main .user {
   background-color: #fff;
   border-radius: 20px;
   z-index: -1;
-  opacity: 0.5;
+  opacity: 0.7;
   overflow: hidden;
 }
 body.main .user__name {
@@ -468,6 +469,31 @@ body.main .ocean {
   top: 70%;
   background: linear-gradient(#58c8da, #022244);
   z-index: -2;
+}
+body.main .category {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background-color: #e6e6e6;
+  text-align: center;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: 0.15s;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 3px #fff, 1px 1px 3px #fff, 1px 1px 3px #fff;
+}
+body.main .category:hover {
+  font-weight: 800;
+  font-size: 1.7rem;
+  font-size: 2rem;
+  transform: scale(120%, 120%);
+}
+body.main .category__name {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
 }
 @keyframes rise {
   to {
