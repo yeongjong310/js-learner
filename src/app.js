@@ -322,7 +322,7 @@ const gamePage = (function () {
   const $body = document.body;
 
   // states
-  let currentProblemIdx = 3;
+  let currentProblemIdx = 0;
   let userAnswers = [];
   const problems = [...PROBLEMS].map(problem => ({
     ...problem,
