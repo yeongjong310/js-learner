@@ -26,57 +26,72 @@ const mainPage = (function () {
     fetch() {
       document.body.className = 'main';
       document.body.innerHTML = `
-        <section class="profile-container">
-          <input type="checkbox" id="profile" class="a11y-hidden" />
-          <label for="profile" class="btn profile">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-          </label>
-          <section class="user">
-            <h2 class="user__name">John</h2>
-            <div class="user__status"></div>
+      <section class="profile-container">
+      <input type="checkbox" id="profile" class="a11y-hidden" />
+      <label for="profile" class="btn profile">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </label>
+      <section class="user">
+        <h2 class="user__name">John</h2>
+        <div class="user__status">
+          <section class="user__status-circle">
+            <div class="user__status-content">
+              <p class="progress-title">Study</p>
+              <span class="progress-rate">55%</span>
+            </div>
           </section>
-        </section>
-        <section class="ocean">
-          <div
-            class="bubble"
-            style="width: 20px; height: 25px; left: 54%; bottom: 70%"
-          ></div>
-          <div
-            class="bubble"
-            style="width: 30px; height: 30px; left: 29%; bottom: 63%"
-          ></div>
-          <div
-            class="bubble"
-            style="width: 24px; height: 24px; left: 14%; bottom: 30%"
-          ></div>
-          <div
-            class="bubble"
-            style="width: 35px; height: 35px; left: 79%; bottom: 56%"
-          ></div>
-        </section>
-        <div class="boat">
-          <div class="cabin"></div>
-          <div class="top"></div>
-          <div class="pole"></div>
+          <section class="user__status-circle">
+            <div class="user__status-content">
+              <p class="progress-title">Correct</p>
+              <span class="progress-rate">87%</span>
+            </div>
+          </section>
         </div>
-        <div class="land">
-          <div class="tree">
-            <div class="leaf"></div>
-            <div class="leaf left"></div>
-          </div>
-        </div>
-        <div class="sun">
-          <div class="cloud"></div>
-        </div>
-        <div class="moon"></div>
-        <div class="stars"></div>
-        <div class="bird"></div>
-        <div class="bird two"></div>
-        <div class="bird three"></div>
-        <input type="checkbox" id="checkbox" class="a11y-hidden" />
-        <label for="checkbox" class="btn mode">NIGHT</label>
+        <div class="user__more-btn" role="button">MORE</div>
+        <section class="user__more-info">MORE INFO</section>
+      </section>
+    </section>
+    <section class="ocean">
+      <div
+        class="bubble"
+        style="width: 20px; height: 25px; left: 54%; bottom: 70%"
+      ></div>
+      <div
+        class="bubble"
+        style="width: 30px; height: 30px; left: 29%; bottom: 63%"
+      ></div>
+      <div
+        class="bubble"
+        style="width: 24px; height: 24px; left: 14%; bottom: 30%"
+      ></div>
+      <div
+        class="bubble"
+        style="width: 35px; height: 35px; left: 79%; bottom: 56%"
+      ></div>
+    </section>
+    <div class="boat">
+      <div class="cabin"></div>
+      <div class="top"></div>
+      <div class="pole"></div>
+    </div>
+    <div class="land">
+      <div class="tree">
+        <div class="leaf"></div>
+        <div class="leaf left"></div>
+      </div>
+    </div>
+    <div class="sun">
+      <div class="cloud"></div>
+    </div>
+    <div class="moon"></div>
+    <div class="stars"></div>
+    <div class="bird"></div>
+    <div class="bird two"></div>
+    <div class="bird three"></div>
+    <input type="checkbox" id="checkbox" class="a11y-hidden" />
+    <label for="checkbox" class="btn mode">HARD</label>
       `;
     },
 
