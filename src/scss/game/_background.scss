@@ -84,9 +84,8 @@ body.game {
 
   @keyframes bubble {
     0% {
-      bottom: -10%;
       opacity: 0;
-      transform: translate3d(-20px, 0, 0);
+      transform: translate3d(-20px, -10%, 0);
     }
     25% {
       transform: translate3d(20px, 0, 0);
@@ -99,7 +98,7 @@ body.game {
     }
     100% {
       bottom: 100%;
-      transform: translate3d(-20px, 0, 0);
+      transform: translate3d(-20px, 100%, 0);
     }
   }
 
@@ -191,7 +190,7 @@ body.game {
     top: 50%;
     left: 50%;
     box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
-    // animation: fish 40s ease-in infinite;
+    animation: fish 40s ease-in infinite;
   }
   @keyframes fish {
     0% {

@@ -102,10 +102,10 @@ const mainPage = (function () {
 
 mainPage.render();
 
-const backgroundModule = (() => {
+const setBackground = (() => {
   const $body = document.querySelector('body');
-  const setOcean = () => {
-    const $ocean = document.createElement('div');
+  const $ocean = document.createElement('section');
+  const setBackground = () => {
     $ocean.classList.add('ocean');
     $ocean.innerHTML = `
       <div class="bubbles">
@@ -129,14 +129,57 @@ const backgroundModule = (() => {
         <span></span>
         <span></span>
       </div>
+      <aside class="oxygen-tank">
+        <div class="oxygen"></div>
+      </aside>
       `;
     $body.appendChild($ocean);
   };
+  return setBackground;
+})();
+
+// 산소통 구현
+const oxygenTankModule = (() => {
+  let _oxygen = 100;
+  let _inhaleValue = 0.5;
+  const $oxygenTank = document.querySelector('.oxygen-tank');
+
+  const inhaleOxygen = amount => {
+    _oxygen -= amount;
+  };
+
+  const init = () => {
+    const intervalId = setInterval(() => {
+      inhaleOxygen(_inhaleValue);
+
+      $oxygenTank.style.setProperty('--amount', _oxygen);
+
+      if (_oxygen <= 0) {
+        clearInterval(intervalId);
+      }
+    }, 100);
+  };
+
+  const setInhaleValue = value => {
+    _inhaleValue = value;
+  };
+
   return {
-    setOcean
+    inhaleOxygen,
+    init,
+    setInhaleValue,
   };
 })();
-backgroundModule.setOcean();
+
+const displayOxygenTank = (() => {
+  const $body = document.querySelector('body');
+  const $oxygenTank = document.createElement('div');
+  $oxygenTank.classList.add('oxygen-tank');
+  $oxygenTank.innerHTML = `
+    M
+  `;
+  $body.appendChild($oxygenTank);
+})();
 
 const gamePage = (function () {
   const PROBLEM_TYPES = {
