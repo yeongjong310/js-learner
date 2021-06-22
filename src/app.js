@@ -200,14 +200,14 @@ const mainPage = (function () {
       })();
     },
 
-    renderProblem() {
+    render() {
       this.fetch();
       this.init();
     }
   };
 })();
 
-// mainPage.renderProblem();
+// mainPage.render();
 
 const backgroundModule = (() => {
   const $body = document.querySelector('body');
