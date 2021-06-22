@@ -268,7 +268,7 @@ const oxygenTankModule = (() => {
   return {
     inhaleOxygen,
     init,
-    setInhaleValue,
+    setInhaleValue
   };
 })();
 
