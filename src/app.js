@@ -1,14 +1,86 @@
 const mainPage = (function () {
+  const categories = [
+    {
+      id: 1,
+      name: 'DOM'
+    },
+    {
+      id: 2,
+      name: 'THIS'
+    },
+    {
+      id: 3,
+      name: 'CLOUSER'
+    },
+    {
+      id: 4,
+      name: 'LET/CONST'
+    },
+    {
+      id: 5,
+      name: 'EVENT'
+    }
+  ];
+
   return {
     fetch() {
       document.body.className = 'main';
-      // document.body.innerHTML = `
-
-      // `;
+      document.body.innerHTML = `
+        <section class="profile-container">
+          <input type="checkbox" id="profile" class="a11y-hidden" />
+          <label for="profile" class="btn profile">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </label>
+          <section class="user">
+            <h2 class="user__name">John</h2>
+            <div class="user__status"></div>
+          </section>
+        </section>
+        <section class="ocean">
+          <div
+            class="bubble"
+            style="width: 20px; height: 25px; left: 54%; bottom: 70%"
+          ></div>
+          <div
+            class="bubble"
+            style="width: 30px; height: 30px; left: 29%; bottom: 63%"
+          ></div>
+          <div
+            class="bubble"
+            style="width: 24px; height: 24px; left: 14%; bottom: 30%"
+          ></div>
+          <div
+            class="bubble"
+            style="width: 35px; height: 35px; left: 79%; bottom: 56%"
+          ></div>
+        </section>
+        <div class="boat">
+          <div class="cabin"></div>
+          <div class="top"></div>
+          <div class="pole"></div>
+        </div>
+        <div class="land">
+          <div class="tree">
+            <div class="leaf"></div>
+            <div class="leaf left"></div>
+          </div>
+        </div>
+        <div class="sun">
+          <div class="cloud"></div>
+        </div>
+        <div class="moon"></div>
+        <div class="stars"></div>
+        <div class="bird"></div>
+        <div class="bird two"></div>
+        <div class="bird three"></div>
+        <input type="checkbox" id="checkbox" class="a11y-hidden" />
+        <label for="checkbox" class="btn mode">NIGHT</label>
+      `;
     },
-    init() {
-      this.fetch();
 
+    init() {
       const gameModeBtn = document.querySelector('#checkbox');
       const modeBtn = document.querySelector('.mode');
       const birds = document.querySelectorAll('.bird');
@@ -41,66 +113,101 @@ const mainPage = (function () {
         boat.classList.add('night');
       });
 
-      // 2. bubble logic
-      const $ocean = document.querySelector('.ocean');
-      const numBubbles = 50;
-      const minSize = 20;
-      const maxSize = 40;
+      // 2. renderCategories
+      (function renderCategories() {
+        const $fragment = document.createDocumentFragment();
 
-      // Get the size of a bubble.
-      // Randomized between minSize and maxSize.
-      function bubbleSize() {
-        return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
-      }
+        categories.forEach(({ name }, idx) => {
+          const $category = document.createElement('div');
 
-      // Get the location of a bubble.
-      // Between left=2% and left=98%.
-      function bubbleLocation() {
-        return Math.floor(Math.random() * 96) + 2;
-      }
+          $category.className = 'category';
+          $category.setAttribute('role', 'button');
+          $category.innerHTML = `
+            <p class='category__name'>${name}</p>
+          `;
+          $category.style.setProperty('top', (idx + 1) * 600 + 'px');
+          $category.style.setProperty('left', Math.random() * 50 + 20 + '%');
+          $fragment.appendChild($category);
+        });
 
-      // Create a bubble using the previous two functions.
-      function createBubble() {
-        const size = bubbleSize();
-        const location = bubbleLocation();
-        const $bubble = document.createElement('div');
+        document.querySelector('.ocean').appendChild($fragment);
+      })();
 
-        $bubble.classList.add('bubble');
-        $bubble.setAttribute(
-          'style',
-          `width: ${size}px; height: ${size}px; left: ${location}%; bottom: ${
-            Math.random() * 30
-          }%`
-        );
+      // 3. bubble logic
+      (function startBubbleMaking() {
+        const $ocean = document.querySelector('.ocean');
+        const numBubbles = 30;
+        const minSize = 20;
+        const maxSize = 40;
 
-        $ocean.appendChild($bubble);
-      }
-
-      // Start adding bubbles.
-      (function startBubbles() {
-        let i = 0;
-        let timerId;
-
-        function addBubble() {
-          if (i < numBubbles) {
-            createBubble();
-            i++;
-            return;
-          }
-
-          clearInterval(timerId);
+        // Get the size of a bubble.
+        // Randomized between minSize and maxSize.
+        function bubbleSize() {
+          return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
         }
 
-        // Add a bubble every 500ms.
-        timerId = setInterval(addBubble, 500);
+        // Get the location of a bubble.
+        // Between left=2% and left=98%.
+        function bubbleLocation() {
+          return Math.floor(Math.random() * 96) + 2;
+        }
+
+        // Create a bubble using the previous two functions.
+        function createBubble() {
+          const size = bubbleSize();
+          const location = bubbleLocation();
+          const $bubble = document.createElement('div');
+
+          $bubble.classList.add('bubble');
+          $bubble.setAttribute(
+            'style',
+            `width: ${size}px; height: ${size}px; left: ${location}%; bottom: ${
+              Math.random() * 20
+            }%`
+          );
+
+          $ocean.appendChild($bubble);
+        }
+
+        // Start adding bubbles.
+        function startBubbles() {
+          let i = 0;
+          let timerId;
+
+          function addBubble() {
+            if (i < numBubbles) {
+              createBubble();
+              i++;
+              return;
+            }
+
+            clearInterval(timerId);
+          }
+
+          // Add a bubble every 500ms.
+          timerId = setInterval(addBubble, 800);
+        }
+
+        startBubbles();
+      })();
+
+      // 4. addEventListeners
+      (function bindEventListeners() {
+        document.querySelector('.ocean').addEventListener('click', e => {
+          if (!e.target.matches('.category, .category__name')) return;
+          // gamePage.start();
+        });
       })();
     },
 
-    render() {}
+    render() {
+      this.fetch();
+      this.init();
+    }
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 const setBackground = (() => {
   const $body = document.querySelector('body');
@@ -171,17 +278,8 @@ const oxygenTankModule = (() => {
   };
 })();
 
-const displayOxygenTank = (() => {
-  const $body = document.querySelector('body');
-  const $oxygenTank = document.createElement('div');
-  $oxygenTank.classList.add('oxygen-tank');
-  $oxygenTank.innerHTML = `
-    M
-  `;
-  $body.appendChild($oxygenTank);
-})();
-
 const gamePage = (function () {
+  // data
   const PROBLEM_TYPES = {
     MULTIPLE_SINGLE: 0,
     MULTIPLE_MULTIPLE: 1,
@@ -253,24 +351,60 @@ const gamePage = (function () {
     }
   ];
 
+  // elements
+  const $body = document.body;
+
+  // states
   let currentProblemIdx = 0;
+  let userAnswers = [];
   const problems = [...PROBLEMS].map(problem => ({
     ...problem,
     completed: false
   }));
-  let userAnswers = [];
 
-  const $body = document.querySelector('body');
-  $body.className = 'game';
+  // game initial settings
+  const init = () => {
+    backgroundModule.setOcean();
+    $body.className = 'game';
+  };
 
-  const render = () => {
-    const goTo = idx => {
-      if (!problems[idx] || problems[idx].completed) return;
+  const end = () => {
+    renderResult();
+  };
+
+  const renderResult = () => {
+    const $result = document.createElement('section');
+    $result.className = 'result-container';
+    $result.innerHTML = `
+      <div class="overlay"></div>
+      <div class="result">
+        <div>John</div>
+        <div>${userAnswers.filter(userAnswer => userAnswer.correct).length} / ${
+      problems.length
+    }
+      </div>
+      </div>
+    `;
+    $body.appendChild($result);
+  };
+
+  const renderProblem = () => {
+    const getProblemByIdx = idx => {
+      if (problems[idx].completed) return;
       currentProblemIdx = idx;
-      render();
+      renderProblem();
     };
 
-    $body.innerHTML = '';
+    const next = currentIdx => {
+      const nextIdx = currentIdx + 1;
+      if (!problems[nextIdx]) {
+        end();
+        return;
+      }
+      getProblemByIdx(nextIdx);
+    };
+
+    // $body.innerHTML = '';
 
     const $options = (() => {
       const { type, options } = problems[currentProblemIdx];
@@ -341,30 +475,30 @@ const gamePage = (function () {
       }
     })();
 
-    const $problemLinks = (() => {
-      const CLASS_PROBLEM_LINKS = 'problem-links';
-      const $container = document.createElement('ol');
-      $container.className = CLASS_PROBLEM_LINKS;
-      $container.innerHTML = problems
-        .map(
-          (problem, idx) => `
-          <li data-problem-idx=${idx}>
-            <button ${problem.completed ? 'disabled' : ''}>
-              ${problem.id}
-            </button>
-          </li>
-        `
-        )
-        .join('');
+    // const $problemLinks = (() => {
+    //   const CLASS_PROBLEM_LINKS = 'problem-links';
+    //   const $container = document.createElement('ol');
+    //   $container.className = CLASS_PROBLEM_LINKS;
+    //   $container.innerHTML = problems
+    //     .map(
+    //       (problem, idx) => `
+    //       <li data-problem-idx=${idx}>
+    //         <button ${problem.completed ? 'disabled' : ''}>
+    //           ${problem.id}
+    //         </button>
+    //       </li>
+    //     `
+    //     )
+    //     .join('');
 
-      $container.addEventListener('click', e => {
-        if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
-          return;
-        }
-        goTo(+e.target.parentNode.dataset.problemIdx);
-      });
-      return $container;
-    })();
+    //   $container.addEventListener('click', e => {
+    //     if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
+    //       return;
+    //     }
+    //     getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
+    //   });
+    //   return $container;
+    // })();
 
     const $container = document.createElement('section');
     $container.className = 'problem';
@@ -385,8 +519,29 @@ const gamePage = (function () {
       </fieldset>
     `;
     $container.appendChild($form);
-    $container.appendChild($problemLinks);
+    // $container.appendChild($problemLinks);
     $body.appendChild($container);
+
+    // body innerHTML
+    // $body.innerHTML += `
+    //   <section class="problem">
+    //     <form class="form">
+    //       <fieldset>
+    //         <legend>
+    //           ${problems[currentProblemIdx].question}
+    //         </legend>
+    //         <div>
+    //           ${problems[currentProblemIdx].sub}
+    //         </div>
+    //         ${$options}
+    //         <button type="submit">
+    //           제출
+    //         </button>
+    //       </fieldset>
+    //     </form>
+    //     ${$problemLinks}
+    //   </section>
+    // `;
 
     $form.addEventListener('submit', e => {
       e.preventDefault();
@@ -402,8 +557,8 @@ const gamePage = (function () {
           answer: [isShort ? $input.value : $input.dataset.optionId]
         }
       ];
-      console.log(problems);
       problems[+$input.dataset.problemId].completed = true;
+      $container.classList.add('completed');
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
       //   .filter($input => {
@@ -414,16 +569,11 @@ const gamePage = (function () {
       //     problems[+$input.dataset.problemId].completed = true;
       //   });
 
-      goTo(++currentProblemIdx);
+      next(currentProblemIdx);
     });
   };
 
   return {
     start() {
-      render();
-    },
-    end() {}
-  };
-})();
-
-gamePage.start();
+      init();
+      renderProblem();
