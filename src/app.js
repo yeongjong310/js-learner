@@ -195,7 +195,7 @@ const mainPage = (function () {
       (function bindEventListeners() {
         document.querySelector('.ocean').addEventListener('click', e => {
           if (!e.target.matches('.category, .category__name')) return;
-          // gamePage.start();
+          gamePage.start();
         });
       })();
     },
@@ -207,14 +207,11 @@ const mainPage = (function () {
   };
 })();
 
-// mainPage.render();
+mainPage.render();
 
-const backgroundModule = (() => {
-  const $body = document.querySelector('body');
-  const setOcean = () => {
-    const $ocean = document.createElement('div');
-    $ocean.classList.add('ocean');
-    $ocean.innerHTML = `
+const renderGameBackground = () => {
+  document.body.innerHTML = `
+    <section class="ocean">
       <div class="bubbles">
         <span></span>
         <span></span>
@@ -236,14 +233,44 @@ const backgroundModule = (() => {
         <span></span>
         <span></span>
       </div>
-      `;
-    $body.appendChild($ocean);
+      <aside class="oxygen-tank">
+        <div class="oxygen"></div>
+      </aside>
+    </section>`;
+};
+
+// 산소통 구현
+const oxygenTankModule = (() => {
+  let _oxygen = 100;
+  let _inhaleValue = 0.5;
+  const $oxygenTank = document.querySelector('.oxygen-tank');
+
+  const inhaleOxygen = amount => {
+    _oxygen -= amount;
   };
+
+  const init = () => {
+    const intervalId = setInterval(() => {
+      inhaleOxygen(_inhaleValue);
+
+      $oxygenTank.style.setProperty('--amount', _oxygen);
+
+      if (_oxygen <= 0) {
+        clearInterval(intervalId);
+      }
+    }, 100);
+  };
+
+  const setInhaleValue = value => {
+    _inhaleValue = value;
+  };
+
   return {
-    setOcean
+    inhaleOxygen,
+    init,
+    setInhaleValue,
   };
 })();
-// backgroundModule.setOcean();
 
 const gamePage = (function () {
   // data
@@ -331,7 +358,7 @@ const gamePage = (function () {
 
   // game initial settings
   const init = () => {
-    backgroundModule.setOcean();
+    renderGameBackground();
     $body.className = 'game';
   };
 
@@ -549,4 +576,4 @@ const gamePage = (function () {
   };
 })();
 
-gamePage.start();
+// gamePage.start();

@@ -14,11 +14,11 @@ body.game {
 }
 body.game::after {
   content: "";
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   background-color: inherit;
   position: absolute;
-  bottom: -60px;
+  bottom: -110px;
   left: 50%;
   transform: translate3d(-50%, 0, 0) rotate(45deg);
   border-top-left-radius: 30%;
@@ -79,9 +79,8 @@ body.game .bubbles span {
 }
 @keyframes bubble {
   0% {
-    bottom: -10%;
     opacity: 0;
-    transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-20px, -10%, 0);
   }
   25% {
     transform: translate3d(20px, 0, 0);
@@ -94,7 +93,7 @@ body.game .bubbles span {
   }
   100% {
     bottom: 100%;
-    transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-20px, 100%, 0);
   }
 }
 body.game .bubbles span:nth-child(1) {
@@ -268,12 +267,12 @@ body.game .fish span:nth-child(3) {
 }
 @keyframes mouth {
   0%, 100% {
-    height: 15px;
-    width: 9px;
+    height: 20px;
+    width: 15px;
   }
   50% {
-    height: 9px;
-    width: 5px;
+    height: 15px;
+    width: 13px;
   }
 }
 
@@ -386,6 +385,31 @@ body.game .result-container > .result {
   align-items: center;
 }
 
+body.game > .ocean .oxygen-tank {
+  --amount: 100;
+  width: 50px;
+  height: 500px;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  background-color: #fff;
+  border-radius: 50px 50px 15px 15px;
+  z-index: 2;
+}
+body.game > .ocean .oxygen-tank::after {
+  content: "";
+  width: calc(100% - 10px);
+  height: calc(var(--amount) * 1% - 10px);
+  background-color: hsla(var(--amount), 50%, 50%, 0.8);
+  border-radius: inherit;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  box-shadow: inset 10px 0 0px rgba(0, 0, 0, 0.1);
+}
+
 body.main {
   position: relative;
   width: 100%;
@@ -470,10 +494,7 @@ body.main .profile .line:last-child {
 }
 body.main .user {
   position: absolute;
-<<<<<<< Updated upstream
   display: none;
-=======
->>>>>>> Stashed changes
   top: 55px;
   left: -20px;
   width: 400px;
@@ -481,11 +502,7 @@ body.main .user {
   background-color: #fff;
   border-radius: 20px;
   z-index: -1;
-<<<<<<< Updated upstream
   opacity: 0.7;
-=======
-  opacity: 0.5;
->>>>>>> Stashed changes
   overflow: hidden;
 }
 body.main .user__name {
@@ -512,7 +529,6 @@ body.main .ocean {
   background: linear-gradient(#58c8da, #022244);
   z-index: -2;
 }
-<<<<<<< Updated upstream
 body.main .category {
   position: absolute;
   width: 120px;
@@ -538,8 +554,6 @@ body.main .category__name {
   top: 50%;
   transform: translate3d(-50%, -50%, 0);
 }
-=======
->>>>>>> Stashed changes
 @keyframes rise {
   to {
     bottom: 90%;
