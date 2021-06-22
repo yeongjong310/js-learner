@@ -362,10 +362,6 @@ const gamePage = (function () {
     $body.className = 'game';
   };
 
-  const end = () => {
-    renderResult();
-  };
-
   const renderResult = () => {
     const $result = document.createElement('section');
     $result.className = 'result-container';
@@ -391,10 +387,6 @@ const gamePage = (function () {
 
     const next = currentIdx => {
       const nextIdx = currentIdx + 1;
-      if (!problems[nextIdx]) {
-        end();
-        return;
-      }
       getProblemByIdx(nextIdx);
     };
 
@@ -553,6 +545,16 @@ const gamePage = (function () {
       ];
       problems[+$input.dataset.problemId].completed = true;
       $container.classList.add('completed');
+
+      // 마지막 문제일 경우, 테스트 결과 보여주기
+      if (!problems[currentProblemIdx + 1]) {
+        renderResult();
+        return;
+      }
+
+      // 마지막 문제가 아닐경우, 다음 문제 보여주기
+      next(currentProblemIdx);
+
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
       //   .filter($input => {
