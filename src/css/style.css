@@ -416,16 +416,17 @@ body.main {
   min-width: 520px;
   height: 100vh;
   background: #c0dfef;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
 }
 body.main .progress-bar__background {
   fill: none;
+  stroke: #fff;
   stroke-width: 1.8;
 }
 body.main .progress-bar__progress {
   fill: none;
-  stroke: #fff;
+  stroke: #53c100;
   stroke-dasharray: 100 100;
   stroke-dashoffset: 100;
   stroke-linecap: round;
@@ -529,7 +530,7 @@ body.main .user__status {
   left: 20px;
   width: 100%;
   height: 0;
-  background-color: #022244;
+  background-color: #222;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -549,6 +550,9 @@ body.main .user__status-circle {
 body.main .user__status-circle:hover {
   transform: scale(110%, 110%);
 }
+body.main .user__status-circle:hover .progress-rate {
+  font-size: 2.5rem;
+}
 body.main .user__status-content {
   position: absolute;
   top: 50%;
@@ -563,6 +567,7 @@ body.main .user__status-content .progress-title {
 body.main .user__status-content .progress-rate {
   display: block;
   text-align: center;
+  transition: font-size 0.4s;
 }
 @keyframes blink {
   from {
@@ -683,7 +688,7 @@ body.main .boat {
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
   background: #cb3a37;
-  z-index: 1;
+  z-index: 0;
   transition: left ease 1s;
 }
 body.main .boat.night {
@@ -876,402 +881,374 @@ body.main .stars {
 body.main .stars.night {
   top: 30px;
 }
-body.main .shark {
+body.main .overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(34, 34, 34, 0.9);
+}
+body.main .login-form {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body.main .login-label {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 30px;
+}
+body.main .login-input {
+  border: 2px solid #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  padding-left: 10px;
+  height: 40px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.5rem;
+  background-color: transparent;
+  font-weight: 800;
+}
+body.main .login-btn {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+body.main .login-btn:hover, body.main .login-btn:focus {
+  border: 4px solid #53c100;
+  color: #53c100;
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+body.main .greeting {
+  text-align: center;
+  font-size: 3rem;
+  padding-top: 200px;
+  color: #022244;
+  text-shadow: 1px 1px 5px #fff;
+  animation: fadeOut 1.5s linear;
+}
+body.main .sea {
+  margin: 70px auto 80px auto;
   overflow: hidden;
-  position: absolute;
-  top: -100%;
-  left: 10%;
-  width: 540px;
-  height: 322px;
-  border-radius: 0 0 240px 240px;
 }
-body.main .shark__body {
+body.main .sea .bubble {
   position: absolute;
-  top: 100%;
-  left: 188px;
-  width: 278px;
-  height: 900px;
-  background: #646f76;
-  border-radius: 100%;
-  transform: rotate(-22deg);
-  transition: top 0.4s;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #6bafca;
+  opacity: 0.9;
+  animation: bubble1-h-movement 1s ease-in infinite, bubble1-v-movement 300ms ease-in-out infinite alternate, bubble-scale-movement 300ms ease-in-out infinite alternate;
 }
-body.main .shark__body:before {
-  position: absolute;
-  top: 24px;
-  left: 6px;
-  width: 75%;
-  height: 75%;
-  content: "";
-  background: #f6f5f1;
-  border-radius: inherit;
-  transform: rotate(2deg);
-}
-body.main .shark__body .shark__eye {
-  position: absolute;
-  top: 204px;
-  right: 53px;
-  width: 12px;
-  height: 12px;
-  background: #222;
-  border-radius: 100%;
-}
-body.main .shark__body .shark__eye:before, body.main .shark__body .shark__eye:after {
+body.main .sea .bubble:after {
   position: absolute;
   content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #6bafca;
+  opacity: 0.9;
 }
-body.main .shark__body .shark__eye:before {
-  top: -6px;
-  left: 3px;
+body.main .sea .bubble:after {
+  top: -20;
+  left: 100px;
+  width: 9px;
+  height: 9px;
+}
+body.main .sea .circle-wrapper {
+  position: relative;
+  background: linear-gradient(#2c647a, #204858);
+  width: 300px;
+  height: 300px;
+  margin: 10px auto 0 auto;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 50%;
+  padding: 0 50px 0 50px;
+  border: 6px solid #3e8caa;
+}
+body.main .sea .submarine-wrapper {
+  height: 300px;
+  width: 300px;
+  padding: 30px 50px 30px 150px;
+  margin: 0 auto 0 auto;
+  animation: diving 3s ease-in-out infinite, diving-rotate 3s ease-in-out infinite;
+}
+body.main .sea .submarine-wrapper .submarine-body {
+  width: 150px;
+  height: 80px;
+  position: absolute;
+  margin-top: 50px;
+  left: 25px;
+  background-color: #d93a54;
+  border-radius: 40px;
+  background: linear-gradient(#d93a54, #bc243d);
+}
+body.main .sea .submarine-wrapper .submarine-body .light {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 40px 150px 40px;
+  border-color: transparent transparent #377c98 transparent;
+  transform: rotate(-50deg);
+  top: 40px;
+  left: 99%;
+}
+body.main .sea .submarine-wrapper .submarine-body .light:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 13px;
+  border-radius: 5px;
+  background-color: #d12844;
+  margin-left: -10px;
+}
+body.main .sea .submarine-wrapper .submarine-body .window {
+  width: 37px;
+  height: 37px;
+  position: absolute;
+  margin-top: 23px;
+  right: 18px;
+  background: linear-gradient(#1e4554, #183642);
+  border-radius: 50%;
+  border: 3px solid #d93a54;
+}
+body.main .sea .submarine-wrapper .submarine-body .window:after {
+  content: "";
+  position: absolute;
+  margin-top: 3px;
+  margin-left: 3px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: transparent;
+  opacity: 0.8;
+  border-top: 3px solid white;
+  transform: rotate(-45deg);
+}
+body.main .sea .submarine-wrapper .submarine-body .engine {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  margin-top: 32px;
+  left: 53px;
+  background-color: #bc243d;
+  border-radius: 50%;
+  border: 5px solid #d93a54;
+}
+body.main .sea .submarine-wrapper .submarine-body .engine:after, body.main .sea .submarine-wrapper .submarine-body .engine:before {
+  position: absolute;
+  content: "";
+  border-radius: 2px;
+  background-color: white;
+  animation: spin 900ms linear infinite;
+  opacity: 0.8;
+}
+body.main .sea .submarine-wrapper .submarine-body .engine:after {
+  top: 8px;
   width: 20px;
   height: 4px;
-  background: inherit;
-  transform: rotate(5deg);
 }
-body.main .shark__body .shark__eye:after {
-  top: 3px;
-  right: 3px;
-  width: 30%;
-  height: 30%;
-  background: #fff;
-  border-radius: inherit;
+body.main .sea .submarine-wrapper .submarine-body .engine:before {
+  left: 8px;
+  width: 4px;
+  height: 20px;
 }
-body.main .shark__body .shark__mouth {
-  overflow: hidden;
+body.main .sea .submarine-wrapper .helix {
+  width: 30px;
+  height: 70px;
   position: absolute;
-  top: 105px;
-  left: -30px;
-  width: 70%;
-  height: 40%;
-  background: #246c9c;
-  border-radius: inherit;
-  transform: rotate(6deg);
+  margin-top: 55px;
+  left: 0;
+  background-color: #d93a54;
+  border-radius: 7px;
+  background: linear-gradient(#d93a54, #bc243d);
 }
-body.main .shark__body .shark__mouth:before, body.main .shark__body .shark__mouth:after {
-  position: absolute;
-  height: 90%;
+body.main .sea .submarine-wrapper .helix:after {
   content: "";
-  border-radius: inherit;
-}
-body.main .shark__body .shark__mouth:before {
-  top: -6px;
-  left: 56px;
-  width: 75%;
-  background: #d99fa3;
-}
-body.main .shark__body .shark__mouth:after {
-  top: 40px;
-  left: 28px;
-  width: 70%;
-  background: #f6f5f1;
-}
-body.main .shark__body .shark__mouth .mouth__tooth--1 {
   position: absolute;
-  top: 50px;
-  left: 44px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-37deg);
+  margin-top: 5px;
+  margin-left: 7px;
+  width: 17px;
+  height: 60px;
+  border-radius: 3px;
+  background-color: transparent;
+  opacity: 0.8;
+  background: linear-gradient(to bottom, #d93a54, #d93a54 50%, #e57a8c 50%, #e57a8c);
+  background-size: 100% 20px;
+  animation: helix-movement 110ms linear infinite;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--2 {
+body.main .sea .submarine-wrapper .hat {
+  width: 65px;
+  height: 25px;
   position: absolute;
-  top: 38px;
-  left: 54px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-22deg);
+  margin-top: 26px;
+  left: 70px;
+  background-color: #d93a54;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(#d93a54, #d72d49);
 }
-body.main .shark__body .shark__mouth .mouth__tooth--3 {
+body.main .sea .submarine-wrapper .hat .periscope {
   position: absolute;
-  top: 26px;
-  left: 69px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-8deg);
+  width: 7px;
+  height: 20px;
+  background-color: #d93a54;
+  margin-top: -27px;
+  margin-left: 32px;
+  border-radius: 5px 5px 0 0;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--4 {
+body.main .sea .submarine-wrapper .hat .periscope:after, body.main .sea .submarine-wrapper .hat .periscope:before {
+  content: "";
   position: absolute;
-  top: 21px;
-  left: 87px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(6deg);
+  width: 15px;
+  height: 7px;
+  border-radius: 5px;
+  background-color: #d93a54;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--5 {
-  position: absolute;
-  top: 26px;
-  left: 108px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(30deg);
+body.main .sea .submarine-wrapper .hat .leds-wrapper {
+  width: 53px;
+  height: 13px;
+  position: relative;
+  top: 7px;
+  left: 7px;
+  background-color: #d93a54;
+  border-radius: 10px;
+  background: linear-gradient(#b3233a, #a21f35);
 }
-body.main .shark__body .shark__mouth .mouth__tooth--6 {
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds {
   position: absolute;
-  top: 40px;
-  left: 124px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(50deg);
+  margin-top: 4px;
+  margin-left: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: white;
+  animation: leds-off 500ms linear infinite;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--7 {
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:after, body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:before {
+  content: "";
   position: absolute;
-  top: 56px;
-  left: 135px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(64deg);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: white;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--8 {
-  position: absolute;
-  top: 73px;
-  left: 144px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(68deg);
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:after {
+  margin-top: 0px;
+  margin-left: 17px;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--9 {
-  position: absolute;
-  top: 92px;
-  left: 150px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(75deg);
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:before {
+  margin-top: 0px;
+  margin-left: 34px;
 }
-body.main .shark__body .shark__mouth .mouth__tooth--10 {
-  position: absolute;
-  top: 109px;
-  left: 154px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(75deg);
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--11 {
-  position: absolute;
-  top: 129px;
-  left: 158px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(86deg);
+@keyframes leds-off {
+  100% {
+    opacity: 0.3;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--12 {
-  position: absolute;
-  top: 148px;
-  left: 160px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(86deg);
+@keyframes helix-movement {
+  100% {
+    background: linear-gradient(to bottom, #e57a8c 50%, #e57a8c, #d93a54, #d93a54 50%);
+    background-size: 100% 20px;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--13 {
-  position: absolute;
-  top: 167px;
-  left: 162px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(93deg);
+@keyframes diving {
+  0% {
+    margin-top: 5px;
+  }
+  50% {
+    margin-top: 15px;
+  }
+  100% {
+    margin-top: 5px;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--14 {
-  position: absolute;
-  top: 184px;
-  left: 162px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(93deg);
+@keyframes diving-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--15 {
-  position: absolute;
-  top: 177px;
-  left: 180px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-87deg);
+@keyframes bubble1-h-movement {
+  0% {
+    margin-left: 80%;
+  }
+  100% {
+    margin-left: -100%;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--16 {
-  position: absolute;
-  top: 160px;
-  left: 177px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-87deg);
+@keyframes bubble2-h-movement {
+  0% {
+    margin-left: 65%;
+  }
+  100% {
+    margin-left: -5%;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--17 {
-  position: absolute;
-  top: 140px;
-  left: 174px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-87deg);
+@keyframes bubble1-v-movement {
+  0% {
+    margin-top: 115px;
+  }
+  100% {
+    margin-top: 160px;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--18 {
-  position: absolute;
-  top: 121px;
-  left: 173px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-85deg);
+@keyframes bubble2-v-movement {
+  0% {
+    margin-top: 115px;
+  }
+  100% {
+    margin-top: 90px;
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--19 {
-  position: absolute;
-  top: 100px;
-  left: 170px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-87deg);
+@keyframes bubble-scale-movement {
+  0% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(0.9);
+  }
 }
-body.main .shark__body .shark__mouth .mouth__tooth--20 {
-  position: absolute;
-  top: 80px;
-  left: 162px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-95deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--21 {
-  position: absolute;
-  top: 60px;
-  left: 155px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-100deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--22 {
-  position: absolute;
-  top: 42px;
-  left: 146px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-105deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--23 {
-  position: absolute;
-  top: 25px;
-  left: 137px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-120deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--24 {
-  position: absolute;
-  top: 13px;
-  left: 126px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-135deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--25 {
-  position: absolute;
-  top: 4px;
-  left: 108px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-150deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--26 {
-  position: absolute;
-  top: -2px;
-  left: 93px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-171deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--27 {
-  position: absolute;
-  top: -2px;
-  left: 74px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(-171deg);
-}
-body.main .shark__body .shark__mouth .mouth__tooth--28 {
-  position: absolute;
-  top: 4px;
-  left: 57px;
-  width: 0;
-  height: 0;
-  border-bottom: 23px solid #fff;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  transform: rotate(173deg);
+@keyframes light-movement {
+  0% {
+    transform: rotate(-40deg);
+  }
+  50% {
+    transform: rotate(-70deg);
+  }
+  100% {
+    transform: rotate(-40deg);
+  }
 }
 
 *,

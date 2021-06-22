@@ -1,7 +1,8 @@
 const mainPage = (function () {
   let mode = 'EASY';
   let user = {
-    name: 'John'
+    name: 'John',
+    session: false
   };
   let categories = [
     {
@@ -26,108 +27,162 @@ const mainPage = (function () {
     }
   ];
 
-  return {
-    fetch() {
-      document.body.className = 'main';
-      document.body.innerHTML = `
-      <section class="profile-container">
-      <div role="button" class="btn profile">
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
+  const setUser = _user => {
+    user = _user;
+    document.querySelector('.user__name').textContent = user.name;
+    localStorage.setItem('userName', user.name);
+  };
+
+  const getUserSession = () => localStorage.getItem('userName');
+  const fetch = () => {
+    document.body.style.setProperty(
+      'overflow-y',
+      getUserSession() ? 'scroll' : 'hidden'
+    );
+    document.body.className = 'main';
+    document.body.innerHTML = `
+    <section class="profile-container">
+    <div role="button" class="btn profile">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </div>
+    <section class="user">
+      <h2 class="user__name">${user.name}</h2>
+      <div class="user__status">
+        <section class="user__status-circle">
+          <svg class="user__status-svg" viewBox="-1 -1 34 34">
+            <circle
+              cx="16"
+              cy="16"
+              r="15.9155"
+              class="progress-bar__background"
+            />
+
+            <circle
+              cx="16"
+              cy="16"
+              r="15.9155"
+              class="progress-bar__progress js-progress-bar"
+            />
+          </svg>
+          <div class="user__status-content">
+            <p class="progress-title">Study</p>
+            <span class="progress-rate">55%</span>
+          </div>
+        </section>
+        <section class="user__status-circle">
+          <svg viewBox="-1 -1 34 34">
+            <circle
+              cx="16"
+              cy="16"
+              r="15.9155"
+              class="progress-bar__background"
+            />
+
+            <circle
+              cx="16"
+              cy="16"
+              r="15.9155"
+              class="progress-bar__progress js-progress-bar"
+            />
+          </svg>
+          <div class="user__status-content">
+            <p class="progress-title">Correct</p>
+            <span class="progress-rate">87%</span>
+          </div>
+        </section>
       </div>
-      <section class="user">
-        <h2 class="user__name">${user.name}</h2>
-        <div class="user__status">
-          <section class="user__status-circle">
-            <svg class="user__status-svg" viewBox="-1 -1 34 34">
-              <circle
-                cx="16"
-                cy="16"
-                r="15.9155"
-                class="progress-bar__background"
-              />
-
-              <circle
-                cx="16"
-                cy="16"
-                r="15.9155"
-                class="progress-bar__progress js-progress-bar"
-              />
-            </svg>
-            <div class="user__status-content">
-              <p class="progress-title">Study</p>
-              <span class="progress-rate">55%</span>
+      <div class="user__more-btn" role="button">MORE</div>
+      <section class="user__more-info">MORE INFO</section>
+    </section>
+  </section>
+  <section class="ocean">
+    <div
+      class="bubble bubble-rising"
+      style="width: 20px; height: 25px; left: 54%; bottom: 70%"
+    ></div>
+    <div
+      class="bubble bubble-rising"
+      style="width: 30px; height: 30px; left: 29%; bottom: 63%"
+    ></div>
+    <div
+      class="bubble bubble-rising"
+      style="width: 24px; height: 24px; left: 14%; bottom: 30%"
+    ></div>
+    <div
+      class="bubble bubble-rising"
+      style="width: 35px; height: 35px; left: 79%; bottom: 56%"
+    ></div>
+  </section>
+  <div class="boat">
+    <div class="cabin"></div>
+    <div class="top"></div>
+    <div class="pole"></div>
+  </div>
+  <div class="land">
+    <div class="tree">
+      <div class="leaf"></div>
+      <div class="leaf left"></div>
+    </div>
+  </div>
+  <div class="sun">
+    <div class="cloud"></div>
+  </div>
+  <div class="moon"></div>
+  <div class="stars"></div>
+  <div class="bird"></div>
+  <div class="bird two"></div>
+  <div class="bird three"></div>
+  <div for="checkbox" class="btn mode" role="button">HARD</div>
+  ${
+    !getUserSession()
+      ? `<div class="overlay">
+    <section class="login">
+      <div class="login-logo">
+        <div class="sea">
+          <div class="circle-wrapper">
+            <div class="bubble"></div>
+            <div class="submarine-wrapper">
+              <div class="submarine-body">
+                <div class="window"></div>
+                <div class="engine"></div>
+                <div class="light"></div>
+              </div>
+              <div class="helix"></div>
+              <div class="hat">
+                <div class="leds-wrapper">
+                  <div class="periscope"></div>
+                  <div class="leds"></div>
+                </div>
+              </div>
             </div>
-          </section>
-          <section class="user__status-circle">
-            <svg viewBox="-1 -1 34 34">
-              <circle
-                cx="16"
-                cy="16"
-                r="15.9155"
-                class="progress-bar__background"
-              />
-
-              <circle
-                cx="16"
-                cy="16"
-                r="15.9155"
-                class="progress-bar__progress js-progress-bar"
-              />
-            </svg>
-            <div class="user__status-content">
-              <p class="progress-title">Correct</p>
-              <span class="progress-rate">87%</span>
-            </div>
-          </section>
+          </div>
         </div>
-        <div class="user__more-btn" role="button">MORE</div>
-        <section class="user__more-info">MORE INFO</section>
-      </section>
-    </section>
-    <section class="ocean">
-      <div
-        class="bubble bubble-rising"
-        style="width: 20px; height: 25px; left: 54%; bottom: 70%"
-      ></div>
-      <div
-        class="bubble bubble-rising"
-        style="width: 30px; height: 30px; left: 29%; bottom: 63%"
-      ></div>
-      <div
-        class="bubble bubble-rising"
-        style="width: 24px; height: 24px; left: 14%; bottom: 30%"
-      ></div>
-      <div
-        class="bubble bubble-rising"
-        style="width: 35px; height: 35px; left: 79%; bottom: 56%"
-      ></div>
-    </section>
-    <div class="boat">
-      <div class="cabin"></div>
-      <div class="top"></div>
-      <div class="pole"></div>
-    </div>
-    <div class="land">
-      <div class="tree">
-        <div class="leaf"></div>
-        <div class="leaf left"></div>
+        <form action="#" method="GET" class="login-form">
+          <label for="userName" class="login-label">LOGIN DIVER !</label>
+          <input
+            type="text"
+            name="userName"
+            id="userName"
+            class="login-input"
+            maxlength="15"
+          />
+          <button type="submit" class="login-btn">GO DIVE</button>
+        </form>
       </div>
-    </div>
-    <div class="sun">
-      <div class="cloud"></div>
-    </div>
-    <div class="moon"></div>
-    <div class="stars"></div>
-    <div class="bird"></div>
-    <div class="bird two"></div>
-    <div class="bird three"></div>
-    <div for="checkbox" class="btn mode" role="button">HARD</div>
-      `;
-    },
+    </section>
+  </div>`
+      : ''
+  }
+    `;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
+  return {
     init() {
+      fetch();
+
       const throttle = (callback, delay) => {
         let timerId = null;
 
@@ -143,43 +198,43 @@ const mainPage = (function () {
       // 1. renderCategories
       (function renderCategories() {
         const $fragment = document.createDocumentFragment();
-        const sharkHtml = `
-        <div class="shark">
-              <div class="shark__body">
-                <div class="shark__eye"></div>
-                <div class="shark__mouth">
-                  <div class="mouth__tooth--1"></div>
-                  <div class="mouth__tooth--2"></div>
-                  <div class="mouth__tooth--3"></div>
-                  <div class="mouth__tooth--4"></div>
-                  <div class="mouth__tooth--5"></div>
-                  <div class="mouth__tooth--6"></div>
-                  <div class="mouth__tooth--7"></div>
-                  <div class="mouth__tooth--8"></div>
-                  <div class="mouth__tooth--9"></div>
-                  <div class="mouth__tooth--10"></div>
-                  <div class="mouth__tooth--11"></div>
-                  <div class="mouth__tooth--12"></div>
-                  <div class="mouth__tooth--13"></div>
-                  <div class="mouth__tooth--14"></div>
-                  <div class="mouth__tooth--15"></div>
-                  <div class="mouth__tooth--16"></div>
-                  <div class="mouth__tooth--17"></div>
-                  <div class="mouth__tooth--18"></div>
-                  <div class="mouth__tooth--19"></div>
-                  <div class="mouth__tooth--20"></div>
-                  <div class="mouth__tooth--21"></div>
-                  <div class="mouth__tooth--22"></div>
-                  <div class="mouth__tooth--23"></div>
-                  <div class="mouth__tooth--24"></div>
-                  <div class="mouth__tooth--25"></div>
-                  <div class="mouth__tooth--26"></div>
-                  <div class="mouth__tooth--27"></div>
-                  <div class="mouth__tooth--28"></div>
-                </div>
-              </div>
-            </div>
-        `;
+        // const $shark = document.createElement('div');
+        // $shark.className = 'shark';
+        // $shark.innerHTML = `
+        //       <div class="shark__body">
+        //         <div class="shark__eye"></div>
+        //         <div class="shark__mouth">
+        //           <div class="mouth__tooth--1"></div>
+        //           <div class="mouth__tooth--2"></div>
+        //           <div class="mouth__tooth--3"></div>
+        //           <div class="mouth__tooth--4"></div>
+        //           <div class="mouth__tooth--5"></div>
+        //           <div class="mouth__tooth--6"></div>
+        //           <div class="mouth__tooth--7"></div>
+        //           <div class="mouth__tooth--8"></div>
+        //           <div class="mouth__tooth--9"></div>
+        //           <div class="mouth__tooth--10"></div>
+        //           <div class="mouth__tooth--11"></div>
+        //           <div class="mouth__tooth--12"></div>
+        //           <div class="mouth__tooth--13"></div>
+        //           <div class="mouth__tooth--14"></div>
+        //           <div class="mouth__tooth--15"></div>
+        //           <div class="mouth__tooth--16"></div>
+        //           <div class="mouth__tooth--17"></div>
+        //           <div class="mouth__tooth--18"></div>
+        //           <div class="mouth__tooth--19"></div>
+        //           <div class="mouth__tooth--20"></div>
+        //           <div class="mouth__tooth--21"></div>
+        //           <div class="mouth__tooth--22"></div>
+        //           <div class="mouth__tooth--23"></div>
+        //           <div class="mouth__tooth--24"></div>
+        //           <div class="mouth__tooth--25"></div>
+        //           <div class="mouth__tooth--26"></div>
+        //           <div class="mouth__tooth--27"></div>
+        //           <div class="mouth__tooth--28"></div>
+        //         </div>
+        //       </div>
+        // `;
         categories.forEach(({ name }, idx) => {
           const $category = document.createElement('div');
 
@@ -187,12 +242,12 @@ const mainPage = (function () {
           $category.setAttribute('role', 'button');
           $category.innerHTML = `
             <p class='category__name'>${name}</p>
-            ${idx === categories.length - 1 ? sharkHtml : ''}
           `;
           $category.style.setProperty('top', (idx + 1) * 500 + 100 + 'px');
           $category.style.setProperty('left', Math.random() * 50 + 20 + '%');
           $fragment.appendChild($category);
         });
+        // $fragment.append($shark);
 
         document.querySelector('.ocean').appendChild($fragment);
       })();
@@ -338,11 +393,35 @@ const mainPage = (function () {
             e.target.closest('.profile-container').classList.toggle('active');
           }, 500)
         );
+
+        if (!getUserSession()) {
+          document.querySelector('.overlay').addEventListener('submit', e => {
+            e.preventDefault();
+            const userName = document
+              .querySelector('.login-input')
+              .value.trim();
+
+            if (!userName) return;
+            setUser({ name: userName, session: true });
+            document.querySelector('.overlay').remove();
+
+            (function greeting() {
+              const $greeting = document.createElement('h2');
+              $greeting.className = 'greeting';
+              $greeting.textContent = `Let's Dive ${user.name} !`;
+              document.body.append($greeting);
+              document.body.style.setProperty('overflow-y', 'scroll');
+
+              setTimeout(() => {
+                $greeting.remove();
+              }, 1500);
+            })();
+          });
+        }
       })();
     },
 
     render() {
-      this.fetch();
       this.init();
     }
   };
