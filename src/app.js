@@ -4,7 +4,7 @@ const mainPage = (function () {
     name: 'John',
     session: false
   };
-  let categories = [
+  const categories = [
     {
       id: 1,
       name: 'DOM'
@@ -543,6 +543,30 @@ const gamePage = (function () {
       question: '다음은 어떤 결과를 반환할까요?',
       sub: '[1, 2, 3, 4].reduce((acc, cur) => acc + cur ** 2, 1);',
       options: []
+    },
+    {
+      id: 5,
+      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      question: '다음 중 옳은 것을 모두 고르시오',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: '클로저는 해당 함수와 그 함수의 렉시컬 환경의 조합이다.'
+        },
+        {
+          id: 2,
+          content: '자바스크립트에서는 함수도 값이다.'
+        },
+        {
+          id: 3,
+          content: '자바스크립트의 배열은 기본적으로 희소배열이 아니다.'
+        },
+        {
+          id: 4,
+          content: '브라우저는 싱글 스레드다.'
+        }
+      ]
     }
   ];
 
@@ -562,6 +586,10 @@ const gamePage = (function () {
     {
       problemId: 4,
       answers: ['31']
+    },
+    {
+      problemId: 5,
+      answers: ['1', '2']
     }
   ];
 
@@ -582,60 +610,88 @@ const gamePage = (function () {
     $body.className = 'game';
   };
 
-  const end = () => {
-    renderResult();
-  };
-
   const renderResult = () => {
+    const checkCorrectness = () => {
+      const isEqual = (array1, array2) => {
+        if (array1.length !== array2.length) return false;
+        array1.sort();
+        array2.sort();
+        for (let i = 0; i < array1.length; i++) {
+          if (array1[i] !== array2[i]) return false;
+        }
+
+        return true;
+      };
+
+      userAnswers.forEach(userAnswer => {
+        const correctAnswer = ANSWERS.find(
+          answer => answer.problemId === userAnswer.problemId
+        );
+        userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
+      });
+    };
+
+    checkCorrectness();
+    const correct = userAnswers.filter(userAnswer => userAnswer.correct).length;
+    const totalCnt = problems.length;
     const $result = document.createElement('section');
     $result.className = 'result-container';
     $result.innerHTML = `
       <div class="overlay"></div>
       <div class="result">
-        <div>John</div>
-        <div>${userAnswers.filter(userAnswer => userAnswer.correct).length} / ${
-      problems.length
-    }
-      </div>
+        <div class="user-name">
+          <span>&#127881;</span>
+          great! John
+          <span>&#127881;</span>
+        </div>
+        <div class="user-score">${correct} / ${totalCnt}
+        <button class="close"></button>
       </div>
     `;
+
     $body.appendChild($result);
+
+    $result.addEventListener('click', e => {
+      if (!e.target.matches('.overlay')) return;
+      mainPage.render();
+    });
   };
 
   const renderProblem = () => {
-    const getProblemByIdx = idx => {
-      if (problems[idx].completed) return;
-      currentProblemIdx = idx;
+    const next = idx => {
+      problems[currentProblemIdx].completed = true;
+      currentProblemIdx = idx + 1;
       renderProblem();
-    };
-
-    const next = currentIdx => {
-      const nextIdx = currentIdx + 1;
-      if (!problems[nextIdx]) {
-        end();
-        return;
-      }
-      getProblemByIdx(nextIdx);
     };
 
     // $body.innerHTML = '';
 
     const $options = (() => {
-      const { type, options } = problems[currentProblemIdx];
+      const { id: problemId, type, options } = problems[currentProblemIdx];
 
       switch (type) {
         case PROBLEM_TYPES.MULTIPLE_SINGLE:
           return options
             .map(
-              ({ id, content }) => `
+              ({ id, content }, idx) => `
+              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+                <div class="fish-leg"></div>
+                <div class="fish-face">
+                  <div class="fish-smile">
+                    <div class="fish-tongue"></div>
+                  </div>
+                </div>     
+              </div>
               <input
                 type="radio"
-                id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx}
+                id=question${problemId}-option${id}
+                data-problem-id=${problemId}
                 data-option-id=${id}
                 name="option"
               />
-              <label for=question${currentProblemIdx + 1}-option${id}>
+              <label class='multiple ${
+                idx % 2 === 0 ? 'even' : ''
+              }' for=question${problemId}-option${id}>
                 ${content}
               </label>
             `
@@ -644,15 +700,26 @@ const gamePage = (function () {
         case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
           return options
             .map(
-              ({ id, content }) => `
+              ({ id, content }, idx) => `
+              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+              <div class="fish-leg"></div>
+              <div class="fish-face">
+                <div class="fish-smile">
+                  <div class="fish-tongue"></div>
+                </div>
+              </div>     
+            </div>
               <input
                 type="checkbox"
-                id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx}
+                id=problem${problemId}-option${id}
+                data-problem-id=${problemId}
                 data-option-id=${id}
                 name="option"
+                ${id === 1 ? 'checked focus' : ''}
               />
-              <label for=question${currentProblemIdx + 1}-option${id}>
+              <label class='multiple ${
+                idx % 2 === 0 ? 'even' : ''
+              }' for=problem${problemId}-option${id}>
                 ${content}
               </label>
             `
@@ -662,14 +729,22 @@ const gamePage = (function () {
           return options
             .map(
               ({ id, content }) => `
+              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+              <div class="fish-leg"></div>
+              <div class="fish-face">
+                <div class="fish-smile">
+                  <div class="fish-tongue"></div>
+                </div>
+              </div>     
+            </div>
               <input
                 type="radio"
-                id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx}
+                id=problem${problemId}-option${id}
+                data-problem-id=${problemId}
                 data-option-id=${id}
                 name="option"
               />
-              <label for=question${currentProblemIdx + 1}-option${id}>
+              <label class='multiple' for=problem${problemId}-option${id}>
                 ${content}
               </label>
             `
@@ -680,8 +755,8 @@ const gamePage = (function () {
             <input
               type="text"
               placeholder="답을 입력하세요"
-              id=question${currentProblemIdx + 1}
-              data-problem-id=${currentProblemIdx}
+              id=question${problemId}
+              data-problem-id=${problemId}
             />
           `;
         default:
@@ -689,6 +764,7 @@ const gamePage = (function () {
       }
     })();
 
+    // 문제 번호 링크
     // const $problemLinks = (() => {
     //   const CLASS_PROBLEM_LINKS = 'problem-links';
     //   const $container = document.createElement('ol');
@@ -733,56 +809,75 @@ const gamePage = (function () {
       </fieldset>
     `;
     $container.appendChild($form);
+
+    // 문제 번호 링크 DOM에 추가
     // $container.appendChild($problemLinks);
     $body.appendChild($container);
-
-    // body innerHTML
-    // $body.innerHTML += `
-    //   <section class="problem">
-    //     <form class="form">
-    //       <fieldset>
-    //         <legend>
-    //           ${problems[currentProblemIdx].question}
-    //         </legend>
-    //         <div>
-    //           ${problems[currentProblemIdx].sub}
-    //         </div>
-    //         ${$options}
-    //         <button type="submit">
-    //           제출
-    //         </button>
-    //       </fieldset>
-    //     </form>
-    //     ${$problemLinks}
-    //   </section>
-    // `;
+    console.log(document.querySelectorAll('label'));
 
     $form.addEventListener('submit', e => {
       e.preventDefault();
 
-      const isShort = problems[currentProblemIdx].type === PROBLEM_TYPES.SHORT;
-      const $input = e.target.querySelector(
-        isShort ? 'input[type=text]' : 'input[type=radio]:checked'
+      const currentProblemType = problems[currentProblemIdx].type;
+
+      let $inputs;
+      switch (currentProblemType) {
+        case PROBLEM_TYPES.SHORT:
+          $inputs = [...e.target.querySelectorAll('input[type=text]')];
+          break;
+        case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
+          $inputs = [
+            ...e.target.querySelectorAll('input[type=checkbox]:checked')
+          ];
+          break;
+        case PROBLEM_TYPES.MULTIPLE_SINGLE:
+          $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
+          break;
+        case PROBLEM_TYPES.OX:
+          $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
+          break;
+        default:
+          break;
+      }
+
+      const problemId = +$inputs[0].dataset.problemId;
+      const userAnswerForProblem = userAnswers.find(
+        userAnswer => userAnswer === problemId
       );
+
+      // 문제에 대한 기존의 답이 있을 경우
+      // if (userAnswerForProblem) {
+      //   userAnswerForProblem.answer = [
+      //     ...userAnswerForProblem.answer,
+      //     ...(currentProblemType === PROBLEM_TYPES.SHORT
+      //       ? $inputs.map($input => $input.value)
+      //       : $inputs.map($input => $input.dataset.optionId))
+      //   ];
+      // }
+
+      // 문제에 대한 기존의 답이 없을 경우
       userAnswers = [
         ...userAnswers,
         {
-          problemId: +$input.dataset.problemId,
-          answer: [isShort ? $input.value : $input.dataset.optionId]
+          problemId: +$inputs[0].dataset.problemId,
+          answer: [
+            ...(currentProblemType === PROBLEM_TYPES.SHORT
+              ? $inputs.map($input => $input.value)
+              : $inputs.map($input => $input.dataset.optionId))
+          ],
+          correct: false
         }
       ];
-      problems[+$input.dataset.problemId].completed = true;
-      $container.classList.add('completed');
-      // 복수 정답 로직
-      // [...e.target.querySelectorAll('input[type=radio]:checked')]
-      //   .filter($input => {
-      //     console.log($input);
-      //     $input.checked;
-      //   })
-      //   .forEach($input => {
-      //     problems[+$input.dataset.problemId].completed = true;
-      //   });
 
+      $container.classList.add('completed');
+
+      // 마지막 문제일 경우, 테스트 결과 보여주기
+      if (!problems[currentProblemIdx + 1]) {
+        renderResult();
+        return;
+      }
+
+      // 마지막 문제가 아닐경우, 다음 문제 보여주기
       next(currentProblemIdx);
     });
   };
