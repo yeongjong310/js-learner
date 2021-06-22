@@ -13,41 +13,53 @@ body.main {
   $gray: #8b9a97;
   $dark-blue: #194a63;
 
+  $progress-bar-stroke-width: 1.8;
+  $progress-bar-size: 150px;
+
   position: relative;
   width: 100%;
   min-width: 520px;
   height: 100vh;
   background: $sky;
   overflow-y: scroll;
+  overflow-x: hidden;
+
+  .progress-bar__background {
+    fill: none;
+    // stroke: #fff;
+    stroke-width: $progress-bar-stroke-width;
+  }
+
+  .progress-bar__progress {
+    fill: none;
+    stroke: #fff;
+    // stroke: #69bf27;
+    stroke-dasharray: 100 100;
+    stroke-dashoffset: 100;
+    stroke-linecap: round;
+    stroke-width: $progress-bar-stroke-width;
+    transition: stroke-dashoffset 1s ease-in-out;
+  }
 
   &.night {
     background-color: $dark-blue;
-  }
-
-  .btn {
-    position: absolute;
-    cursor: pointer;
-    text-align: center;
-    background: #cc5c5c;
-    border-radius: 8px;
-    font-size: 1.3rem;
-    font-weight: 800;
-    line-height: 50px;
-    font-family: arial;
-    color: #f0f0f0;
-    transform: translateX(-50%);
-    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
   }
 
   .profile-container {
     position: absolute;
     top: 30px;
     left: 60px;
-  }
 
-  #profile {
-    &:checked ~ .user {
-      height: 300px;
+    & svg {
+      height: $progress-bar-size;
+      transform: rotate(-90deg);
+      width: $progress-bar-size;
+    }
+
+    &.active {
+      & .user {
+        height: 300px;
+      }
 
       & .user__name {
         font-size: 2rem;
@@ -56,24 +68,24 @@ body.main {
       & .user__status {
         height: 80%;
       }
-    }
 
-    &:checked + .profile .line {
-      margin: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      & .profile .line {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
 
-      &:first-child {
-        transform: translate3d(-50%, -50%, 0) rotate(45deg);
-      }
+        &:first-child {
+          transform: translate3d(-50%, -50%, 0) rotate(45deg);
+        }
 
-      &:nth-child(2) {
-        opacity: 0;
-      }
+        &:nth-child(2) {
+          opacity: 0;
+        }
 
-      &:last-child {
-        transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+        &:last-child {
+          transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+        }
       }
     }
   }
@@ -156,11 +168,15 @@ body.main {
         position: relative;
         width: 150px;
         height: 150px;
-        border: 5px solid #fff;
         border-radius: 50%;
         font-size: 2rem;
         font-weight: 800;
         color: #fff;
+        transition: transform 0.3s;
+
+        &:hover {
+          transform: scale(110%, 110%);
+        }
       }
 
       &-content {
@@ -218,17 +234,40 @@ body.main {
       }
     }
   }
+  .btn {
+    position: absolute;
+    cursor: pointer;
+    text-align: center;
+    background: #cc5c5c;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 50px;
+    font-family: arial;
+    color: #f0f0f0;
+    transform: translateX(-50%);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+  }
 
   .mode {
     bottom: 7%;
     left: 50%;
     width: 150px;
     height: 50px;
+
+    &:hover {
+      background-color: darken(#cc5c5c, 10%);
+      color: darken(#fff, 10%);
+    }
+
+    &:active {
+      transform: translateX(-50%) scale(90%, 90%);
+    }
   }
 
   .ocean {
     width: 100%;
-    height: 500vh;
+    height: 360vh;
     position: absolute;
     top: 70%;
     background: linear-gradient(#58c8da, #022244);
@@ -239,20 +278,25 @@ body.main {
     position: absolute;
     width: 120px;
     height: 120px;
-    background-color: darken(#fff, 10%);
+    background-color: #d2d2ff87;
     text-align: center;
     border-radius: 50%;
-    opacity: 0.6;
     transition: 0.15s;
     font-size: 1.4rem;
     font-weight: 800;
     text-shadow: 1px 1px 3px #fff, 1px 1px 3px #fff, 1px 1px 3px #fff;
+    border: 2px solid darken($ocean, 2%);
+    cursor: pointer;
 
     &:hover {
       font-weight: 800;
       font-size: 1.7rem;
       font-size: 2rem;
       transform: scale(120%, 120%);
+
+      & .shark__body {
+        top: 0;
+      }
     }
 
     &__name {
@@ -279,8 +323,11 @@ body.main {
     border-radius: 50%;
     border: 1px solid $border;
     background: $bubbles;
-    animation: rise 20s linear infinite;
     opacity: 0.3;
+
+    &-rising {
+      animation: rise 20s linear infinite;
+    }
   }
 
   .boat {
@@ -492,6 +539,205 @@ body.main {
     z-index: -3;
     &.night {
       top: 30px;
+    }
+  }
+
+  // shark
+  @mixin tooth($top: 50px, $left: 44px, $rotate: -37deg) {
+    position: absolute;
+    top: $top;
+    left: $left;
+    width: 0;
+    height: 0;
+    border-bottom: 23px solid $shark__teeth;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    transform: rotate($rotate);
+  }
+
+  $bg: #246c9c;
+  $shark__skin: #646f76;
+  $shark__belly: #f6f5f1;
+  $shark__eye: #222;
+  $shark__mouth: #d99fa3;
+  $shark__teeth: #fff;
+
+  .shark {
+    overflow: hidden;
+    position: absolute;
+    top: -100%;
+    left: 10%;
+    width: 540px;
+    height: 322px;
+    border-radius: 0 0 240px 240px;
+
+    &__body {
+      position: absolute;
+      top: 100%;
+      left: 188px;
+      width: 278px;
+      height: 900px;
+      background: $shark__skin;
+      border-radius: 100%;
+      transform: rotate(-22deg);
+      transition: top 0.4s;
+      &:before {
+        position: absolute;
+        top: 24px;
+        left: 6px;
+        width: 75%;
+        height: 75%;
+        content: '';
+        background: $shark__belly;
+        border-radius: inherit;
+        transform: rotate(2deg);
+      }
+      .shark__eye {
+        position: absolute;
+        top: 204px;
+        right: 53px;
+        width: 12px;
+        height: 12px;
+        background: $shark__eye;
+        border-radius: 100%;
+        &:before,
+        &:after {
+          position: absolute;
+          content: '';
+        }
+        &:before {
+          top: -6px;
+          left: 3px;
+          width: 20px;
+          height: 4px;
+          background: inherit;
+          transform: rotate(5deg);
+        }
+        &:after {
+          top: 3px;
+          right: 3px;
+          width: 30%;
+          height: 30%;
+          background: #fff;
+          border-radius: inherit;
+        }
+      }
+      .shark__mouth {
+        overflow: hidden;
+        position: absolute;
+        top: 105px;
+        left: -30px;
+        width: 70%;
+        height: 40%;
+        background: $bg;
+        border-radius: inherit;
+        transform: rotate(6deg);
+        &:before,
+        &:after {
+          position: absolute;
+          height: 90%;
+          content: '';
+          border-radius: inherit;
+        }
+        &:before {
+          top: -6px;
+          left: 56px;
+          width: 75%;
+          background: $shark__mouth;
+        }
+        &:after {
+          top: 40px;
+          left: 28px;
+          width: 70%;
+          background: $shark__belly;
+        }
+        // Bottom Teeth
+        .mouth__tooth--1 {
+          @include tooth();
+        }
+        .mouth__tooth--2 {
+          @include tooth(38px, 54px, -22deg);
+        }
+        .mouth__tooth--3 {
+          @include tooth(26px, 69px, -8deg);
+        }
+        .mouth__tooth--4 {
+          @include tooth(21px, 87px, 6deg);
+        }
+        .mouth__tooth--5 {
+          @include tooth(26px, 108px, 30deg);
+        }
+        .mouth__tooth--6 {
+          @include tooth(40px, 124px, 50deg);
+        }
+        .mouth__tooth--7 {
+          @include tooth(56px, 135px, 64deg);
+        }
+        .mouth__tooth--8 {
+          @include tooth(73px, 144px, 68deg);
+        }
+        .mouth__tooth--9 {
+          @include tooth(92px, 150px, 75deg);
+        }
+        .mouth__tooth--10 {
+          @include tooth(109px, 154px, 75deg);
+        }
+        .mouth__tooth--11 {
+          @include tooth(129px, 158px, 86deg);
+        }
+        .mouth__tooth--12 {
+          @include tooth(148px, 160px, 86deg);
+        }
+        .mouth__tooth--13 {
+          @include tooth(167px, 162px, 93deg);
+        }
+        .mouth__tooth--14 {
+          @include tooth(184px, 162px, 93deg);
+        }
+        // Top Teeth
+        .mouth__tooth--15 {
+          @include tooth(177px, 180px, -87deg);
+        }
+        .mouth__tooth--16 {
+          @include tooth(160px, 177px, -87deg);
+        }
+        .mouth__tooth--17 {
+          @include tooth(140px, 174px, -87deg);
+        }
+        .mouth__tooth--18 {
+          @include tooth(121px, 173px, -85deg);
+        }
+        .mouth__tooth--19 {
+          @include tooth(100px, 170px, -87deg);
+        }
+        .mouth__tooth--20 {
+          @include tooth(80px, 162px, -95deg);
+        }
+        .mouth__tooth--21 {
+          @include tooth(60px, 155px, -100deg);
+        }
+        .mouth__tooth--22 {
+          @include tooth(42px, 146px, -105deg);
+        }
+        .mouth__tooth--23 {
+          @include tooth(25px, 137px, -120deg);
+        }
+        .mouth__tooth--24 {
+          @include tooth(13px, 126px, -135deg);
+        }
+        .mouth__tooth--25 {
+          @include tooth(4px, 108px, -150deg);
+        }
+        .mouth__tooth--26 {
+          @include tooth(-2px, 93px, -171deg);
+        }
+        .mouth__tooth--27 {
+          @include tooth(-2px, 74px, -171deg);
+        }
+        .mouth__tooth--28 {
+          @include tooth(4px, 57px, 173deg);
+        }
+      }
     }
   }
 }
