@@ -136,9 +136,9 @@ const backgroundModule = (() => {
     setOcean
   };
 })();
-backgroundModule.setOcean();
 
 const gamePage = (function () {
+  // data
   const PROBLEM_TYPES = {
     MULTIPLE_SINGLE: 0,
     MULTIPLE_MULTIPLE: 1,
@@ -210,24 +210,31 @@ const gamePage = (function () {
     }
   ];
 
+  // elements
+  const $body = document.body;
+
+  // states
   let currentProblemIdx = 0;
+  let userAnswers = [];
   const problems = [...PROBLEMS].map(problem => ({
     ...problem,
     completed: false
   }));
-  let userAnswers = [];
 
-  const $body = document.querySelector('body');
-  $body.className = 'game';
+  // game initial settings
+  const init = () => {
+    $body.className = 'game';
+    backgroundModule.setOcean();
+  };
 
   const render = () => {
-    const goTo = idx => {
+    const getProblemByIdx = idx => {
       if (!problems[idx] || problems[idx].completed) return;
       currentProblemIdx = idx;
       render();
     };
 
-    $body.innerHTML = '';
+    // $body.innerHTML = '';
 
     const $options = (() => {
       const { type, options } = problems[currentProblemIdx];
@@ -318,7 +325,7 @@ const gamePage = (function () {
         if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
           return;
         }
-        goTo(+e.target.parentNode.dataset.problemIdx);
+        getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
       });
       return $container;
     })();
@@ -359,7 +366,6 @@ const gamePage = (function () {
           answer: [isShort ? $input.value : $input.dataset.optionId]
         }
       ];
-      console.log(problems);
       problems[+$input.dataset.problemId].completed = true;
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
@@ -371,12 +377,13 @@ const gamePage = (function () {
       //     problems[+$input.dataset.problemId].completed = true;
       //   });
 
-      goTo(++currentProblemIdx);
+      getProblemByIdx(++currentProblemIdx);
     });
   };
 
   return {
     start() {
+      init();
       render();
     },
     end() {}
