@@ -144,14 +144,14 @@ const mainPage = (function () {
       })();
     },
 
-    render() {
+    renderProblem() {
       this.fetch();
       this.init();
     }
   };
 })();
 
-// mainPage.render();
+// mainPage.renderProblem();
 
 const backgroundModule = (() => {
   const $body = document.querySelector('body');
@@ -266,7 +266,7 @@ const gamePage = (function () {
   const $body = document.body;
 
   // states
-  let currentProblemIdx = 0;
+  let currentProblemIdx = 3;
   let userAnswers = [];
   const problems = [...PROBLEMS].map(problem => ({
     ...problem,
@@ -275,15 +275,44 @@ const gamePage = (function () {
 
   // game initial settings
   const init = () => {
-    $body.className = 'game';
     backgroundModule.setOcean();
+    $body.className = 'game';
   };
 
-  const render = () => {
+  const end = () => {
+    renderResult();
+  };
+
+  const renderResult = () => {
+    const $result = document.createElement('section');
+    $result.className = 'result-container';
+    $result.innerHTML = `
+      <div class="overlay"></div>
+      <div class="result">
+        <div>John</div>
+        <div>${userAnswers.filter(userAnswer => userAnswer.correct).length} / ${
+      problems.length
+    }
+      </div>
+      </div>
+    `;
+    $body.appendChild($result);
+  };
+
+  const renderProblem = () => {
     const getProblemByIdx = idx => {
-      if (!problems[idx] || problems[idx].completed) return;
+      if (problems[idx].completed) return;
       currentProblemIdx = idx;
-      render();
+      renderProblem();
+    };
+
+    const next = currentIdx => {
+      const nextIdx = currentIdx + 1;
+      if (!problems[nextIdx]) {
+        end();
+        return;
+      }
+      getProblemByIdx(nextIdx);
     };
 
     // $body.innerHTML = '';
@@ -357,30 +386,30 @@ const gamePage = (function () {
       }
     })();
 
-    const $problemLinks = (() => {
-      const CLASS_PROBLEM_LINKS = 'problem-links';
-      const $container = document.createElement('ol');
-      $container.className = CLASS_PROBLEM_LINKS;
-      $container.innerHTML = problems
-        .map(
-          (problem, idx) => `
-          <li data-problem-idx=${idx}>
-            <button ${problem.completed ? 'disabled' : ''}>
-              ${problem.id}
-            </button>
-          </li>
-        `
-        )
-        .join('');
+    // const $problemLinks = (() => {
+    //   const CLASS_PROBLEM_LINKS = 'problem-links';
+    //   const $container = document.createElement('ol');
+    //   $container.className = CLASS_PROBLEM_LINKS;
+    //   $container.innerHTML = problems
+    //     .map(
+    //       (problem, idx) => `
+    //       <li data-problem-idx=${idx}>
+    //         <button ${problem.completed ? 'disabled' : ''}>
+    //           ${problem.id}
+    //         </button>
+    //       </li>
+    //     `
+    //     )
+    //     .join('');
 
-      $container.addEventListener('click', e => {
-        if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
-          return;
-        }
-        getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
-      });
-      return $container;
-    })();
+    //   $container.addEventListener('click', e => {
+    //     if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
+    //       return;
+    //     }
+    //     getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
+    //   });
+    //   return $container;
+    // })();
 
     const $container = document.createElement('section');
     $container.className = 'problem';
@@ -401,9 +430,10 @@ const gamePage = (function () {
       </fieldset>
     `;
     $container.appendChild($form);
-    $container.appendChild($problemLinks);
+    // $container.appendChild($problemLinks);
     $body.appendChild($container);
 
+    // body innerHTML
     // $body.innerHTML += `
     //   <section class="problem">
     //     <form class="form">
@@ -440,7 +470,6 @@ const gamePage = (function () {
       ];
       problems[+$input.dataset.problemId].completed = true;
       $container.classList.add('completed');
-      console.log($container);
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
       //   .filter($input => {
@@ -451,14 +480,14 @@ const gamePage = (function () {
       //     problems[+$input.dataset.problemId].completed = true;
       //   });
 
-      getProblemByIdx(++currentProblemIdx);
+      next(currentProblemIdx);
     });
   };
 
   return {
     start() {
       init();
-      render();
+      renderProblem();
     },
     end() {}
   };
