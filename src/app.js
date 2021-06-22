@@ -2,13 +2,61 @@ const mainPage = (function () {
   return {
     fetch() {
       document.body.className = 'main';
-      // document.body.innerHTML = `
-
-      // `;
+      document.body.innerHTML = `
+        <section class="profile-container">
+          <input type="checkbox" id="profile" class="a11y-hidden" />
+          <label for="profile" class="btn profile">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </label>
+          <section class="user">
+            <h2 class="user__name">John</h2>
+            <div class="user__status"></div>
+          </section>
+        </section>
+        <section class="ocean">
+          <div
+            class="bubble"
+            style="width: 20px; height: 25px; left: 54%; bottom: 70%"
+          ></div>
+          <div
+            class="bubble"
+            style="width: 30px; height: 30px; left: 29%; bottom: 63%"
+          ></div>
+          <div
+            class="bubble"
+            style="width: 24px; height: 24px; left: 14%; bottom: 30%"
+          ></div>
+          <div
+            class="bubble"
+            style="width: 35px; height: 35px; left: 79%; bottom: 56%"
+          ></div>
+        </section>
+        <div class="boat">
+          <div class="cabin"></div>
+          <div class="top"></div>
+          <div class="pole"></div>
+        </div>
+        <div class="land">
+          <div class="tree">
+            <div class="leaf"></div>
+            <div class="leaf left"></div>
+          </div>
+        </div>
+        <div class="sun">
+          <div class="cloud"></div>
+        </div>
+        <div class="moon"></div>
+        <div class="stars"></div>
+        <div class="bird"></div>
+        <div class="bird two"></div>
+        <div class="bird three"></div>
+        <input type="checkbox" id="checkbox" class="a11y-hidden" />
+        <label for="checkbox" class="btn mode">NIGHT</label>
+      `;
     },
     init() {
-      this.fetch();
-
       const gameModeBtn = document.querySelector('#checkbox');
       const modeBtn = document.querySelector('.mode');
       const birds = document.querySelectorAll('.bird');
@@ -69,7 +117,7 @@ const mainPage = (function () {
         $bubble.setAttribute(
           'style',
           `width: ${size}px; height: ${size}px; left: ${location}%; bottom: ${
-            Math.random() * 30
+            Math.random() * 20
           }%`
         );
 
@@ -96,11 +144,14 @@ const mainPage = (function () {
       })();
     },
 
-    render() {}
+    render() {
+      this.fetch();
+      this.init();
+    }
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 const backgroundModule = (() => {
   const $body = document.querySelector('body');
@@ -136,6 +187,7 @@ const backgroundModule = (() => {
     setOcean
   };
 })();
+// backgroundModule.setOcean();
 
 const gamePage = (function () {
   // data
@@ -352,6 +404,26 @@ const gamePage = (function () {
     $container.appendChild($problemLinks);
     $body.appendChild($container);
 
+    // $body.innerHTML += `
+    //   <section class="problem">
+    //     <form class="form">
+    //       <fieldset>
+    //         <legend>
+    //           ${problems[currentProblemIdx].question}
+    //         </legend>
+    //         <div>
+    //           ${problems[currentProblemIdx].sub}
+    //         </div>
+    //         ${$options}
+    //         <button type="submit">
+    //           제출
+    //         </button>
+    //       </fieldset>
+    //     </form>
+    //     ${$problemLinks}
+    //   </section>
+    // `;
+
     $form.addEventListener('submit', e => {
       e.preventDefault();
 
@@ -367,6 +439,8 @@ const gamePage = (function () {
         }
       ];
       problems[+$input.dataset.problemId].completed = true;
+      $container.classList.add('completed');
+      console.log($container);
       // 복수 정답 로직
       // [...e.target.querySelectorAll('input[type=radio]:checked')]
       //   .filter($input => {
