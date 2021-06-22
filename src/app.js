@@ -195,7 +195,7 @@ const mainPage = (function () {
       (function bindEventListeners() {
         document.querySelector('.ocean').addEventListener('click', e => {
           if (!e.target.matches('.category, .category__name')) return;
-          // gamePage.start();
+          gamePage.start();
         });
       })();
     },
@@ -207,14 +207,11 @@ const mainPage = (function () {
   };
 })();
 
-// mainPage.render();
+mainPage.render();
 
-const setBackground = (() => {
-  const $body = document.querySelector('body');
-  const $ocean = document.createElement('section');
-  const setBackground = () => {
-    $ocean.classList.add('ocean');
-    $ocean.innerHTML = `
+const renderGameBackground = () => {
+  document.body.innerHTML = `
+    <section class="ocean">
       <div class="bubbles">
         <span></span>
         <span></span>
@@ -239,11 +236,8 @@ const setBackground = (() => {
       <aside class="oxygen-tank">
         <div class="oxygen"></div>
       </aside>
-      `;
-    $body.appendChild($ocean);
-  };
-  return setBackground;
-})();
+    </section>`;
+};
 
 // 산소통 구현
 const oxygenTankModule = (() => {
@@ -364,7 +358,7 @@ const gamePage = (function () {
 
   // game initial settings
   const init = () => {
-    backgroundModule.setOcean();
+    renderGameBackground();
     $body.className = 'game';
   };
 
@@ -577,3 +571,9 @@ const gamePage = (function () {
     start() {
       init();
       renderProblem();
+    },
+    end() {}
+  };
+})();
+
+// gamePage.start();
