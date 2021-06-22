@@ -4,7 +4,7 @@ const mainPage = (function () {
     name: 'John',
     session: false
   };
-  let categories = [
+  const categories = [
     {
       id: 1,
       name: 'DOM'
@@ -891,4 +891,4 @@ const gamePage = (function () {
   };
 })();
 
-gamePage.start();
+// gamePage.start();
