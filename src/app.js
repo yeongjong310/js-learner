@@ -427,19 +427,29 @@ const gamePage = (function () {
     };
 
     checkCorrectness();
+    const correct = userAnswers.filter(userAnswer => userAnswer.correct).length;
+    const totalCnt = problems.length;
     const $result = document.createElement('section');
     $result.className = 'result-container';
     $result.innerHTML = `
       <div class="overlay"></div>
       <div class="result">
-        <div>John</div>
-        <div>${userAnswers.filter(userAnswer => userAnswer.correct).length} / ${
-      problems.length
-    }
-      </div>
+        <div class="user-name">
+          <span>&#127881;</span>
+          great! John
+          <span>&#127881;</span>
+        </div>
+        <div class="user-score">${correct} / ${totalCnt}
+        <button class="close"></button>
       </div>
     `;
+
     $body.appendChild($result);
+
+    $result.addEventListener('click', e => {
+      if (!e.target.matches('.overlay')) return;
+      mainPage.render();
+    });
   };
 
   const renderProblem = () => {
@@ -452,21 +462,31 @@ const gamePage = (function () {
     // $body.innerHTML = '';
 
     const $options = (() => {
-      const { type, options } = problems[currentProblemIdx];
+      const { id: problemId, type, options } = problems[currentProblemIdx];
 
       switch (type) {
         case PROBLEM_TYPES.MULTIPLE_SINGLE:
           return options
             .map(
-              ({ id, content }) => `
+              ({ id, content }, idx) => `
+              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+                <div class="fish-leg"></div>
+                <div class="fish-face">
+                  <div class="fish-smile">
+                    <div class="fish-tongue"></div>
+                  </div>
+                </div>     
+              </div>
               <input
                 type="radio"
-                id=question${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx + 1}
+                id=question${problemId}-option${id}
+                data-problem-id=${problemId}
                 data-option-id=${id}
                 name="option"
               />
-              <label for=question${currentProblemIdx + 1}-option${id}>
+              <label class='multiple ${
+                idx % 2 === 0 ? 'even' : ''
+              }' for=question${problemId}-option${id}>
                 ${content}
               </label>
             `
@@ -475,15 +495,26 @@ const gamePage = (function () {
         case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
           return options
             .map(
-              ({ id, content }) => `
+              ({ id, content }, idx) => `
+              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+              <div class="fish-leg"></div>
+              <div class="fish-face">
+                <div class="fish-smile">
+                  <div class="fish-tongue"></div>
+                </div>
+              </div>     
+            </div>
               <input
                 type="checkbox"
-                id=problem${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx + 1}
+                id=problem${problemId}-option${id}
+                data-problem-id=${problemId}
                 data-option-id=${id}
                 name="option"
+                ${id === 1 ? 'checked focus' : ''}
               />
-              <label for=problem${currentProblemIdx + 1}-option${id}>
+              <label class='multiple ${
+                idx % 2 === 0 ? 'even' : ''
+              }' for=problem${problemId}-option${id}>
                 ${content}
               </label>
             `
@@ -493,14 +524,22 @@ const gamePage = (function () {
           return options
             .map(
               ({ id, content }) => `
+              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+              <div class="fish-leg"></div>
+              <div class="fish-face">
+                <div class="fish-smile">
+                  <div class="fish-tongue"></div>
+                </div>
+              </div>     
+            </div>
               <input
                 type="radio"
-                id=problem${currentProblemIdx + 1}-option${id}
-                data-problem-id=${currentProblemIdx + 1}
+                id=problem${problemId}-option${id}
+                data-problem-id=${problemId}
                 data-option-id=${id}
                 name="option"
               />
-              <label for=problem${currentProblemIdx + 1}-option${id}>
+              <label class='multiple' for=problem${problemId}-option${id}>
                 ${content}
               </label>
             `
@@ -511,8 +550,8 @@ const gamePage = (function () {
             <input
               type="text"
               placeholder="답을 입력하세요"
-              id=question${currentProblemIdx + 1}
-              data-problem-id=${currentProblemIdx + 1}
+              id=question${problemId}
+              data-problem-id=${problemId}
             />
           `;
         default:
@@ -569,6 +608,7 @@ const gamePage = (function () {
     // 문제 번호 링크 DOM에 추가
     // $container.appendChild($problemLinks);
     $body.appendChild($container);
+    console.log(document.querySelectorAll('label'));
 
     $form.addEventListener('submit', e => {
       e.preventDefault();
@@ -601,14 +641,14 @@ const gamePage = (function () {
       );
 
       // 문제에 대한 기존의 답이 있을 경우
-      if (userAnswerForProblem) {
-        userAnswerForProblem.answer = [
-          ...userAnswerForProblem.answer,
-          ...(currentProblemType === PROBLEM_TYPES.SHORT
-            ? $inputs.map($input => $input.value)
-            : $inputs.map($input => $input.dataset.optionId))
-        ];
-      }
+      // if (userAnswerForProblem) {
+      //   userAnswerForProblem.answer = [
+      //     ...userAnswerForProblem.answer,
+      //     ...(currentProblemType === PROBLEM_TYPES.SHORT
+      //       ? $inputs.map($input => $input.value)
+      //       : $inputs.map($input => $input.dataset.optionId))
+      //   ];
+      // }
 
       // 문제에 대한 기존의 답이 없을 경우
       userAnswers = [
@@ -646,4 +686,4 @@ const gamePage = (function () {
   };
 })();
 
-// gamePage.start();
+gamePage.start();

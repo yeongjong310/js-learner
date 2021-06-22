@@ -4,12 +4,11 @@ body.game {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    min-height: 300px;
-    min-width: 500px;
-    max-width: 700px;
-    background-color: #7b9cb0;
+    height: 100%;
+    width: 100%;
+    // background-color: #7b9cb0;
     margin: auto;
-    padding: 2em;
+    padding: 5em 10em;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -42,51 +41,64 @@ body.game {
           position: relative;
         }
 
-        & > button:disabled::after {
-          content: 'clear';
-          position: absolute;
-          background-color: blue;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: #fff;
-          cursor: not-allowed;
-          width: 3em;
-          height: 3em;
-          border-radius: 50%;
-          top: 0;
-          left: 0;
-        }
+        // & > button:disabled::after {
+        //   content: 'clear';
+        //   position: absolute;
+        //   background-color: blue;
+        //   display: flex;
+        //   justify-content: center;
+        //   align-items: center;
+        //   color: #fff;
+        //   cursor: not-allowed;
+        //   width: 3em;
+        //   height: 3em;
+        //   border-radius: 50%;
+        //   top: 0;
+        //   left: 0;
+        // }
       }
     }
 
     .form {
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+
       & > fieldset {
         padding: 0;
         margin: 0;
         border: none;
         color: #fff;
         font-size: 1.5em;
+        display: flex;
 
-        & > input[type='radio'] {
+        & > input[type='radio'],
+        & > input[type='checkbox'] {
           opacity: 0;
-
           & ~ label {
             text-align: center;
-            display: block;
             border: 1px solid #fff;
-            padding: 10px;
-            margin-top: 8px;
+            border-radius: 10px;
             font-size: 0.8em;
+            max-height: 400px;
+            min-width: 200px;
+            cursor: pointer;
+            padding: 1em;
+
+            & > .multiple {
+              margin-top: 160px;
+            }
+
+            & > .multiple.even {
+              margin-top: 100px;
+            }
           }
-        }
-
-        & > input[type='radio']:checked + label {
-          background-color: pink;
-        }
-
-        & > button[type='submit'] {
-          opacity: 0;
+          &:hover + label,
+          &:checked + label,
+          &:checked + label {
+            background-color: pink;
+          }
         }
       }
     }
@@ -111,6 +123,7 @@ body.game {
 
     & > .result {
       position: absolute;
+      border-radius: 20px;
       top: 50%;
       left: 50%;
       transform: translate3d(-50%, -50%, 0);
@@ -119,8 +132,18 @@ body.game {
       transition: width 0.5s;
       background-color: #fff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-evenly;
       align-items: center;
+
+      & > .user-name {
+        font-size: 50px;
+      }
+
+      & > .user-score {
+        font-size: 2em;
+        font-weight: 700;
+      }
     }
   }
 }
