@@ -427,7 +427,7 @@ const mainPage = (function () {
   };
 })();
 
-// mainPage.render();
+mainPage.render();
 
 // yj
 
@@ -493,7 +493,7 @@ const gameUtils = (() => {
 
         if (_oxygen <= 0) {
           clearInterval(intervalId);
-          // callback(); // 게임 종료 콜백
+          callback(); // 게임 종료 콜백
           document.querySelector('.ocean').classList.remove('active');
         } else if (_oxygen <= 30) {
           document.querySelector('.ocean').classList.add('active');
@@ -630,6 +630,8 @@ const gamePage = (function () {
   // game initial settings
   const init = () => {
     $body.className = 'game';
+    gameUtils.renderGameBackground();
+    gameUtils.oxygenTank.init(0.5, renderResult);
   };
 
   const renderResult = () => {
