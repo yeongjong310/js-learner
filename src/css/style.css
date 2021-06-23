@@ -1,0 +1,1550 @@
+@charset "UTF-8";
+.accessibility {
+  position: fixed;
+  align-items: center;
+  right: 10px;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  display: flex;
+}
+.accessibility__menu-btn {
+  display: flex;
+  border-radius: 50%;
+  background-color: #3e7faa;
+  width: 80px;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.accessibility__menu-btn > img {
+  width: 90%;
+  height: 90%;
+  border: 5px solid #fff;
+  margin: auto;
+  border-radius: 50%;
+}
+.accessibility__menu {
+  position: relative;
+  right: 10px;
+  opacity: 0.7;
+  order: -1;
+  width: 0;
+  overflow: hidden;
+  list-style-type: none;
+  background-color: #fff;
+  border-radius: 20px;
+  transition: 1s;
+}
+.accessibility__menu.on {
+  display: inline-block;
+  width: 370px;
+}
+.accessibility__menu-title {
+  line-height: 30px;
+  text-align: center;
+  padding: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.accessibility__menu ul {
+  display: flex;
+  list-style-type: none;
+  height: 100px;
+  margin: 0 10px 10px 10px;
+}
+.accessibility__menu ul > :nth-child(1) {
+  margin-right: 10px;
+}
+.accessibility__menu li {
+  position: relative;
+}
+.accessibility .accessibility__btn {
+  display: inline-block;
+  color: white;
+  width: 170px;
+  height: 100%;
+  background-color: #222;
+  border-radius: 10px;
+  transition: 0.3s;
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0);
+}
+.accessibility .accessibility__btn--level-wrapper {
+  display: flex;
+  position: absolute;
+  right: 50%;
+  bottom: 10px;
+  transform: translate3d(50%, 0, 0);
+}
+.accessibility .accessibility__btn--level {
+  margin: 2px;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: white;
+}
+.accessibility .accessibility__btn:hover {
+  box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.6);
+}
+
+body.game {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+  margin: 0;
+  /* eyes(black) */
+  /* mouth */
+}
+body.game .ocean {
+  position: absolute;
+  width: 93vw;
+  height: 90vh;
+  overflow: hidden;
+  background-image: linear-gradient(#58c8da, #022244);
+  z-index: -2;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 160px;
+  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.8);
+}
+body.game .ocean.active {
+  animation: blinkRed 1s ease infinite var(--play-state);
+}
+@keyframes blinkRed {
+  0%, 100% {
+    box-shadow: inset 0 0 80px 5px rgba(255, 0, 0, 0.8);
+  }
+  50% {
+    box-shadow: inset 0 0 150px 5px rgba(255, 0, 0, 0.8);
+  }
+}
+body.game .ocean::after,
+body.game .ocean::before {
+  background-color: white;
+  width: 120%;
+  height: 120px;
+  position: absolute;
+  content: "";
+  top: -80px;
+  left: -10%;
+  border-radius: 100%;
+  animation: waves 10s ease infinite var(--play-state);
+  opacity: 0.2;
+}
+body.game .ocean::before {
+  top: -60px;
+  animation-delay: 5s;
+  opacity: 0.1;
+  left: -5%;
+}
+@keyframes waves {
+  0%, 100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+body.game .bubbles {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+body.game .bubbles span {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  position: absolute;
+  background-color: white;
+  bottom: -10%;
+  animation: bubble 10s ease-in-out infinite var(--play-state);
+}
+@keyframes bubble {
+  0% {
+    opacity: 0;
+    transform: translate3d(-20px, -10%, 0);
+  }
+  25% {
+    transform: translate3d(20px, 0, 0);
+  }
+  50% {
+    transform: translate3d(-20px, 0, 0);
+  }
+  75% {
+    transform: translate3d(20px, 0, 0);
+  }
+  100% {
+    bottom: 100%;
+    transform: translate3d(-20px, 100%, 0);
+  }
+}
+body.game .bubbles span:nth-child(1) {
+  width: 50px;
+  height: 50px;
+  opacity: 0.5;
+  left: 10%;
+  animation-delay: 3s;
+  animation-duration: 10s;
+  opacity: 0.2;
+}
+body.game .bubbles span:nth-child(2) {
+  width: 30px;
+  height: 30px;
+  opacity: 0.5;
+  left: 40%;
+  animation-delay: 1s;
+  animation-duration: 5s;
+  opacity: 0.1;
+}
+body.game .bubbles span:nth-child(3) {
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+  left: 30%;
+  animation-delay: 5s;
+  animation-duration: 20s;
+  opacity: 0.3;
+}
+body.game .bubbles span:nth-child(4) {
+  width: 35px;
+  height: 35px;
+  opacity: 0.5;
+  left: 40%;
+  animation-delay: 8s;
+  animation-duration: 8s;
+  opacity: 0.2;
+}
+body.game .bubbles span:nth-child(5) {
+  width: 45px;
+  height: 45px;
+  opacity: 0.5;
+  left: 60%;
+  animation-delay: 10s;
+  animation-duration: 15s;
+  opacity: 0.1;
+}
+body.game .bubbles span:nth-child(6) {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+  left: 80%;
+  animation-delay: 3s;
+  animation-duration: 30s;
+  opacity: 0.4;
+}
+body.game .bubbles span:nth-child(7) {
+  width: 15px;
+  height: 15px;
+  opacity: 0.5;
+  left: 90%;
+  animation-duration: 25s;
+  opacity: 0.3;
+}
+body.game .bubbles span:nth-child(8) {
+  width: 20px;
+  height: 20px;
+  opacity: 0.5;
+  left: 50%;
+  animation-duration: 10s;
+  opacity: 0.2;
+}
+body.game .shark,
+body.game .fish {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background-color: orange;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
+  animation: fish 40s ease-in infinite var(--play-state);
+}
+body.game .shark {
+  width: 100px;
+  height: 50px;
+  background-color: #1984db;
+  top: 30%;
+  left: 30%;
+  box-shadow: inset 0px -10px 0px rgba(151, 202, 236, 0.7);
+  animation: shark 20s ease-in infinite var(--play-state);
+}
+@keyframes fish {
+  0% {
+    left: calc(100% + 30px);
+    top: 30%;
+  }
+  50% {
+    top: 20%;
+  }
+  100% {
+    left: -20%;
+    top: 30%;
+  }
+}
+@keyframes shark {
+  0% {
+    left: -30%;
+    top: 80%;
+  }
+  50% {
+    top: 70%;
+  }
+  100% {
+    left: 120%;
+    top: 80%;
+  }
+}
+body.game .shark::after,
+body.game .fish::after {
+  width: 20px;
+  height: 20px;
+  background-color: inherit;
+  content: "";
+  position: absolute;
+  right: -20px;
+  animation: tail 2s ease infinite var(--play-state);
+  z-index: -1;
+}
+body.game .shark::after {
+  height: 40px;
+  border-radius: 0 100% 100% 0;
+  animation: sharktail 2s ease infinite var(--play-state);
+}
+body.game .fish::after {
+  border-radius: 10px;
+  top: 30%;
+  animation: tail 2s ease infinite var(--play-state);
+}
+@keyframes tail {
+  0%, 100% {
+    right: -13px;
+  }
+  50% {
+    right: -7px;
+  }
+}
+@keyframes sharktail {
+  0%, 100% {
+    left: -14px;
+  }
+  50% {
+    left: -11px;
+  }
+}
+body.game .shark::before {
+  width: 20px;
+  height: 20px;
+  left: 30px;
+  top: -15px;
+  background-color: inherit;
+  content: "";
+  position: absolute;
+  border-top-right-radius: 100%;
+}
+body.game .shark span,
+body.game .fish span {
+  content: "";
+  position: absolute;
+}
+body.game .shark span:nth-child(1),
+body.game .shark span:nth-child(2),
+body.game .fish span:nth-child(1),
+body.game .fish span:nth-child(2) {
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.1);
+  top: 10px;
+  z-index: -2;
+}
+body.game .fish span:nth-child(1) {
+  left: -2px;
+}
+body.game .fish span:nth-child(2) {
+  z-index: 0;
+  left: 15px;
+}
+body.game .shark span:nth-child(1),
+body.game .shark span:nth-child(2) {
+  width: 20px;
+  height: 30px;
+}
+body.game .shark span:nth-child(1) {
+  left: 75px;
+  top: 7px;
+}
+body.game .shark span:nth-child(2) {
+  z-index: 0;
+  left: 70px;
+  top: 8px;
+}
+body.game .shark span:nth-child(2)::after,
+body.game .fish span:nth-child(2)::after {
+  border-radius: 100%;
+  width: 8px;
+  height: 8px;
+  background-color: #2a2a2a;
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 6px;
+  left: 6px;
+  box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.5);
+  animation: eyes 4s ease infinite var(--play-state);
+}
+body.game .shark span:nth-child(2)::after {
+  width: 6px;
+  height: 6px;
+  left: 9px;
+  animation: sharkEyes 4s ease infinite var(--play-state);
+}
+@keyframes sharkEyes {
+  0%, 100% {
+    top: 9px;
+  }
+  50% {
+    top: 14px;
+  }
+}
+@keyframes eyes {
+  0%, 100% {
+    top: 4px;
+  }
+  50% {
+    top: 10px;
+  }
+}
+body.game .fish span:nth-child(3) {
+  border-radius: 100%;
+  background-color: brown;
+  box-shadow: inset 0px -5px 0px rgba(0, 0, 0, 0.3);
+  top: 20px;
+  left: -5px;
+  z-index: 1;
+  transform: rotate(5deg);
+  border: solid 5px orange;
+  animation: mouth 4s ease infinite var(--play-state);
+}
+body.game .shark span:nth-child(3) {
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  right: 0px;
+  top: 25px;
+  border-radius: 0 50%;
+  z-index: 0;
+}
+body.game .shark span:nth-child(3)::after {
+  background-color: #1984db;
+  width: 6px;
+  height: 4px;
+  border-radius: 0 0 100% 0;
+  content: "";
+  position: inherit;
+}
+@keyframes mouth {
+  0%, 100% {
+    height: 20px;
+    width: 15px;
+  }
+  50% {
+    height: 15px;
+    width: 13px;
+  }
+}
+body.game .fish1,
+body.game .fish2,
+body.game .fish3,
+body.game .fish4,
+body.game .fish5 {
+  position: absolute;
+  width: 40px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0.8;
+  z-index: -3;
+}
+body.game .fish1:after,
+body.game .fish2:after,
+body.game .fish3:after,
+body.game .fish4:after,
+body.game .fish5:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 15px;
+  left: 35px;
+  top: 3px;
+  background-color: inherit;
+  border-radius: 100% 0 0 100%;
+}
+body.game .fish1 {
+  background-color: #e87112;
+  animation: infinite fishMove1 15s ease-out var(--play-state);
+}
+body.game .fish2 {
+  background-color: #01014c;
+  animation: infinite fishMove1 15s ease var(--play-state);
+}
+body.game .fish3 {
+  background-color: #d82973;
+  animation: infinite fishMove2 15s ease-out 5s var(--play-state);
+  transform: rotate(180deg);
+}
+body.game .fish4 {
+  background-color: #5a357d;
+  animation: infinite fishMove2 15s ease 5s var(--play-state);
+  transform: rotate(180deg);
+}
+@keyframes fishMove1 {
+  0% {
+    left: 110%;
+    top: 60%;
+  }
+  50% {
+    top: 40%;
+  }
+  100% {
+    left: -50%;
+    top: 50%;
+  }
+}
+@keyframes fishMove2 {
+  0% {
+    left: -10%;
+    top: 60%;
+  }
+  50% {
+    top: 80%;
+  }
+  100% {
+    left: 150%;
+    top: 60%;
+  }
+}
+
+body.game .problem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  padding: 5em 10em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+body.game .problem.completed {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+  transition: all 0.5s;
+}
+body.game .problem-links {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  min-width: 1.25em;
+  margin: 0;
+  padding: 0;
+}
+body.game .problem-links > li > button {
+  padding: 0.8em;
+  width: 3em;
+  height: 3em;
+  text-align: center;
+  background-color: rebeccapurple;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  position: relative;
+}
+body.game .problem .form {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+body.game .problem .form > fieldset {
+  padding: 0;
+  margin: 0;
+  border: none;
+  color: #fff;
+  font-size: 1.5em;
+  display: flex;
+}
+body.game .problem .form > fieldset > input[type=radio], body.game .problem .form > fieldset > input[type=checkbox] {
+  opacity: 0;
+}
+body.game .problem .form > fieldset > input[type=radio] ~ label, body.game .problem .form > fieldset > input[type=checkbox] ~ label {
+  text-align: center;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  font-size: 0.8em;
+  max-height: 400px;
+  min-width: 200px;
+  cursor: pointer;
+  padding: 1em;
+}
+body.game .problem .form > fieldset > input[type=radio] ~ label > .multiple, body.game .problem .form > fieldset > input[type=checkbox] ~ label > .multiple {
+  margin-top: 160px;
+}
+body.game .problem .form > fieldset > input[type=radio] ~ label > .multiple.even, body.game .problem .form > fieldset > input[type=checkbox] ~ label > .multiple.even {
+  margin-top: 100px;
+}
+body.game .problem .form > fieldset > input[type=radio]:hover + label, body.game .problem .form > fieldset > input[type=radio]:checked + label, body.game .problem .form > fieldset > input[type=radio]:checked + label, body.game .problem .form > fieldset > input[type=checkbox]:hover + label, body.game .problem .form > fieldset > input[type=checkbox]:checked + label, body.game .problem .form > fieldset > input[type=checkbox]:checked + label {
+  background-color: pink;
+}
+body.game .result-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+body.game .result-container > .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  opacity: 0.7;
+}
+body.game .result-container > .result {
+  position: absolute;
+  border-radius: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 600px;
+  height: 500px;
+  transition: width 0.5s;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+body.game .result-container > .result > .user-name {
+  font-size: 50px;
+}
+body.game .result-container > .result > .user-score {
+  font-size: 2em;
+  font-weight: 700;
+}
+
+body.game > .ocean .oxygen-tank {
+  --amount: 100;
+  width: 50px;
+  height: 500px;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  background-color: #fff;
+  border-radius: 50px 50px 15px 15px;
+  z-index: 2;
+}
+body.game > .ocean .oxygen-tank::after {
+  content: "";
+  width: calc(100% - 10px);
+  height: calc(var(--amount) * 1% - 10px);
+  background-color: hsla(var(--amount), 50%, 50%, 0.8);
+  border-radius: inherit;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  box-shadow: inset 10px 0 0px rgba(0, 0, 0, 0.1);
+  transition: ease-in-out 0.1s height;
+}
+
+body.main {
+  position: relative;
+  width: 100%;
+  min-width: 520px;
+  height: 100vh;
+  background: #c0dfef;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+body.main .progress-bar__background {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.8;
+}
+body.main .progress-bar__progress {
+  fill: none;
+  stroke: #53c100;
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  stroke-linecap: round;
+  stroke-width: 1.8;
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+body.main.night {
+  background-color: #194a63;
+}
+body.main .profile-container {
+  position: absolute;
+  top: 30px;
+  left: 60px;
+}
+body.main .profile-container svg {
+  height: 150px;
+  transform: rotate(-90deg);
+  width: 150px;
+}
+body.main .profile-container.active .user {
+  height: 300px;
+}
+body.main .profile-container.active .user__name {
+  font-size: 2rem;
+}
+body.main .profile-container.active .user__status {
+  height: 80%;
+}
+body.main .profile-container.active .profile .line {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+body.main .profile-container.active .profile .line:first-child {
+  transform: translate3d(-50%, -50%, 0) rotate(45deg);
+}
+body.main .profile-container.active .profile .line:nth-child(2) {
+  opacity: 0;
+}
+body.main .profile-container.active .profile .line:last-child {
+  transform: translate3d(-50%, -50%, 0) rotate(-45deg);
+}
+body.main .profile {
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #cc5c5c;
+  margin: 0;
+  padding: 0;
+  transition: background-color ease 0.2s;
+}
+body.main .profile:hover {
+  background-color: #bb3a3a;
+}
+body.main .profile:hover .line {
+  background-color: #e6e6e6;
+}
+body.main .profile .line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 20px;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 3px;
+  transition: all ease 0.25s;
+}
+body.main .profile .line:first-child {
+  top: 35%;
+}
+body.main .profile .line:last-child {
+  top: 65%;
+}
+body.main .user {
+  position: absolute;
+  top: 55px;
+  left: -20px;
+  width: 400px;
+  height: 0;
+  border-radius: 20px;
+  z-index: -1;
+  opacity: 0.7;
+  overflow: hidden;
+  z-index: 3;
+  transition: height 0.3s;
+}
+body.main .user__name {
+  padding: 15px;
+  text-align: center;
+  font-size: 0;
+  height: 20%;
+  background-color: #fff;
+  transition: font-size 0.2s;
+}
+body.main .user__status {
+  top: 20px;
+  left: 20px;
+  width: 100%;
+  height: 0;
+  background-color: #222;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: all 0.3s 0.1s;
+  overflow: hidden;
+}
+body.main .user__status-circle {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  transition: transform 0.3s;
+}
+body.main .user__status-circle:hover {
+  transform: scale(110%, 110%);
+}
+body.main .user__status-circle:hover .progress-rate {
+  font-size: 2.5rem;
+}
+body.main .user__status-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+body.main .user__status-content .progress-title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+body.main .user__status-content .progress-rate {
+  display: block;
+  text-align: center;
+  transition: font-size 0.4s;
+}
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.4;
+  }
+}
+body.main .user__more-btn {
+  position: absolute;
+  padding: 5px 10px;
+  border-radius: 5px;
+  bottom: 2%;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  color: #fff;
+  font-weight: 800;
+  animation: blink 1.4s alternate infinite;
+  cursor: pointer;
+}
+body.main .user__more-btn:hover {
+  background-color: rgba(255, 255, 255, 0.406);
+}
+body.main .user__more-info {
+  width: 100%;
+  height: 300px;
+  display: none;
+}
+body.main .btn {
+  position: absolute;
+  cursor: pointer;
+  text-align: center;
+  background: #cc5c5c;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 50px;
+  font-family: arial;
+  color: #f0f0f0;
+  transform: translateX(-50%);
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+}
+body.main .mode {
+  bottom: 7%;
+  left: 50%;
+  width: 150px;
+  height: 50px;
+}
+body.main .mode:hover {
+  background-color: #bb3a3a;
+  color: #e6e6e6;
+}
+body.main .mode:active {
+  transform: translateX(-50%) scale(90%, 90%);
+}
+body.main .ocean {
+  width: 100%;
+  height: 360vh;
+  position: absolute;
+  top: 70%;
+  background: linear-gradient(#58c8da, #022244);
+  z-index: -2;
+}
+body.main .category {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background-color: #d2d2ff87;
+  text-align: center;
+  border-radius: 50%;
+  transition: 0.15s;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 3px #fff, 1px 1px 3px #fff, 1px 1px 3px #fff;
+  border: 2px solid #9595ff;
+  cursor: pointer;
+}
+body.main .category:hover {
+  font-weight: 800;
+  font-size: 1.7rem;
+  font-size: 2rem;
+  transform: scale(120%, 120%);
+}
+body.main .category:hover .shark__body {
+  top: 0;
+}
+body.main .category__name {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+@keyframes rise {
+  to {
+    bottom: 90%;
+  }
+}
+body.main .bubble {
+  bottom: 0;
+  position: absolute;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  border: 1px solid #9595ff;
+  background: #d2d2ff;
+  opacity: 0.3;
+}
+body.main .bubble-rising {
+  animation: rise 20s linear infinite;
+}
+body.main .boat {
+  position: absolute;
+  bottom: 28%;
+  left: 70%;
+  height: 45px;
+  width: 130px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  background: #cb3a37;
+  z-index: 0;
+  transition: left ease 1s;
+}
+body.main .boat.night {
+  left: 150%;
+}
+body.main .boat .cabin {
+  position: absolute;
+  top: -35px;
+  left: 40px;
+  width: 70px;
+  height: 35px;
+  background: #f5f5f5;
+}
+body.main .boat .cabin::after {
+  content: "";
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background: #8b9a97;
+  z-index: 2;
+  box-shadow: 20px 0 #8b9a97, -20px 0 #8b9a97;
+}
+body.main .boat .top {
+  position: absolute;
+  top: -35px;
+  left: 40px;
+  width: 70px;
+  height: 10px;
+  background: #cb3a37;
+}
+body.main .boat .pole {
+  position: absolute;
+  top: -50px;
+  left: 30px;
+  width: 10px;
+  height: 50px;
+  background: #8b9a97;
+}
+body.main .boat .pole::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 0;
+  left: -5px;
+  background: #8b9a97;
+}
+body.main .land {
+  position: absolute;
+  width: 180px;
+  height: 50px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border: 3px solid #d8be83;
+  background: #f0d492;
+  bottom: 25%;
+  left: 25%;
+}
+body.main .land .tree {
+  position: absolute;
+  width: 30px;
+  height: 100px;
+  background: #b45f08;
+  top: -100px;
+  left: 50%;
+  transform: translate3d(-50%, 10%, 0);
+  z-index: -1;
+}
+body.main .land .tree .leaf {
+  position: absolute;
+  top: -30px;
+  left: 10px;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border-top: 30px solid #69bf27;
+  z-index: -2;
+}
+body.main .land .tree .leaf::after {
+  content: "";
+  position: absolute;
+  top: -60px;
+  left: 0px;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border-top: 30px solid #69bf27;
+  transform: rotate(-30deg);
+}
+body.main .land .tree .leaf.left {
+  left: -80px;
+}
+body.main .land .tree .leaf.left::after {
+  transform: rotate(30deg);
+}
+body.main .bird {
+  position: absolute;
+  top: 10%;
+  left: 30%;
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border-top: 5px solid black;
+  transform: rotate(10deg);
+  z-index: -3;
+  transition: top ease 0.5s;
+}
+body.main .bird::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 28px;
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  border-top: 5px solid black;
+  transform: rotate(-10deg);
+}
+body.main .bird.two {
+  top: 14%;
+  left: 34%;
+}
+body.main .bird.three {
+  top: 40%;
+  left: 80%;
+}
+body.main .bird.night {
+  top: 100%;
+}
+body.main .sun {
+  position: absolute;
+  background: #ffde7b;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border: 8px solid #debd56;
+  top: 8%;
+  right: 20%;
+  transition: top ease 0.35s;
+  z-index: -3;
+  transition-delay: 0.25s;
+}
+body.main .sun::after {
+  content: "";
+  position: absolute;
+  left: -5%;
+  top: 50%;
+  width: 60px;
+  height: calc(50px * 0.3);
+  border-radius: 2em;
+  box-shadow: -25px -8px white, -50px 0 white;
+  background: white;
+}
+body.main .sun.night {
+  top: 90%;
+}
+body.main .moon {
+  position: absolute;
+  background: #ffefb5;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  border: 8px solid #caba94;
+  top: -20%;
+  right: 20%;
+  transition: all ease 0.25s;
+  transition-delay: 0.25s;
+  background-image: radial-gradient(circle at 60% 10%, #caba94 15%, transparent 0), radial-gradient(circle at 30% 50%, #caba94 10%, transparent 0), radial-gradient(circle at 60% 70%, #caba94 13%, transparent 0);
+}
+body.main .moon.night {
+  top: 8%;
+}
+body.main .stars {
+  background: #96cae5;
+  position: absolute;
+  top: -400px;
+  left: 40%;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  transition: top ease 0.25s;
+  transition-delay: 0.25s;
+  box-shadow: 70px 70px 0 #96cae5, -100px 80px 0 #96cae5, 200px 10px 0 #96cae5, 130px 180px 0 #96cae5, -120px -10px 0 #96cae5, -200px 170px 0 #96cae5, -280px 110px 0 #96cae5, -320px 20px 0 #96cae5, 320px 170px 0 #96cae5, 430px 60px 0 #96cae5, 480px 190px 0 #96cae5;
+  z-index: -3;
+}
+body.main .stars.night {
+  top: 30px;
+}
+body.main .overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(34, 34, 34, 0.9);
+}
+body.main .login-form {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+body.main .login-label {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 30px;
+}
+body.main .login-input {
+  border: 2px solid #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  padding-left: 10px;
+  height: 40px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.5rem;
+  background-color: transparent;
+  font-weight: 800;
+}
+body.main .login-btn {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+body.main .login-btn:hover, body.main .login-btn:focus {
+  border: 4px solid #53c100;
+  color: #53c100;
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+body.main .greeting {
+  text-align: center;
+  font-size: 3rem;
+  padding-top: 200px;
+  color: #022244;
+  text-shadow: 1px 1px 5px #fff;
+  animation: fadeOut 1.5s linear;
+}
+body.main .sea {
+  margin: 70px auto 80px auto;
+  overflow: hidden;
+}
+body.main .sea .bubble {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #6bafca;
+  opacity: 0.9;
+  animation: bubble1-h-movement 1s ease-in infinite, bubble1-v-movement 300ms ease-in-out infinite alternate, bubble-scale-movement 300ms ease-in-out infinite alternate;
+}
+body.main .sea .bubble:after {
+  position: absolute;
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #6bafca;
+  opacity: 0.9;
+}
+body.main .sea .bubble:after {
+  top: -20;
+  left: 100px;
+  width: 9px;
+  height: 9px;
+}
+body.main .sea .circle-wrapper {
+  position: relative;
+  background: linear-gradient(#2c647a, #204858);
+  width: 300px;
+  height: 300px;
+  margin: 10px auto 0 auto;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 50%;
+  padding: 0 50px 0 50px;
+  border: 6px solid #3e8caa;
+}
+body.main .sea .submarine-wrapper {
+  height: 300px;
+  width: 300px;
+  padding: 30px 50px 30px 150px;
+  margin: 0 auto 0 auto;
+  animation: diving 3s ease-in-out infinite, diving-rotate 3s ease-in-out infinite;
+}
+body.main .sea .submarine-wrapper .submarine-body {
+  width: 150px;
+  height: 80px;
+  position: absolute;
+  margin-top: 50px;
+  left: 25px;
+  background-color: #d93a54;
+  border-radius: 40px;
+  background: linear-gradient(#d93a54, #bc243d);
+}
+body.main .sea .submarine-wrapper .submarine-body .light {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 40px 150px 40px;
+  border-color: transparent transparent #377c98 transparent;
+  transform: rotate(-50deg);
+  top: 40px;
+  left: 99%;
+}
+body.main .sea .submarine-wrapper .submarine-body .light:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 13px;
+  border-radius: 5px;
+  background-color: #d12844;
+  margin-left: -10px;
+}
+body.main .sea .submarine-wrapper .submarine-body .window {
+  width: 37px;
+  height: 37px;
+  position: absolute;
+  margin-top: 23px;
+  right: 18px;
+  background: linear-gradient(#1e4554, #183642);
+  border-radius: 50%;
+  border: 3px solid #d93a54;
+}
+body.main .sea .submarine-wrapper .submarine-body .window:after {
+  content: "";
+  position: absolute;
+  margin-top: 3px;
+  margin-left: 3px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: transparent;
+  opacity: 0.8;
+  border-top: 3px solid white;
+  transform: rotate(-45deg);
+}
+body.main .sea .submarine-wrapper .submarine-body .engine {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  margin-top: 32px;
+  left: 53px;
+  background-color: #bc243d;
+  border-radius: 50%;
+  border: 5px solid #d93a54;
+}
+body.main .sea .submarine-wrapper .submarine-body .engine:after, body.main .sea .submarine-wrapper .submarine-body .engine:before {
+  position: absolute;
+  content: "";
+  border-radius: 2px;
+  background-color: white;
+  animation: spin 900ms linear infinite;
+  opacity: 0.8;
+}
+body.main .sea .submarine-wrapper .submarine-body .engine:after {
+  top: 8px;
+  width: 20px;
+  height: 4px;
+}
+body.main .sea .submarine-wrapper .submarine-body .engine:before {
+  left: 8px;
+  width: 4px;
+  height: 20px;
+}
+body.main .sea .submarine-wrapper .helix {
+  width: 30px;
+  height: 70px;
+  position: absolute;
+  margin-top: 55px;
+  left: 0;
+  background-color: #d93a54;
+  border-radius: 7px;
+  background: linear-gradient(#d93a54, #bc243d);
+}
+body.main .sea .submarine-wrapper .helix:after {
+  content: "";
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 7px;
+  width: 17px;
+  height: 60px;
+  border-radius: 3px;
+  background-color: transparent;
+  opacity: 0.8;
+  background: linear-gradient(to bottom, #d93a54, #d93a54 50%, #e57a8c 50%, #e57a8c);
+  background-size: 100% 20px;
+  animation: helix-movement 110ms linear infinite;
+}
+body.main .sea .submarine-wrapper .hat {
+  width: 65px;
+  height: 25px;
+  position: absolute;
+  margin-top: 26px;
+  left: 70px;
+  background-color: #d93a54;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(#d93a54, #d72d49);
+}
+body.main .sea .submarine-wrapper .hat .periscope {
+  position: absolute;
+  width: 7px;
+  height: 20px;
+  background-color: #d93a54;
+  margin-top: -27px;
+  margin-left: 32px;
+  border-radius: 5px 5px 0 0;
+}
+body.main .sea .submarine-wrapper .hat .periscope:after, body.main .sea .submarine-wrapper .hat .periscope:before {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 7px;
+  border-radius: 5px;
+  background-color: #d93a54;
+}
+body.main .sea .submarine-wrapper .hat .leds-wrapper {
+  width: 53px;
+  height: 13px;
+  position: relative;
+  top: 7px;
+  left: 7px;
+  background-color: #d93a54;
+  border-radius: 10px;
+  background: linear-gradient(#b3233a, #a21f35);
+}
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds {
+  position: absolute;
+  margin-top: 4px;
+  margin-left: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: white;
+  animation: leds-off 500ms linear infinite;
+}
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:after, body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: white;
+}
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:after {
+  margin-top: 0px;
+  margin-left: 17px;
+}
+body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:before {
+  margin-top: 0px;
+  margin-left: 34px;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes leds-off {
+  100% {
+    opacity: 0.3;
+  }
+}
+@keyframes helix-movement {
+  100% {
+    background: linear-gradient(to bottom, #e57a8c 50%, #e57a8c, #d93a54, #d93a54 50%);
+    background-size: 100% 20px;
+  }
+}
+@keyframes diving {
+  0% {
+    margin-top: 5px;
+  }
+  50% {
+    margin-top: 15px;
+  }
+  100% {
+    margin-top: 5px;
+  }
+}
+@keyframes diving-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+@keyframes bubble1-h-movement {
+  0% {
+    margin-left: 80%;
+  }
+  100% {
+    margin-left: -100%;
+  }
+}
+@keyframes bubble2-h-movement {
+  0% {
+    margin-left: 65%;
+  }
+  100% {
+    margin-left: -5%;
+  }
+}
+@keyframes bubble1-v-movement {
+  0% {
+    margin-top: 115px;
+  }
+  100% {
+    margin-top: 160px;
+  }
+}
+@keyframes bubble2-v-movement {
+  0% {
+    margin-top: 115px;
+  }
+  100% {
+    margin-top: 90px;
+  }
+}
+@keyframes bubble-scale-movement {
+  0% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+@keyframes light-movement {
+  0% {
+    transform: rotate(-40deg);
+  }
+  50% {
+    transform: rotate(-70deg);
+  }
+  100% {
+    transform: rotate(-40deg);
+  }
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html,
+html * {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  --play-state: running;
+}
+
+.a11y-hidden {
+  /* 임시 */
+  display: none;
+}
+
+.icon {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+button {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/*# sourceMappingURL=style.css.map */
