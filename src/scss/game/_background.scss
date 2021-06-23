@@ -508,6 +508,35 @@ body.game {
       top: 60%;
     }
   }
+  .overlay {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0,0,0, 80%);
+  }
+  .loading {
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate3d(-50%, -50%, 0);
+    &__text {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 10px;
+    }
+  }
+  .spinner {
+    animation: spinner infinite 2s linear;
+  }
+  @keyframes spinner {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 }
-
-

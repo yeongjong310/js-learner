@@ -470,7 +470,31 @@ const gameUtils = (() => {
           <div class="oxygen"></div>
         </aside>
       </section>
+      <div class="overlay">
+        <div class="loading">
+          <svg class="spinner" width="100" height="100">
+            <circle cx="50" cy="50" r="40"
+            stroke="rgba(100, 100, 100, 0.4)"
+            stroke-width="10"
+            fill='rgba(0, 0, 0, 0)' />
+            <circle cx="50" cy="50" r="40"
+            stroke="rgb(25, 132, 219)" stroke-width="10"
+            stroke-dasharray="314" stroke-dashoffset="270"
+            stroke-linecap="round" fill='rgba(0,0,0,0)' />
+          <div class="loading__text">LOADING</div>
+        </div>
+      </div>
       `;
+    const timer = setInterval(() => {
+      const $loadingText = document.querySelector('.loading__text');
+      $loadingText.textContent = $loadingText.textContent.length >= 12
+        ? 'LOADING'
+        : $loadingText.textContent + ' .';
+    }, 250);
+
+    setTimeout(() => {
+      clearInterval(timer);
+    }, 2000);
   };
 
   const oxygenTank = (() => {
@@ -513,7 +537,7 @@ const gameUtils = (() => {
 
 // document.body.classList.add('game');
 // gameUtils.renderGameBackground();
-// gameUtils.oxygenTank.init(0.1);
+// gameUtils.oxygenTank.init(0);
 
 const gamePage = (function () {
   // data
