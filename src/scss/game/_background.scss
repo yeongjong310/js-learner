@@ -21,7 +21,7 @@ body.game {
     width: 93vw;
     height: 90vh;
     overflow: hidden;
-    background-image: linear-gradient(0deg, #022244, #58c8da);
+    background-image: linear-gradient(#58c8da, #022244);
     z-index: -2;
     top: 50%;
     left: 50%;
@@ -41,7 +41,7 @@ body.game {
       }
     }
 
-    animation: blinkRed 1s ease infinite;
+    animation: blinkRed 1s ease infinite var(--play-state);
   }
 
   // 상단 물결, 타원을 그리고 absolute로 배치
@@ -55,7 +55,7 @@ body.game {
     top: -80px;
     left: -10%;
     border-radius: 100%;
-    animation: waves 10s ease infinite;
+    animation: waves 10s ease infinite var(--play-state);
     opacity: 0.2;
   }
 
@@ -94,7 +94,7 @@ body.game {
     position: absolute;
     background-color: white;
     bottom: -10%;
-    animation: bubble 10s ease-in-out infinite;
+    animation: bubble 10s ease-in-out infinite var(--play-state);
   }
 
   @keyframes bubble {
@@ -205,7 +205,7 @@ body.game {
     top: 50%;
     left: 50%;
     box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
-    animation: fish 40s ease-in infinite;
+    animation: fish 40s ease-in infinite var(--play-state);
   }
 
   .shark {
@@ -215,7 +215,7 @@ body.game {
     top: 30%;
     left: 30%;
     box-shadow: inset 0px -10px 0px rgba(151, 202, 236, 0.7);
-    animation: shark 20s ease-in infinite;
+    animation: shark 20s ease-in infinite var(--play-state);
   }
 
   @keyframes fish {
@@ -254,18 +254,18 @@ body.game {
     content: '';
     position: absolute;
     right: -20px;
-    animation: tail 2s ease infinite;
+    animation: tail 2s ease infinite var(--play-state);
     z-index: -1;
   }
   .shark::after {
     height: 40px;
     border-radius: 0 100% 100% 0;
-    animation: sharktail 2s ease infinite;
+    animation: sharktail 2s ease infinite var(--play-state);
   }
   .fish::after {
     border-radius: 10px;
     top: 30%;
-    animation: tail 2s ease infinite;
+    animation: tail 2s ease infinite var(--play-state);
   }
 
   @keyframes tail {
@@ -359,13 +359,13 @@ body.game {
     top: 6px;
     left: 6px;
     box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.5);
-    animation: eyes 4s ease infinite;
+    animation: eyes 4s ease infinite var(--play-state);
   }
   .shark span:nth-child(2)::after {
     width: 6px;
     height: 6px;
     left: 9px;
-    animation: sharkEyes 4s ease infinite;
+    animation: sharkEyes 4s ease infinite var(--play-state);
   }
   @keyframes sharkEyes {
     0%,
@@ -396,7 +396,7 @@ body.game {
     z-index: 1;
     transform: rotate(5deg);
     border: solid 5px orange;
-    animation: mouth 4s ease infinite;
+    animation: mouth 4s ease infinite var(--play-state);
   }
 
   .shark span:nth-child(3) {
@@ -461,23 +461,23 @@ body.game {
   
   .fish1 {
     background-color: #e87112;
-    animation: infinite fishMove1 15s ease-out;
+    animation: infinite fishMove1 15s ease-out var(--play-state);
   }
 
   .fish2 {
     background-color: #01014c;
-    animation: infinite fishMove1 15s ease;
+    animation: infinite fishMove1 15s ease var(--play-state);
   }
   
   .fish3 {
     background-color: #d82973;
-    animation: infinite fishMove2 15s ease-out 5s;
+    animation: infinite fishMove2 15s ease-out 5s var(--play-state);
     transform: rotate(180deg);
   }
 
   .fish4 {
     background-color: #5a357d;
-    animation: infinite fishMove2 15s ease 5s;
+    animation: infinite fishMove2 15s ease 5s var(--play-state);
     transform: rotate(180deg);
   }
 
