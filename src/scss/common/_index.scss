@@ -10,7 +10,25 @@ html * {
   margin: 0;
 }
 
+body {
+  --play-state: running;
+}
+
 .a11y-hidden {
   /* 임시 */
   display: none;
+}
+
+.icon {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+button {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1rem;
 }

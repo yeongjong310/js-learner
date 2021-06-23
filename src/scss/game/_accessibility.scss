@@ -1,0 +1,43 @@
+.accessibility {
+  position: fixed;
+  right: 10px;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+  display: flex;
+  &__menu-btn {
+    display: flex;
+    border-radius: 50%;
+    background-color: #3e7faa;
+    width: 80px;
+    height: 80px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    > img {
+      width: 90%;
+      height: 90%;
+      border: 5px solid #fff;
+      margin: auto;
+      border-radius: 50%;
+    }
+  }
+  &__menu {
+    order: -1;
+    display: none;
+    list-style-type: none;
+    ul {
+      display: flex;
+      list-style-type: none;
+      height: 100%;
+    }
+    .accessibility__btn {
+      width: 150px;
+      height: 100%;
+      border-radius: 50% 0 0 50%;
+      border: 2px solid #fff;
+    }
+    &.on {
+      display: inline-block;
+    }
+  }
+}
