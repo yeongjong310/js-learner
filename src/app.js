@@ -145,7 +145,7 @@ const mainPage = (function () {
   <div class="bird two"></div>
   <div class="bird three"></div>
   <div class="scroll-del-wrapper">
-  <div class="btn mode scroll-del" role="button">HARD</div>
+  <div class="btn mode scroll-del" role="button">EASY MODE</div>
   <div class="arrow arrow-left scroll-del"></div>
   <div class="arrow arrow-right scroll-del"></div>
   <div class="scroll-up">GO DIVE !</div>
@@ -301,10 +301,10 @@ const mainPage = (function () {
             'click',
             throttle(() => {
               if (mode === 'HARD') {
-                // EASY MODE
+                // HARD MODE
                 mode = 'EASY';
                 document.body.classList.remove('night');
-                modeBtn.textContent = 'HARD';
+                modeBtn.textContent = 'EASY MODE';
                 sun.classList.remove('night');
                 moon.classList.remove('night');
                 stars.classList.remove('night');
@@ -313,10 +313,10 @@ const mainPage = (function () {
 
                 return;
               }
-              // HARD MODE
+              // EASY MODE
               mode = 'HARD';
               document.body.classList.add('night');
-              modeBtn.textContent = 'EASY';
+              modeBtn.textContent = 'HARD MODE';
               birds.forEach(bird => bird.classList.add('night'));
               sun.classList.add('night');
               moon.classList.add('night');
@@ -337,11 +337,11 @@ const mainPage = (function () {
             const currentY = window.scrollY;
 
             document.querySelectorAll('.scroll-del').forEach(e => {
-              e.classList.toggle('disable', currentY > 100);
+              e.classList.toggle('disable', currentY > 200);
             });
             document
               .querySelector('.scroll-up')
-              .classList.toggle('able', currentY > 100);
+              .classList.toggle('able', currentY > 200);
           }, 50)
         );
 
