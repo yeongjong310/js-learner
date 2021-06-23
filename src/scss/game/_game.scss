@@ -7,6 +7,22 @@ body.game {
     color: #fff;
   }
 
+  .countdown {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    opacity: 1;
+    animation: countingBlink 1s ease 1s infinite;
+    font-size: 4em;
+  }
+
+  @keyframes countingBlink {
+    to {
+      opacity: 0;
+    }
+  }
+
   @keyframes showup {
     to {
       opacity: 1;
@@ -15,13 +31,12 @@ body.game {
 
   .problem {
     opacity: 0;
-    position: absolute;
-    width: 70%;
-    top: 25%;
-    left: 50%;
-    transform: translate3d(-50%, -50%, 0);
-    // animation: showup 0.5s ease linear;
+    width: 100%;
+    height: 100%;
+    padding: 5em;
     animation: showup 0.6s forwards ease;
+    display: flex;
+    justify-content: center;
 
     &.completed {
       display: none;
@@ -30,25 +45,45 @@ body.game {
 
   .form {
     height: 100%;
+    width: 100%;
+    display: flex;
+    align-content: space-around;
+    justify-content: center;
 
     & > fieldset {
       height: 100%;
+      width: 100%;
       text-align: center;
       border: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+
+      & > legend {
+        font-size: 1.5em;
+      }
     }
 
     &__selections {
-      margin-top: 30px;
+      height: auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    &__selection:focus-within {
+      background-color: #b7e2a8;
     }
 
     &__selection {
-      position: absolute;
       width: 250px;
-      background-color: #f0d492;
+      background-color: #f0f0f0;
       border-radius: 20px;
-      transition: background-color 0.2s;
       opacity: 0.8;
       color: #222;
+      position: relative;
+      box-sizing: border-box;
 
       & > .jelly-fish,
       & > input,
@@ -84,18 +119,24 @@ body.game {
       & > input[type='radio']:checked,
       & > input[type='checkbox']:checked {
         & + label {
-          background-color: #cc5c5c;
+          background-color: #b7e2a8;
+          height: 100%;
         }
       }
     }
 
     &__selection:hover {
-      background-color: #cc5c5c;
+      background-color: #b7e2a8;
+      transform: scale(95%);
+    }
+
+    .fly-slightly {
+      position: relative;
+      top: -100px;
     }
 
     .btn {
       position: relative;
-      top: 650px;
       cursor: pointer;
       text-align: center;
       background: #cc5c5c;
@@ -117,7 +158,7 @@ body.game {
     width: 400px;
     height: 70px;
     margin: 0 auto;
-    background-color: #f0d492;
+    background-color: #f0f0f0;
     border-radius: 20px;
     // overflow: hidden;
 
@@ -135,6 +176,7 @@ body.game {
     font-size: 1.2em;
     background-color: transparent;
     height: 100%;
+    width: 100%;
     border-radius: 20px;
     text-align: center;
 
@@ -144,19 +186,33 @@ body.game {
   }
 
   .overlay {
+    overflow: auto;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background-color: #000;
-    opacity: 0.7;
+    opacity: 0;
+    animation: overlayDarker 1s forwards linear;
+  }
+
+  @keyframes overlayDarker {
+    to {
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes resultPopupSlowly {
+    to {
+      transform: translate3d(-50%, -280%, 0);
+    }
   }
 
   .result {
     position: absolute;
     border-radius: 20px;
-    top: 50%;
+    top: 150%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
     width: 600px;
@@ -167,13 +223,15 @@ body.game {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    animation: resultPopupSlowly 0.8s forwards 1s ease;
+    z-index: 4;
 
     & > .user-name {
       font-size: 50px;
     }
 
     & > .user-score {
-      font-size: 2em;
+      font-size: 4em;
       font-weight: 700;
     }
 
