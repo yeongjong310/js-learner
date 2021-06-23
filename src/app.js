@@ -1,9 +1,12 @@
+let user = {
+  name: 'GUEST',
+  solved: 53,
+  correct: 49,
+  stageCleared: 2
+};
+
 const mainPage = (function () {
   let mode = 'EASY';
-  let user = {
-    name: 'John',
-    session: false
-  };
   const categories = [
     {
       id: 1,
@@ -34,6 +37,10 @@ const mainPage = (function () {
   };
 
   const getUserSession = () => localStorage.getItem('userName');
+  const getCorrectRate = () => Math.floor((user.correct / user.solved) * 100);
+  const getStageClearRate = () =>
+    Math.floor((user.stageCleared / categories.length) * 100);
+
   const fetch = () => {
     document.body.style.setProperty(
       'overflow-y',
@@ -51,24 +58,24 @@ const mainPage = (function () {
       <h2 class="user__name">${user.name}</h2>
       <div class="user__status">
         <section class="user__status-circle">
-          <svg class="user__status-svg" viewBox="-1 -1 34 34">
+          <svg xmlns="http://www.w3.org/2000/svg" class="user__status-svg" viewBox="-1 -1 34 34">
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__background"
             />
 
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__progress js-progress-bar"
             />
           </svg>
           <div class="user__status-content">
-            <p class="progress-title">Study</p>
-            <span class="progress-rate">55%</span>
+            <p class="progress-title">STAGE</p>
+            <span class="progress-rate">${getStageClearRate()}%</span>
           </div>
         </section>
         <section class="user__status-circle">
@@ -76,20 +83,20 @@ const mainPage = (function () {
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__background"
             />
 
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__progress js-progress-bar"
             />
           </svg>
           <div class="user__status-content">
-            <p class="progress-title">Correct</p>
-            <span class="progress-rate">87%</span>
+            <p class="progress-title">CORRECT</p>
+            <span class="progress-rate">${getCorrectRate()}%</span>
           </div>
         </section>
       </div>
@@ -355,43 +362,23 @@ const mainPage = (function () {
         document.querySelector('.profile').addEventListener(
           'click',
           throttle(e => {
-            if (
-              !e.target
-                .closest('.profile-container')
-                .classList.contains('active')
-            ) {
-              // TODO: 리팩토링
-              const percentageCompletes = [0.55, 0.87];
-              const strokeDashOffsetValues = [
-                100 - percentageCompletes[0] * 100,
-                100 - percentageCompletes[1] * 100
-              ];
-              const $progressBars =
-                document.querySelectorAll('.js-progress-bar');
-              [...$progressBars].forEach(($bar, idx) => {
-                $bar.style.setProperty(
-                  'stroke-dashoffset',
-                  strokeDashOffsetValues[idx]
-                );
-              });
-            } else {
-              // TODO: 리팩토링
-              const percentageCompletes = [0, 0];
-              const strokeDashOffsetValues = [
-                100 - percentageCompletes[0] * 100,
-                100 - percentageCompletes[1] * 100
-              ];
-              const $progressBars =
-                document.querySelectorAll('.js-progress-bar');
-              [...$progressBars].forEach(($bar, idx) => {
-                $bar.style.setProperty(
-                  'stroke-dashoffset',
-                  strokeDashOffsetValues[idx]
-                );
-              });
-            }
+            const $progressBars = document.querySelectorAll('.js-progress-bar');
+            const percentageCompletes = [getStageClearRate(), getCorrectRate()];
+
+            [...$progressBars].forEach(($bar, idx) => {
+              $bar.style.setProperty(
+                'stroke-dashoffset',
+                100 -
+                  (!e.target
+                    .closest('.profile-container')
+                    .classList.contains('active')
+                    ? percentageCompletes[idx]
+                    : 0)
+              );
+            });
+
             e.target.closest('.profile-container').classList.toggle('active');
-          }, 500)
+          }, 700)
         );
 
         if (!getUserSession()) {
@@ -603,11 +590,11 @@ const gamePage = (function () {
         },
         {
           id: 2,
-          content: '자바스크립트에서는 함수도 값이다.'
+          content: 'JS에서는 함수도 값이다.'
         },
         {
           id: 3,
-          content: '자바스크립트의 배열은 기본적으로 희소배열이 아니다.'
+          content: 'JS의 배열은 기본적으로 희소배열이 아니다.'
         },
         {
           id: 4,
@@ -644,47 +631,236 @@ const gamePage = (function () {
   const $body = document.body;
 
   // states
-  let currentProblemIdx = 0;
-  let userAnswers = [];
-  const problems = [...PROBLEMS].map(problem => ({
-    ...problem,
-    completed: false
-  }));
+  let currentProblemIdx;
+  let $problemSections;
+  let problems;
 
-  // game initial settings
-  const init = () => {
-    $body.className = 'game';
-    gameUtils.renderGameBackground();
-    gameUtils.oxygenTank.init(0.5, renderResult);
+  // initialize states
+  const initialStates = () => {
+    currentProblemIdx = 0;
+    $problemSections = [];
+    problems = [...PROBLEMS].map(problem => ({
+      ...problem,
+      completed: false,
+      correct: false
+    }));
   };
 
-  const renderResult = () => {
-    const checkCorrectness = () => {
-      const isEqual = (array1, array2) => {
-        if (array1.length !== array2.length) return false;
-        array1.sort();
-        array2.sort();
-        for (let i = 0; i < array1.length; i++) {
-          if (array1[i] !== array2[i]) return false;
-        }
+  // append problem section to $body
+  const appendProblem = () => {
+    const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
 
-        return true;
-      };
+    const {
+      id: problemId,
+      type: problemType,
+      question,
+      sub,
+      options
+    } = problems[currentProblemIdx];
 
-      userAnswers.forEach(userAnswer => {
-        const correctAnswer = ANSWERS.find(
-          answer => answer.problemId === userAnswer.problemId
-        );
-        userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
-      });
-    };
+    const $defaultProblemsSection = $body.querySelector('.problems');
 
-    checkCorrectness();
-    const correct = userAnswers.filter(userAnswer => userAnswer.correct).length;
-    const totalCnt = problems.length;
-    const $result = document.createElement('section');
-    $result.className = 'result-container';
-    $result.innerHTML = `
+    const $sectionProblem = document.createElement('section');
+    $sectionProblem.className = 'problem';
+    const $innerForm = document.createElement('form');
+    $innerForm.className = 'form';
+    $innerForm.setAttribute('data-problem-id', problemId);
+    $innerForm.setAttribute('data-problem-type', problemType);
+
+    if (problemType === PROBLEM_TYPES.MULTIPLE_SINGLE) {
+      $innerForm.innerHTML = `
+        <fieldset>
+          <legend>
+            ${question}
+          </legend>
+          <div>
+            ${sub}
+          </div>
+          <section class="form__selections">
+            ${options
+              .map(
+                ({ id: optionId, content }, idx) => `
+              <div class="form__selection" style="top: ${
+                Math.random() * 100 * 2 + 100
+              }px;left:${idx * 400}px">
+                <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}"/>
+                <input
+                  type='radio'
+                  id=question${problemId}-option${optionId}
+                  data-option-id=${optionId}
+                  name='option'
+                  class="a11y-hidden"
+                />
+                <label
+                  for=question${problemId}-option${optionId}
+                >
+                  ${content}
+                </label>
+              </div>
+            `
+              )
+              .join('')}
+            </section>
+            <button class="btn" type='submit'>SUBMIT</button>
+        </fielset>
+      `;
+    }
+    if (problemType === PROBLEM_TYPES.MULTIPLE_MULTIPLE) {
+      $innerForm.innerHTML = `
+        <fieldset>
+          <legend>
+            ${question}
+          </legend>
+          <div>
+            ${sub}
+          </div>
+          <section class="form__selections">
+          ${options
+            .map(
+              ({ id: optionId, content }, idx) => `
+              <div class="form__selection" style="top: ${
+                Math.random() * 100 * 2 + 150
+              }px;left:${idx * 400}px">
+                <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
+                <input
+                  type='checkbox'
+                  id=question${problemId}-option${optionId}
+                  data-option-id=${optionId}
+                  name='option'
+                  class="a11y-hidden"
+                />
+                <label
+                  for=question${problemId}-option${optionId}
+                >
+                  ${content}
+                </label>
+              </div>
+          `
+            )
+            .join('')}
+            </section>
+            <button class="btn" type='submit'>SUBMIT</button>
+        </fielset>
+      `;
+    }
+    if (problemType === PROBLEM_TYPES.OX) {
+      $innerForm.innerHTML = `
+        <fieldset>
+          <legend>
+            ${question}
+          </legend>
+          <div>
+            ${sub}
+          </div>
+          <section class="form__selections">
+            ${options
+              .map(
+                ({ id: optionId, content }, idx) => `
+              <div class="form__selection" style="top: ${200}px;left:${
+                  idx * 400 + 400
+                }px">
+                <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
+                <input
+                  type='radio'
+                  id=question${problemId}-option${optionId}
+                  data-option-id=${optionId}
+                  name='option'
+                  class="a11y-hidden"
+                />
+                <label
+                  for=question${problemId}-option${optionId}
+                >
+                  ${content}
+                </label>
+              </div>
+            `
+              )
+              .join('')}
+          </section>
+          <button class="btn" type='submit'>SUBMIT</button>
+        </fielset>
+      `;
+    }
+    if (problemType === PROBLEM_TYPES.SHORT) {
+      $innerForm.innerHTML = `
+        <fieldset>
+          <legend>
+            ${question}
+          </legend>
+          <div class="sub">
+            ${sub}
+          </div>
+          <section class="form__selections">
+            <div class="input__answer">
+              <img width='100' src='${SVG_CHARACTER_SRC}' />
+              <input
+                type="text"
+                placeholder="답을 입력하세요"
+                id=question${problemId}
+                class='input__short-type'
+              />
+            </div>
+          </section>
+          <button class="btn" type='submit'>SUBMIT</button>
+        </fielset>
+      `;
+    }
+
+    $problemSections = [...$problemSections, $sectionProblem];
+    $sectionProblem.appendChild($innerForm);
+    $defaultProblemsSection.appendChild($sectionProblem);
+    registerFormEvent($innerForm);
+  };
+
+  // append problem control
+  // const appendControl = () => {
+  //   const $sectionControl = document.createElement('section');
+  //   $sectionControl.className = 'problem-control';
+  //   const $nextBtn = document.createElement('button');
+  //   // const $prevBtn = document.createElement('button');
+
+  //   $nextBtn.className = 'next';
+  //   $nextBtn.textContent = '>>';
+  //   // $prevBtn.className = 'prev';
+  //   // $prevBtn.textContent = '<<';
+
+  //   // $prevBtn.addEventListener('click', moveProblem.prev);
+  //   $nextBtn.addEventListener('click', moveProblem.next);
+
+  //   $sectionControl.appendChild($nextBtn);
+  //   // $sectionControl.appendChild($prevBtn);
+
+  //   $body.appendChild($sectionControl);
+  // };
+
+  // initial game setting
+  const initializeGame = () => {
+    $body.className = 'game';
+    gameUtils.renderGameBackground();
+    initialStates();
+    const $defaultProblemsSection = document.createElement('section');
+    $defaultProblemsSection.className = 'problems';
+    $body.appendChild($defaultProblemsSection);
+    // appendControl(); // 문제 이동 버튼
+    appendProblem();
+  };
+
+  // hide existing problem
+  const hideExistingProblem = () => {
+    const $allProblems = [...$body.querySelectorAll('.problem')];
+    const $currentProblem = $allProblems[$allProblems.length - 1];
+    $currentProblem.classList.add('completed');
+  };
+
+  // show result
+  const showResult = () => {
+    const correctProblemCnt = problems.filter(
+      problem => problem.correct
+    ).length;
+    const totalProblemLength = problems.length;
+    const $resultSection = document.createElement('section');
+    $resultSection.className = 'results';
+    $resultSection.innerHTML = `
       <div class="overlay"></div>
       <div class="result">
         <div class="user-name">
@@ -692,248 +868,350 @@ const gamePage = (function () {
           great! John
           <span>&#127881;</span>
         </div>
-        <div class="user-score">${correct} / ${totalCnt}
-        <button class="close"></button>
+        <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
+        <button class="close">HOME</button>
       </div>
     `;
 
-    $body.appendChild($result);
-
-    $result.addEventListener('click', e => {
-      if (!e.target.matches('.overlay')) return;
+    $body.appendChild($resultSection);
+    $body.querySelector('.close').addEventListener('click', () => {
       mainPage.render();
     });
   };
 
-  const renderProblem = () => {
-    const next = idx => {
-      problems[currentProblemIdx].completed = true;
-      currentProblemIdx = idx + 1;
-      renderProblem();
-    };
+  // check correctness
+  const checkCorrect = () => {
+    const $currentProblem = $problemSections[currentProblemIdx];
+    const $currentForm = $currentProblem.querySelector('form');
+    const { dataset } = $currentForm;
+    const problemId = +dataset.problemId;
+    const problemType = +dataset.problemType;
+    let userAnswers = [];
 
-    // $body.innerHTML = '';
-
-    const $options = (() => {
-      const { id: problemId, type, options } = problems[currentProblemIdx];
-
-      switch (type) {
-        case PROBLEM_TYPES.MULTIPLE_SINGLE:
-          return options
-            .map(
-              ({ id, content }, idx) => `
-              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
-                <div class="fish-leg"></div>
-                <div class="fish-face">
-                  <div class="fish-smile">
-                    <div class="fish-tongue"></div>
-                  </div>
-                </div>     
-              </div>
-              <input
-                type="radio"
-                id=question${problemId}-option${id}
-                data-problem-id=${problemId}
-                data-option-id=${id}
-                name="option"
-              />
-              <label class='multiple ${
-                idx % 2 === 0 ? 'even' : ''
-              }' for=question${problemId}-option${id}>
-                ${content}
-              </label>
-            `
-            )
-            .join('');
-        case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
-          return options
-            .map(
-              ({ id, content }, idx) => `
-              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
-              <div class="fish-leg"></div>
-              <div class="fish-face">
-                <div class="fish-smile">
-                  <div class="fish-tongue"></div>
-                </div>
-              </div>     
-            </div>
-              <input
-                type="checkbox"
-                id=problem${problemId}-option${id}
-                data-problem-id=${problemId}
-                data-option-id=${id}
-                name="option"
-                ${id === 1 ? 'checked focus' : ''}
-              />
-              <label class='multiple ${
-                idx % 2 === 0 ? 'even' : ''
-              }' for=problem${problemId}-option${id}>
-                ${content}
-              </label>
-            `
-            )
-            .join('');
-        case PROBLEM_TYPES.OX:
-          return options
-            .map(
-              ({ id, content }) => `
-              <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
-              <div class="fish-leg"></div>
-              <div class="fish-face">
-                <div class="fish-smile">
-                  <div class="fish-tongue"></div>
-                </div>
-              </div>     
-            </div>
-              <input
-                type="radio"
-                id=problem${problemId}-option${id}
-                data-problem-id=${problemId}
-                data-option-id=${id}
-                name="option"
-              />
-              <label class='multiple' for=problem${problemId}-option${id}>
-                ${content}
-              </label>
-            `
-            )
-            .join('');
-        case PROBLEM_TYPES.SHORT:
-          return `
-            <input
-              type="text"
-              placeholder="답을 입력하세요"
-              id=question${problemId}
-              data-problem-id=${problemId}
-            />
-          `;
-        default:
-          return '';
-      }
-    })();
-
-    // 문제 번호 링크
-    // const $problemLinks = (() => {
-    //   const CLASS_PROBLEM_LINKS = 'problem-links';
-    //   const $container = document.createElement('ol');
-    //   $container.className = CLASS_PROBLEM_LINKS;
-    //   $container.innerHTML = problems
-    //     .map(
-    //       (problem, idx) => `
-    //       <li data-problem-idx=${idx}>
-    //         <button ${problem.completed ? 'disabled' : ''}>
-    //           ${problem.id}
-    //         </button>
-    //       </li>
-    //     `
-    //     )
-    //     .join('');
-
-    //   $container.addEventListener('click', e => {
-    //     if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
-    //       return;
-    //     }
-    //     getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
-    //   });
-    //   return $container;
-    // })();
-
-    const $container = document.createElement('section');
-    $container.className = 'problem';
-    const $form = document.createElement('form');
-    $form.className = 'form';
-    $form.innerHTML = `
-      <fieldset>
-        <legend>
-          ${problems[currentProblemIdx].question}
-        </legend>
-        <div>
-          ${problems[currentProblemIdx].sub}
-        </div>
-        ${$options}
-        <button type="submit">
-          제출
-        </button>
-      </fieldset>
-    `;
-    $container.appendChild($form);
-
-    // 문제 번호 링크 DOM에 추가
-    // $container.appendChild($problemLinks);
-    $body.appendChild($container);
-    console.log(document.querySelectorAll('label'));
-
-    $form.addEventListener('submit', e => {
-      e.preventDefault();
-
-      const currentProblemType = problems[currentProblemIdx].type;
-
-      let $inputs;
-      switch (currentProblemType) {
-        case PROBLEM_TYPES.SHORT:
-          $inputs = [...e.target.querySelectorAll('input[type=text]')];
-          break;
-        case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
-          $inputs = [
-            ...e.target.querySelectorAll('input[type=checkbox]:checked')
-          ];
-          break;
-        case PROBLEM_TYPES.MULTIPLE_SINGLE:
-          $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
-          break;
-        case PROBLEM_TYPES.OX:
-          $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
-          break;
-        default:
-          break;
-      }
-
-      const problemId = +$inputs[0].dataset.problemId;
-      const userAnswerForProblem = userAnswers.find(
-        userAnswer => userAnswer === problemId
-      );
-
-      // 문제에 대한 기존의 답이 있을 경우
-      // if (userAnswerForProblem) {
-      //   userAnswerForProblem.answer = [
-      //     ...userAnswerForProblem.answer,
-      //     ...(currentProblemType === PROBLEM_TYPES.SHORT
-      //       ? $inputs.map($input => $input.value)
-      //       : $inputs.map($input => $input.dataset.optionId))
-      //   ];
-      // }
-
-      // 문제에 대한 기존의 답이 없을 경우
-      userAnswers = [
-        ...userAnswers,
-        {
-          problemId: +$inputs[0].dataset.problemId,
-          answer: [
-            ...(currentProblemType === PROBLEM_TYPES.SHORT
-              ? $inputs.map($input => $input.value)
-              : $inputs.map($input => $input.dataset.optionId))
-          ],
-          correct: false
-        }
+    if (problemType === PROBLEM_TYPES.SHORT) {
+      const $userAnswer = $currentForm.querySelector('input[type=text]');
+      if ($userAnswer) userAnswers = [$userAnswer.value];
+    } else if (problemType === PROBLEM_TYPES.MULTIPLE_MULTIPLE) {
+      const $userAnswers = [
+        ...$currentForm.querySelectorAll('input[type=checkbox]:checked')
       ];
+      if ($userAnswers) {
+        userAnswers = [
+          ...$userAnswers.map($answer => $answer.dataset.optionId)
+        ];
+      }
+    } else {
+      const $userAnswer = $currentForm.querySelector(
+        'input[type=radio]:checked'
+      );
+      if ($userAnswer) userAnswers = [...$userAnswer.dataset.optionId];
+    }
 
-      $container.classList.add('completed');
+    const answers = [
+      ...ANSWERS.find(answer => answer.problemId === problemId).answers
+    ];
+    if (userAnswers.length !== answers.length) return;
+    answers.sort();
+    userAnswers.sort();
 
-      // 마지막 문제일 경우, 테스트 결과 보여주기
-      if (!problems[currentProblemIdx + 1]) {
-        renderResult();
+    for (let i = 0; i < answers.length; i++) {
+      if (answers[i] !== userAnswers[i]) return;
+    }
+
+    problems.find(problem => problem.id === problemId).correct = true;
+    console.log(problems);
+  };
+
+  // move problem
+  const moveProblem = (() => ({
+    next() {
+      checkCorrect();
+      if (currentProblemIdx === problems.length - 1) {
+        showResult();
         return;
       }
+      hideExistingProblem();
+      currentProblemIdx++;
+      appendProblem();
+    },
+    prev() {
+      currentProblemIdx--;
+    }
+  }))();
 
-      // 마지막 문제가 아닐경우, 다음 문제 보여주기
-      next(currentProblemIdx);
-    });
+  // register form event
+  const registerFormEvent = $form => {
+    $form.onsubmit = e => {
+      e.preventDefault();
+      moveProblem.next();
+    };
   };
+
+  // game initial settings
+  // const init = () => {
+  //   $body.className = 'game';
+  //   gameUtils.renderGameBackground();
+  //   // gameUtils.oxygenTank.init(0.5, renderResult);
+  // };
+
+  // const renderResult = () => {
+  // const checkCorrectness = () => {
+  //   const isEqual = (array1, array2) => {
+  //     if (array1.length !== array2.length) return false;
+  //     array1.sort();
+  //     array2.sort();
+  //     for (let i = 0; i < array1.length; i++) {
+  //       if (array1[i] !== array2[i]) return false;
+  //     }
+
+  //     return true;
+  //   };
+
+  //   userAnswers.forEach(userAnswer => {
+  //     const correctAnswer = ANSWERS.find(
+  //       answer => answer.problemId === userAnswer.problemId
+  //     );
+  //     userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
+  //   });
+  // };
+
+  // checkCorrectness();
+
+  //   $body.appendChild($result);
+
+  //   $result.addEventListener('click', e => {
+  //     if (!e.target.matches('.overlay')) return;
+  //     mainPage.render();
+  //   });
+  // };
+
+  // const renderProblem = () => {
+  //   const nextProblem = idx => {
+  //     problems[currentProblemIdx].completed = true;
+  //     currentProblemIdx = idx + 1;
+  //     renderProblem();
+  //   };
+
+  //   // $body.innerHTML = '';
+
+  //   const $options = (() => {
+  //     const { id: problemId, type, options } = problems[currentProblemIdx];
+
+  //     switch (type) {
+  //       case PROBLEM_TYPES.MULTIPLE_SINGLE:
+  //         return options
+  //           .map(
+  //             ({ id, content }, idx) => `
+  //             <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+  //               <div class="fish-leg"></div>
+  //               <div class="fish-face">
+  //                 <div class="fish-smile">
+  //                   <div class="fish-tongue"></div>
+  //                 </div>
+  //               </div>
+  //             </div>
+  //             <input
+  //               type="radio"
+  //               id=question${problemId}-option${id}
+  //               data-problem-id=${problemId}
+  //               data-option-id=${id}
+  //               name="option"
+  //             />
+  //             <label class='multiple ${
+  //               idx % 2 === 0 ? 'even' : ''
+  //             }' for=question${problemId}-option${id}>
+  //               ${content}
+  //             </label>
+  //           `
+  //           )
+  //           .join('');
+  //       case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
+  //         return options
+  //           .map(
+  //             ({ id, content }, idx) => `
+  //             <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+  //             <div class="fish-leg"></div>
+  //             <div class="fish-face">
+  //               <div class="fish-smile">
+  //                 <div class="fish-tongue"></div>
+  //               </div>
+  //             </div>
+  //           </div>
+  //             <input
+  //               type="checkbox"
+  //               id=problem${problemId}-option${id}
+  //               data-problem-id=${problemId}
+  //               data-option-id=${id}
+  //               name="option"
+  //             />
+  //             <label for=problem${problemId}-option${id}>
+  //               ${content}
+  //             </label>
+  //           `
+  //           )
+  //           .join('');
+  //       case PROBLEM_TYPES.OX:
+  //         return options
+  //           .map(
+  //             ({ id, content }) => `
+  //             <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
+  //             <div class="fish-leg"></div>
+  //             <div class="fish-face">
+  //               <div class="fish-smile">
+  //                 <div class="fish-tongue"></div>
+  //               </div>
+  //             </div>
+  //           </div>
+  //             <input
+  //               type="radio"
+  //               id=problem${problemId}-option${id}
+  //               data-problem-id=${problemId}
+  //               data-option-id=${id}
+  //               name="option"
+  //             />
+  //             <label class='multiple' for=problem${problemId}-option${id}>
+  //               ${content}
+  //             </label>
+  //           `
+  //           )
+  //           .join('');
+  //       case PROBLEM_TYPES.SHORT:
+  //         return `
+  //           <input
+  //             type="text"
+  //             placeholder="답을 입력하세요"
+  //             id=question${problemId}
+  //             data-problem-id=${problemId}
+  //           />
+  //         `;
+  //       default:
+  //         return '';
+  //     }
+  //   })();
+
+  //   // 문제 번호 링크
+  //   // const $problemLinks = (() => {
+  //   //   const CLASS_PROBLEM_LINKS = 'problem-links';
+  //   //   const $container = document.createElement('ol');
+  //   //   $container.className = CLASS_PROBLEM_LINKS;
+  //   //   $container.innerHTML = problems
+  //   //     .map(
+  //   //       (problem, idx) => `
+  //   //       <li data-problem-idx=${idx}>
+  //   //         <button ${problem.completed ? 'disabled' : ''}>
+  //   //           ${problem.id}
+  //   //         </button>
+  //   //       </li>
+  //   //     `
+  //   //     )
+  //   //     .join('');
+
+  //   //   $container.addEventListener('click', e => {
+  //   //     if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
+  //   //       return;
+  //   //     }
+  //   //     getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
+  //   //   });
+  //   //   return $container;
+  //   // })();
+
+  //   const $container = document.createElement('section');
+  //   $container.className = 'problem';
+  //   const $form = document.createElement('form');
+  //   $form.className = 'form';
+  //   $form.innerHTML = `
+  //     <fieldset>
+  //       <legend>
+  //         ${problems[currentProblemIdx].question}
+  //       </legend>
+  //       <div>
+  //         ${problems[currentProblemIdx].sub}
+  //       </div>
+  //       ${$options}
+  //       <button type="submit">
+  //         제출
+  //       </button>
+  //     </fieldset>
+  //   `;
+  //   $container.appendChild($form);
+
+  //   // 문제 번호 링크 DOM에 추가
+  //   // $container.appendChild($problemLinks);
+  //   $body.appendChild($container);
+  //   isLoading = false;
+
+  //   $form.addEventListener('submit', e => {
+  //     e.preventDefault();
+
+  //     const currentProblemType = problems[currentProblemIdx].type;
+
+  //     let $inputs;
+  //     switch (currentProblemType) {
+  //       case PROBLEM_TYPES.SHORT:
+  //         $inputs = [...e.target.querySelectorAll('input[type=text]')];
+  //         break;
+  //       case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
+  //         $inputs = [
+  //           ...e.target.querySelectorAll('input[type=checkbox]:checked')
+  //         ];
+  //         break;
+  //       case PROBLEM_TYPES.MULTIPLE_SINGLE:
+  //         $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
+  //         break;
+  //       case PROBLEM_TYPES.OX:
+  //         $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
+  //         break;
+  //       default:
+  //         break;
+  //     }
+
+  //     const problemId = +$inputs[0].dataset.problemId;
+  //     const userAnswerForProblem = userAnswers.find(
+  //       userAnswer => userAnswer === problemId
+  //     );
+
+  //     // 문제에 대한 기존의 답이 있을 경우
+  //     // if (userAnswerForProblem) {
+  //     //   userAnswerForProblem.answer = [
+  //     //     ...userAnswerForProblem.answer,
+  //     //     ...(currentProblemType === PROBLEM_TYPES.SHORT
+  //     //       ? $inputs.map($input => $input.value)
+  //     //       : $inputs.map($input => $input.dataset.optionId))
+  //     //   ];
+  //     // }
+
+  //     // 문제에 대한 기존의 답이 없을 경우
+  //     userAnswers = [
+  //       ...userAnswers,
+  //       {
+  //         problemId: +$inputs[0].dataset.problemId,
+  //         answer: [
+  //           ...(currentProblemType === PROBLEM_TYPES.SHORT
+  //             ? $inputs.map($input => $input.value)
+  //             : $inputs.map($input => $input.dataset.optionId))
+  //         ],
+  //         correct: false
+  //       }
+  //     ];
+
+  //     $container.classList.add('completed');
+
+  //     // 마지막 문제일 경우, 테스트 결과 보여주기
+  //     if (!problems[currentProblemIdx + 1]) {
+  //       renderResult();
+  //       return;
+  //     }
+
+  //     // 마지막 문제가 아닐경우, 다음 문제 보여주기
+  //     nextProblem(currentProblemIdx);
+  //   });
+  // };
 
   return {
     start() {
-      init();
-      renderProblem();
+      // init();
+      // renderProblem();
+      initializeGame();
     },
     end() {}
   };

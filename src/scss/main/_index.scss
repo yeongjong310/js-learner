@@ -14,7 +14,6 @@ body.main {
   $dark-blue: #194a63;
 
   $progress-bar-stroke-width: 1.8;
-  $progress-bar-size: 150px;
 
   position: relative;
   width: 100%;
@@ -33,10 +32,8 @@ body.main {
   .progress-bar__progress {
     fill: none;
     stroke: #53c100;
-    // stroke: #69bf27;
-    stroke-dasharray: 100 100;
+    stroke-dasharray: 100;
     stroke-dashoffset: 100;
-    stroke-linecap: round;
     stroke-width: $progress-bar-stroke-width;
     transition: stroke-dashoffset 1s ease-in-out;
   }
@@ -51,9 +48,9 @@ body.main {
     left: 60px;
 
     & svg {
-      height: $progress-bar-size;
+      height: 150px;
+      width: 150px;
       transform: rotate(-90deg);
-      width: $progress-bar-size;
     }
 
     &.active {
@@ -133,7 +130,7 @@ body.main {
   .user {
     position: absolute;
     top: 55px;
-    left: -20px;
+    left: -24px;
     width: 400px;
     height: 0;
     border-radius: 20px;
@@ -191,7 +188,7 @@ body.main {
 
         & .progress {
           &-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             text-align: center;
             margin-bottom: 0.4rem;
           }
@@ -248,7 +245,6 @@ body.main {
     font-size: 1.3rem;
     font-weight: 800;
     line-height: 50px;
-    font-family: arial;
     color: #f0f0f0;
     transform: translateX(-50%);
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
@@ -281,13 +277,13 @@ body.main {
 
   .category {
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: 170px;
+    height: 170px;
     background-color: #d2d2ff87;
     text-align: center;
     border-radius: 50%;
     transition: 0.15s;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     font-weight: 800;
     text-shadow: 1px 1px 3px #fff, 1px 1px 3px #fff, 1px 1px 3px #fff;
     border: 2px solid darken($ocean, 2%);
@@ -540,7 +536,8 @@ body.main {
     box-shadow: 70px 70px 0 $stars, -100px 80px 0 $stars, 200px 10px 0 $stars,
       130px 180px 0 $stars, -120px -10px 0 $stars, -200px 170px 0 $stars,
       -280px 110px 0 $stars, -320px 20px 0 $stars, 320px 170px 0 $stars,
-      430px 60px 0 $stars, 480px 190px 0 $stars;
+      430px 60px 0 $stars, 480px 140px 0 $stars, 780px 110px 0 $stars,
+      720px 90px 0 $stars;
     z-index: -3;
     &.night {
       top: 30px;
