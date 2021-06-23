@@ -6,22 +6,8 @@ body.game {
   overflow: hidden;
   background-color: black;
   margin: 0;
-  /* fish tail */
-  /* rest(eyes, mouth) of the fish */
-  /* eyes(white) - white part */
   /* eyes(black) */
   /* mouth */
-}
-body.game::after {
-  content: "";
-  width: 300px;
-  height: 300px;
-  background-color: inherit;
-  position: absolute;
-  bottom: -110px;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0) rotate(45deg);
-  border-top-left-radius: 30%;
 }
 body.game .ocean {
   position: absolute;
@@ -34,6 +20,18 @@ body.game .ocean {
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 160px;
+  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.8);
+}
+body.game .ocean.active {
+  animation: blinkRed 1s ease infinite;
+}
+@keyframes blinkRed {
+  0%, 100% {
+    box-shadow: inset 0 0 80px 5px rgba(255, 0, 0, 0.8);
+  }
+  50% {
+    box-shadow: inset 0 0 150px 5px rgba(255, 0, 0, 0.8);
+  }
 }
 body.game .ocean::after,
 body.game .ocean::before {
@@ -166,6 +164,7 @@ body.game .bubbles span:nth-child(8) {
   animation-duration: 10s;
   opacity: 0.2;
 }
+body.game .shark,
 body.game .fish {
   width: 50px;
   height: 50px;
@@ -178,31 +177,61 @@ body.game .fish {
   box-shadow: inset 0px -6px 0px rgba(0, 0, 0, 0.1);
   animation: fish 40s ease-in infinite;
 }
+body.game .shark {
+  width: 100px;
+  height: 50px;
+  background-color: #1984db;
+  top: 30%;
+  left: 30%;
+  box-shadow: inset 0px -10px 0px rgba(151, 202, 236, 0.7);
+  animation: shark 20s ease-in infinite;
+}
 @keyframes fish {
   0% {
     left: calc(100% + 30px);
-    top: 60%;
+    top: 30%;
   }
   50% {
-    top: 40%;
+    top: 20%;
   }
   100% {
     left: -20%;
-    top: 50%;
+    top: 30%;
   }
 }
+@keyframes shark {
+  0% {
+    left: -30%;
+    top: 80%;
+  }
+  50% {
+    top: 70%;
+  }
+  100% {
+    left: 120%;
+    top: 80%;
+  }
+}
+body.game .shark::after,
 body.game .fish::after {
   width: 20px;
   height: 20px;
-  border-radius: 10px;
   background-color: inherit;
   content: "";
   position: absolute;
-  top: 30%;
   right: -20px;
-  transform: rotate(-20deg);
   animation: tail 2s ease infinite;
   z-index: -1;
+}
+body.game .shark::after {
+  height: 40px;
+  border-radius: 0 100% 100% 0;
+  animation: sharktail 2s ease infinite;
+}
+body.game .fish::after {
+  border-radius: 10px;
+  top: 30%;
+  animation: tail 2s ease infinite;
 }
 @keyframes tail {
   0%, 100% {
@@ -212,10 +241,31 @@ body.game .fish::after {
     right: -7px;
   }
 }
+@keyframes sharktail {
+  0%, 100% {
+    left: -14px;
+  }
+  50% {
+    left: -11px;
+  }
+}
+body.game .shark::before {
+  width: 20px;
+  height: 20px;
+  left: 30px;
+  top: -15px;
+  background-color: inherit;
+  content: "";
+  position: absolute;
+  border-top-right-radius: 100%;
+}
+body.game .shark span,
 body.game .fish span {
   content: "";
   position: absolute;
 }
+body.game .shark span:nth-child(1),
+body.game .shark span:nth-child(2),
 body.game .fish span:nth-child(1),
 body.game .fish span:nth-child(2) {
   border-radius: 100%;
@@ -233,6 +283,21 @@ body.game .fish span:nth-child(2) {
   z-index: 0;
   left: 15px;
 }
+body.game .shark span:nth-child(1),
+body.game .shark span:nth-child(2) {
+  width: 20px;
+  height: 30px;
+}
+body.game .shark span:nth-child(1) {
+  left: 75px;
+  top: 7px;
+}
+body.game .shark span:nth-child(2) {
+  z-index: 0;
+  left: 70px;
+  top: 8px;
+}
+body.game .shark span:nth-child(2)::after,
 body.game .fish span:nth-child(2)::after {
   border-radius: 100%;
   width: 8px;
@@ -245,6 +310,20 @@ body.game .fish span:nth-child(2)::after {
   left: 6px;
   box-shadow: inset 0px 2px 0px rgba(255, 255, 255, 0.5);
   animation: eyes 4s ease infinite;
+}
+body.game .shark span:nth-child(2)::after {
+  width: 6px;
+  height: 6px;
+  left: 9px;
+  animation: sharkEyes 4s ease infinite;
+}
+@keyframes sharkEyes {
+  0%, 100% {
+    top: 9px;
+  }
+  50% {
+    top: 14px;
+  }
 }
 @keyframes eyes {
   0%, 100% {
@@ -265,6 +344,23 @@ body.game .fish span:nth-child(3) {
   border: solid 5px orange;
   animation: mouth 4s ease infinite;
 }
+body.game .shark span:nth-child(3) {
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  right: 0px;
+  top: 25px;
+  border-radius: 0 50%;
+  z-index: 0;
+}
+body.game .shark span:nth-child(3)::after {
+  background-color: #1984db;
+  width: 6px;
+  height: 4px;
+  border-radius: 0 0 100% 0;
+  content: "";
+  position: inherit;
+}
 @keyframes mouth {
   0%, 100% {
     height: 20px;
@@ -275,18 +371,117 @@ body.game .fish span:nth-child(3) {
     width: 13px;
   }
 }
+body.game .fish1,
+body.game .fish2,
+body.game .fish3,
+body.game .fish4,
+body.game .fish5 {
+  position: absolute;
+  width: 40px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0.8;
+  z-index: -3;
+}
+body.game .fish1:after,
+body.game .fish2:after,
+body.game .fish3:after,
+body.game .fish4:after,
+body.game .fish5:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 15px;
+  left: 35px;
+  top: 3px;
+  background-color: inherit;
+  border-radius: 100% 0 0 100%;
+}
+body.game .fish1 {
+  background-color: #e87112;
+  animation: infinite fishMove1 15s ease-out;
+}
+body.game .fish2 {
+  background-color: #01014c;
+  animation: infinite fishMove1 15s ease;
+}
+body.game .fish3 {
+  background-color: #d82973;
+  animation: infinite fishMove2 15s ease-out 5s;
+  transform: rotate(180deg);
+}
+body.game .fish4 {
+  background-color: #5a357d;
+  animation: infinite fishMove2 15s ease 5s;
+  transform: rotate(180deg);
+}
+@keyframes fishMove1 {
+  0% {
+    left: 110%;
+    top: 60%;
+  }
+  50% {
+    top: 40%;
+  }
+  100% {
+    left: -50%;
+    top: 50%;
+  }
+}
+@keyframes fishMove2 {
+  0% {
+    left: -10%;
+    top: 60%;
+  }
+  50% {
+    top: 80%;
+  }
+  100% {
+    left: 150%;
+    top: 60%;
+  }
+}
+body.game .overlay {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+body.game .loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+body.game .loading__text {
+  text-align: center;
+  color: #ffffff;
+  margin-top: 10px;
+}
+body.game .spinner {
+  animation: spinner infinite 2s linear;
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 body.game .problem {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 300px;
-  min-width: 500px;
-  max-width: 700px;
-  background-color: #7b9cb0;
+  height: 100%;
+  width: 100%;
   margin: auto;
-  padding: 2em;
+  padding: 5em 10em;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -316,20 +511,11 @@ body.game .problem-links > li > button {
   border: none;
   position: relative;
 }
-body.game .problem-links > li > button:disabled::after {
-  content: "clear";
-  position: absolute;
-  background-color: blue;
+body.game .problem .form {
   display: flex;
   justify-content: center;
-  align-items: center;
-  color: #fff;
-  cursor: not-allowed;
-  width: 3em;
-  height: 3em;
-  border-radius: 50%;
-  top: 0;
-  left: 0;
+  height: 100%;
+  width: 100%;
 }
 body.game .problem .form > fieldset {
   padding: 0;
@@ -337,23 +523,29 @@ body.game .problem .form > fieldset {
   border: none;
   color: #fff;
   font-size: 1.5em;
+  display: flex;
 }
-body.game .problem .form > fieldset > input[type=radio] {
+body.game .problem .form > fieldset > input[type=radio], body.game .problem .form > fieldset > input[type=checkbox] {
   opacity: 0;
 }
-body.game .problem .form > fieldset > input[type=radio] ~ label {
+body.game .problem .form > fieldset > input[type=radio] ~ label, body.game .problem .form > fieldset > input[type=checkbox] ~ label {
   text-align: center;
-  display: block;
   border: 1px solid #fff;
-  padding: 10px;
-  margin-top: 8px;
+  border-radius: 10px;
   font-size: 0.8em;
+  max-height: 400px;
+  min-width: 200px;
+  cursor: pointer;
+  padding: 1em;
 }
-body.game .problem .form > fieldset > input[type=radio]:checked + label {
+body.game .problem .form > fieldset > input[type=radio] ~ label > .multiple, body.game .problem .form > fieldset > input[type=checkbox] ~ label > .multiple {
+  margin-top: 160px;
+}
+body.game .problem .form > fieldset > input[type=radio] ~ label > .multiple.even, body.game .problem .form > fieldset > input[type=checkbox] ~ label > .multiple.even {
+  margin-top: 100px;
+}
+body.game .problem .form > fieldset > input[type=radio]:hover + label, body.game .problem .form > fieldset > input[type=radio]:checked + label, body.game .problem .form > fieldset > input[type=radio]:checked + label, body.game .problem .form > fieldset > input[type=checkbox]:hover + label, body.game .problem .form > fieldset > input[type=checkbox]:checked + label, body.game .problem .form > fieldset > input[type=checkbox]:checked + label {
   background-color: pink;
-}
-body.game .problem .form > fieldset > button[type=submit] {
-  opacity: 0;
 }
 body.game .result-container {
   display: flex;
@@ -373,6 +565,7 @@ body.game .result-container > .overlay {
 }
 body.game .result-container > .result {
   position: absolute;
+  border-radius: 20px;
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
@@ -381,8 +574,16 @@ body.game .result-container > .result {
   transition: width 0.5s;
   background-color: #fff;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
+}
+body.game .result-container > .result > .user-name {
+  font-size: 50px;
+}
+body.game .result-container > .result > .user-score {
+  font-size: 2em;
+  font-weight: 700;
 }
 
 body.game > .ocean .oxygen-tank {
@@ -408,6 +609,7 @@ body.game > .ocean .oxygen-tank::after {
   left: 50%;
   transform: translate3d(-50%, 0, 0);
   box-shadow: inset 10px 0 0px rgba(0, 0, 0, 0.1);
+  transition: ease-in-out 0.1s height;
 }
 
 body.main {
