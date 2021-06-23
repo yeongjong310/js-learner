@@ -414,7 +414,7 @@ const mainPage = (function () {
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 // yj
 
@@ -608,13 +608,12 @@ const gamePage = (function () {
 
   // states
   let currentProblemIdx;
-  let $problemSections;
   let problems;
+  const isReady = false;
 
   // initialize states
-  const initialStates = () => {
+  const initializeStates = () => {
     currentProblemIdx = 0;
-    $problemSections = [];
     problems = [...PROBLEMS].map(problem => ({
       ...problem,
       completed: false,
@@ -656,9 +655,9 @@ const gamePage = (function () {
             ${options
               .map(
                 ({ id: optionId, content }, idx) => `
-              <div class="form__selection" style="top: ${
-                Math.random() * 100 * 2 + 100
-              }px;left:${idx * 400}px">
+              <div class="form__selection ${
+                idx % 2 === 0 ? 'fly-slightly' : ''
+              }">
                 <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}"/>
                 <input
                   type='radio'
@@ -677,7 +676,7 @@ const gamePage = (function () {
               )
               .join('')}
             </section>
-            <button class="btn" type='submit'>SUBMIT</button>
+            <button class="btn next" type='submit'>SKIP</button>
         </fielset>
       `;
     }
@@ -694,9 +693,9 @@ const gamePage = (function () {
           ${options
             .map(
               ({ id: optionId, content }, idx) => `
-              <div class="form__selection" style="top: ${
-                Math.random() * 100 * 2 + 150
-              }px;left:${idx * 400}px">
+              <div class="form__selection ${
+                idx % 2 === 0 ? 'fly-slightly' : ''
+              }">
                 <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
                 <input
                   type='checkbox'
@@ -715,7 +714,7 @@ const gamePage = (function () {
             )
             .join('')}
             </section>
-            <button class="btn" type='submit'>SUBMIT</button>
+            <button class="btn next" type='submit'>SKIP</button>
         </fielset>
       `;
     }
@@ -731,10 +730,8 @@ const gamePage = (function () {
           <section class="form__selections">
             ${options
               .map(
-                ({ id: optionId, content }, idx) => `
-              <div class="form__selection" style="top: ${200}px;left:${
-                  idx * 400 + 400
-                }px">
+                ({ id: optionId, content }) => `
+              <div class="form__selection">
                 <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
                 <input
                   type='radio'
@@ -753,7 +750,7 @@ const gamePage = (function () {
               )
               .join('')}
           </section>
-          <button class="btn" type='submit'>SUBMIT</button>
+          <button class="btn next" type='submit'>SKIP</button>
         </fielset>
       `;
     }
@@ -777,12 +774,11 @@ const gamePage = (function () {
               />
             </div>
           </section>
-          <button class="btn" type='submit'>SUBMIT</button>
+          <button class="btn next" type='submit'>SKIP</button>
         </fielset>
       `;
     }
 
-    $problemSections = [...$problemSections, $sectionProblem];
     $sectionProblem.appendChild($innerForm);
     $defaultProblemsSection.appendChild($sectionProblem);
     registerFormEvent($innerForm);
@@ -813,12 +809,36 @@ const gamePage = (function () {
   const initializeGame = () => {
     $body.className = 'game';
     gameUtils.renderGameBackground();
-    initialStates();
+    initializeStates();
     const $defaultProblemsSection = document.createElement('section');
     $defaultProblemsSection.className = 'problems';
     $body.appendChild($defaultProblemsSection);
-    // appendControl(); // 문제 이동 버튼
+    getReady();
+  };
+
+  const startGame = () => {
     appendProblem();
+    gameUtils.oxygenTank.init(0.5, showResult);
+  };
+
+  // getReady game
+  const getReady = () => {
+    let count = 3;
+    const $defaultProblemsSection = $body.querySelector('.problems');
+    const $countdownDiv = document.createElement('div');
+    $countdownDiv.className = 'countdown';
+    $defaultProblemsSection.appendChild($countdownDiv);
+
+    const timerId = setInterval(() => {
+      if (count === -1) {
+        clearInterval(timerId);
+        $countdownDiv.remove();
+        startGame();
+        return;
+      }
+      $countdownDiv.textContent = count === 0 ? 'GO DIVE!' : count;
+      count--;
+    }, 1000);
   };
 
   // hide existing problem
@@ -837,11 +857,11 @@ const gamePage = (function () {
     const $resultSection = document.createElement('section');
     $resultSection.className = 'results';
     $resultSection.innerHTML = `
-      <div class="overlay"></div>
+      <div class="overlay progress"></div>
       <div class="result">
         <div class="user-name">
           <span>&#127881;</span>
-          great! John
+          Great! ${user.name}
           <span>&#127881;</span>
         </div>
         <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
@@ -850,26 +870,31 @@ const gamePage = (function () {
     `;
 
     $body.appendChild($resultSection);
-    $body.querySelector('.close').addEventListener('click', () => {
+    $resultSection.querySelector('.close').addEventListener('click', () => {
       mainPage.render();
     });
   };
 
+  // check selection
+  const checkSelection = e => {
+    if (e.target.value || e.target.checked) {
+      e.currentTarget.querySelector('.next').textContent = 'SUBMIT';
+    }
+  };
+
   // check correctness
-  const checkCorrect = () => {
-    const $currentProblem = $problemSections[currentProblemIdx];
-    const $currentForm = $currentProblem.querySelector('form');
-    const { dataset } = $currentForm;
+  const checkCorrect = e => {
+    const { dataset } = e.target;
     const problemId = +dataset.problemId;
     const problemType = +dataset.problemType;
     let userAnswers = [];
 
     if (problemType === PROBLEM_TYPES.SHORT) {
-      const $userAnswer = $currentForm.querySelector('input[type=text]');
+      const $userAnswer = e.target.querySelector('input[type=text]');
       if ($userAnswer) userAnswers = [$userAnswer.value];
     } else if (problemType === PROBLEM_TYPES.MULTIPLE_MULTIPLE) {
       const $userAnswers = [
-        ...$currentForm.querySelectorAll('input[type=checkbox]:checked')
+        ...e.target.querySelectorAll('input[type=checkbox]:checked')
       ];
       if ($userAnswers) {
         userAnswers = [
@@ -877,31 +902,40 @@ const gamePage = (function () {
         ];
       }
     } else {
-      const $userAnswer = $currentForm.querySelector(
-        'input[type=radio]:checked'
-      );
+      const $userAnswer = e.target.querySelector('input[type=radio]:checked');
       if ($userAnswer) userAnswers = [...$userAnswer.dataset.optionId];
     }
 
     const answers = [
       ...ANSWERS.find(answer => answer.problemId === problemId).answers
     ];
-    if (userAnswers.length !== answers.length) return;
+
+    let isCorrect = true;
+    if (userAnswers.length !== answers.length) {
+      isCorrect = false;
+    }
     answers.sort();
     userAnswers.sort();
 
     for (let i = 0; i < answers.length; i++) {
-      if (answers[i] !== userAnswers[i]) return;
+      if (answers[i] !== userAnswers[i]) {
+        isCorrect = false;
+        break;
+      }
     }
 
-    problems.find(problem => problem.id === problemId).correct = true;
-    console.log(problems);
+    user.solved++;
+    if (isCorrect) {
+      user.correct++;
+      problems.find(problem => problem.id === problemId).correct = true;
+      return;
+    }
+    gameUtils.oxygenTank.minusOxygen();
   };
 
   // move problem
   const moveProblem = (() => ({
     next() {
-      checkCorrect();
       if (currentProblemIdx === problems.length - 1) {
         showResult();
         return;
@@ -919,7 +953,16 @@ const gamePage = (function () {
   const registerFormEvent = $form => {
     $form.onsubmit = e => {
       e.preventDefault();
+      checkCorrect(e);
       moveProblem.next();
+    };
+    $form.onclick = e => {
+      if (!e.target.matches('input')) return;
+      checkSelection(e);
+    };
+    $form.oninput = e => {
+      if (!e.target.matches('input[type=text]')) return;
+      checkSelection(e);
     };
   };
 
@@ -1193,4 +1236,4 @@ const gamePage = (function () {
   };
 })();
 
-// gamePage.start();
+gamePage.start();
