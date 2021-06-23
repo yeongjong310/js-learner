@@ -42,6 +42,7 @@ const mainPage = (function () {
     Math.floor((user.stageCleared.size / categories.length) * 100);
 
   const fetch = () => {
+    mode = 'EASY';
     document.body.style.setProperty(
       'overflow-y',
       getUserSession() ? 'scroll' : 'hidden'
@@ -336,12 +337,12 @@ const mainPage = (function () {
           throttle(() => {
             const currentY = window.scrollY;
 
-            document.querySelectorAll('.scroll-del').forEach(e => {
+            document.querySelectorAll('.scroll-del')?.forEach(e => {
               e.classList.toggle('disable', currentY > 200);
             });
             document
               .querySelector('.scroll-up')
-              .classList.toggle('able', currentY > 200);
+              ?.classList.toggle('able', currentY > 200);
           }, 50)
         );
 
@@ -420,6 +421,81 @@ const mainPage = (function () {
 mainPage.render();
 
 // yj
+// 접근성
+const accessibility = (() => {
+  let aniPlayState = 'running';
+  // render
+  (() => {
+    const $accessbility = document.createElement('article');
+    $accessbility.classList.add('accessibility');
+    $accessbility.innerHTML = `
+    <a class="accessibility__menu-btn" role="button">
+      <img src="./src/img/disabled.svg"/ alt="accessibility menu button" />
+    </a>
+    <div class="accessibility__menu">
+      <div class="accessibility__menu-title">접근성 메뉴</div>
+      <ul>
+        <li>
+          <button class="accessibility__btn">텍스트 크기 조절</button>
+          <div class="accessibility__btn--level-wrapper">
+            <span class="accessibility__btn--level"></span>
+          </div>
+        </li>
+        <li><button class="accessibility__btn">애니메이션 중지</button></li>
+      </ul>
+    </div>
+  `;
+    document.body.appendChild($accessbility);
+  })();
+
+  const $accessibilityMenu = document.querySelector('.accessibility__menu');
+  const $accessbilityMenuToggleBtn = document.querySelector(
+    '.accessibility__menu-btn'
+  );
+  const [$btnBiggerText, $btnContrast] = $accessibilityMenu.querySelectorAll(
+    '.accessibility__btn'
+  );
+
+  // functions
+  const biggerText = (() => {
+    const $fontLevelIcons = document.querySelector('.accessibility__btn--level-wrapper');
+    const FONT_SIZES = ['16px', '18px', '20px'];
+    let level = 0;
+    return () => {
+      level = (level + 1) % FONT_SIZES.length;
+      document.documentElement.style.fontSize = FONT_SIZES[level];
+
+      const $fontLevelIcon = document.createElement('span');
+      $fontLevelIcon.className = 'accessibility__btn--level';
+      $fontLevelIcons.append($fontLevelIcon);
+
+      if ($fontLevelIcons.children.length === 4) {
+        $fontLevelIcons.innerHTML = '<div class="accessibility__btn--level"></div>';
+      }
+    };
+  })();
+
+  const pauseStartAnimation = () => {
+    if (aniPlayState === 'running') {
+      aniPlayState = 'paused';
+      $btnContrast.textContent = '애니메이션 시작';
+    } else {
+      aniPlayState = 'running';
+      $btnContrast.textContent = '애니메이션 중지';
+    }
+    document.body.style.setProperty('--play-state', aniPlayState);
+  };
+
+  // handlers
+  $accessibilityMenu.addEventListener('click', ({ target }) => {
+    if (!target.matches('.accessibility__menu .accessibility__btn')) return;
+    target === $btnBiggerText ? biggerText() : pauseStartAnimation();
+  });
+
+  $accessbilityMenuToggleBtn.addEventListener('click', () => {
+    $accessibilityMenu.classList.toggle('on');
+  });
+})();
 
 // 게임 유틸즈
 const gameUtils = (() => {
