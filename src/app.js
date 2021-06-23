@@ -1,9 +1,12 @@
+let user = {
+  name: 'GUEST',
+  solved: 53,
+  correct: 49,
+  stageCleared: 2
+};
+
 const mainPage = (function () {
   let mode = 'EASY';
-  let user = {
-    name: 'John',
-    session: false
-  };
   const categories = [
     {
       id: 1,
@@ -34,6 +37,10 @@ const mainPage = (function () {
   };
 
   const getUserSession = () => localStorage.getItem('userName');
+  const getCorrectRate = () => Math.floor((user.correct / user.solved) * 100);
+  const getStageClearRate = () =>
+    Math.floor((user.stageCleared / categories.length) * 100);
+
   const fetch = () => {
     document.body.style.setProperty(
       'overflow-y',
@@ -51,24 +58,24 @@ const mainPage = (function () {
       <h2 class="user__name">${user.name}</h2>
       <div class="user__status">
         <section class="user__status-circle">
-          <svg class="user__status-svg" viewBox="-1 -1 34 34">
+          <svg xmlns="http://www.w3.org/2000/svg" class="user__status-svg" viewBox="-1 -1 34 34">
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__background"
             />
 
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__progress js-progress-bar"
             />
           </svg>
           <div class="user__status-content">
-            <p class="progress-title">Study</p>
-            <span class="progress-rate">55%</span>
+            <p class="progress-title">STAGE</p>
+            <span class="progress-rate">${getStageClearRate()}%</span>
           </div>
         </section>
         <section class="user__status-circle">
@@ -76,20 +83,20 @@ const mainPage = (function () {
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__background"
             />
 
             <circle
               cx="16"
               cy="16"
-              r="15.9155"
+              r="15.923566879"
               class="progress-bar__progress js-progress-bar"
             />
           </svg>
           <div class="user__status-content">
-            <p class="progress-title">Correct</p>
-            <span class="progress-rate">87%</span>
+            <p class="progress-title">CORRECT</p>
+            <span class="progress-rate">${getCorrectRate()}%</span>
           </div>
         </section>
       </div>
@@ -355,43 +362,23 @@ const mainPage = (function () {
         document.querySelector('.profile').addEventListener(
           'click',
           throttle(e => {
-            if (
-              !e.target
-                .closest('.profile-container')
-                .classList.contains('active')
-            ) {
-              // TODO: 리팩토링
-              const percentageCompletes = [0.55, 0.87];
-              const strokeDashOffsetValues = [
-                100 - percentageCompletes[0] * 100,
-                100 - percentageCompletes[1] * 100
-              ];
-              const $progressBars =
-                document.querySelectorAll('.js-progress-bar');
-              [...$progressBars].forEach(($bar, idx) => {
-                $bar.style.setProperty(
-                  'stroke-dashoffset',
-                  strokeDashOffsetValues[idx]
-                );
-              });
-            } else {
-              // TODO: 리팩토링
-              const percentageCompletes = [0, 0];
-              const strokeDashOffsetValues = [
-                100 - percentageCompletes[0] * 100,
-                100 - percentageCompletes[1] * 100
-              ];
-              const $progressBars =
-                document.querySelectorAll('.js-progress-bar');
-              [...$progressBars].forEach(($bar, idx) => {
-                $bar.style.setProperty(
-                  'stroke-dashoffset',
-                  strokeDashOffsetValues[idx]
-                );
-              });
-            }
+            const $progressBars = document.querySelectorAll('.js-progress-bar');
+            const percentageCompletes = [getStageClearRate(), getCorrectRate()];
+
+            [...$progressBars].forEach(($bar, idx) => {
+              $bar.style.setProperty(
+                'stroke-dashoffset',
+                100 -
+                  (!e.target
+                    .closest('.profile-container')
+                    .classList.contains('active')
+                    ? percentageCompletes[idx]
+                    : 0)
+              );
+            });
+
             e.target.closest('.profile-container').classList.toggle('active');
-          }, 500)
+          }, 700)
         );
 
         if (!getUserSession()) {
