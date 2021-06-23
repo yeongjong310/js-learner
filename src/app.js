@@ -42,6 +42,7 @@ const mainPage = (function () {
     Math.floor((user.stageCleared.size / categories.length) * 100);
 
   const fetch = () => {
+    mode = 'EASY';
     document.body.style.setProperty(
       'overflow-y',
       getUserSession() ? 'scroll' : 'hidden'
