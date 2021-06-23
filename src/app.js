@@ -417,13 +417,22 @@ const mainPage = (function () {
   };
 })();
 
-// mainPage.render();
+mainPage.render();
 
 // yj
 
 // 게임 유틸즈
 const gameUtils = (() => {
+  let timerId;
+  let _oxygen;
+
+  const initializeState = () => {
+    clearInterval(timerId);
+    _oxygen = 100;
+  };
+
   const renderGameBackground = () => {
+    initializeState();
     document.body.innerHTML = `
       <section class="ocean">
         <div class="bubbles">
@@ -489,7 +498,6 @@ const gameUtils = (() => {
   };
 
   const oxygenTank = (() => {
-    let _oxygen = 100;
     let _inhaleAmount;
 
     const minusOxygen = () => {
@@ -499,7 +507,7 @@ const gameUtils = (() => {
     const init = (inhaleAmount, callback) => {
       _inhaleAmount = inhaleAmount;
 
-      const intervalId = setInterval(() => {
+      timerId = setInterval(() => {
         _oxygen -= _inhaleAmount;
 
         document
@@ -507,7 +515,7 @@ const gameUtils = (() => {
           .style.setProperty('--amount', _oxygen);
 
         if (_oxygen <= 0) {
-          clearInterval(intervalId);
+          clearInterval(timerId);
           callback(); // 게임 종료 콜백
           document.querySelector('.ocean').classList.remove('active');
         } else if (_oxygen <= 30) {
@@ -637,7 +645,8 @@ const gamePage = (function () {
   // states
   let currentProblemIdx;
   let problems;
-  const isReady = false;
+  let gameEnd;
+  let mode;
 
   // initialize states
   const initializeStates = () => {
@@ -647,6 +656,7 @@ const gamePage = (function () {
       completed: false,
       correct: false
     }));
+    gameEnd = false;
   };
 
   // append problem section to $body
@@ -833,20 +843,65 @@ const gamePage = (function () {
   //   $body.appendChild($sectionControl);
   // };
 
+  // load game
+  const loadGame = () => {
+    let count = 1;
+    const timerId = setInterval(() => {
+      if (count === 0) {
+        clearInterval(timerId);
+        $body.querySelector('.overlay').remove();
+        getReady();
+        return;
+      }
+      count--;
+    }, 1000);
+  };
+
   // initial game setting
-  const initializeGame = () => {
+  const initializeGame = _mode => {
+    mode = _mode;
     $body.className = 'game';
     gameUtils.renderGameBackground();
     initializeStates();
     const $defaultProblemsSection = document.createElement('section');
     $defaultProblemsSection.className = 'problems';
     $body.appendChild($defaultProblemsSection);
-    getReady();
+    loadGame();
+  };
+
+  // show result
+  const showResult = () => {
+    if (gameEnd) return;
+
+    gameEnd = true;
+    const correctProblemCnt = problems.filter(
+      problem => problem.correct
+    ).length;
+    const totalProblemLength = problems.length;
+    const $resultSection = document.createElement('section');
+    $resultSection.className = 'results';
+    $resultSection.innerHTML = `
+        <div class="overlay progress"></div>
+        <div class="result">
+          <div class="user-name">
+            <span>&#127881;</span>
+            Great! ${user.name}
+            <span>&#127881;</span>
+          </div>
+          <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
+          <button class="close">HOME</button>
+        </div>
+      `;
+
+    $body.appendChild($resultSection);
+    $resultSection.querySelector('.close').addEventListener('click', () => {
+      mainPage.render();
+    });
   };
 
   const startGame = () => {
     appendProblem();
-    gameUtils.oxygenTank.init(0.5, showResult);
+    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
   };
 
   // getReady game
@@ -874,33 +929,6 @@ const gamePage = (function () {
     const $allProblems = [...$body.querySelectorAll('.problem')];
     const $currentProblem = $allProblems[$allProblems.length - 1];
     $currentProblem.classList.add('completed');
-  };
-
-  // show result
-  const showResult = () => {
-    const correctProblemCnt = problems.filter(
-      problem => problem.correct
-    ).length;
-    const totalProblemLength = problems.length;
-    const $resultSection = document.createElement('section');
-    $resultSection.className = 'results';
-    $resultSection.innerHTML = `
-      <div class="overlay progress"></div>
-      <div class="result">
-        <div class="user-name">
-          <span>&#127881;</span>
-          Great! ${user.name}
-          <span>&#127881;</span>
-        </div>
-        <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
-        <button class="close">HOME</button>
-      </div>
-    `;
-
-    $body.appendChild($resultSection);
-    $resultSection.querySelector('.close').addEventListener('click', () => {
-      mainPage.render();
-    });
   };
 
   // check selection
@@ -964,6 +992,7 @@ const gamePage = (function () {
   // move problem
   const moveProblem = (() => ({
     next() {
+      if (currentProblemIdx > problems.length - 1) return;
       if (currentProblemIdx === problems.length - 1) {
         showResult();
         return;
@@ -1255,13 +1284,13 @@ const gamePage = (function () {
   // };
 
   return {
-    start() {
+    start(_mode) {
       // init();
       // renderProblem();
-      initializeGame();
+      initializeGame(_mode);
     },
     end() {}
   };
 })();
 
-gamePage.start();
+// gamePage.start();
