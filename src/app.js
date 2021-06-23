@@ -337,11 +337,11 @@ const mainPage = (function () {
             const currentY = window.scrollY;
 
             document.querySelectorAll('.scroll-del').forEach(e => {
-              e.classList.toggle('disable', currentY > 100);
+              e.classList.toggle('disable', currentY > 200);
             });
             document
               .querySelector('.scroll-up')
-              .classList.toggle('able', currentY > 100);
+              .classList.toggle('able', currentY > 200);
           }, 50)
         );
 
