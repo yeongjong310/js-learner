@@ -458,7 +458,9 @@ const accessibility = (() => {
 
   // functions
   const biggerText = (() => {
-    const $fontLevelIcons = document.querySelector('.accessibility__btn--level-wrapper');
+    const $fontLevelIcons = document.querySelector(
+      '.accessibility__btn--level-wrapper'
+    );
     const FONT_SIZES = ['16px', '18px', '20px'];
     let level = 0;
     return () => {
@@ -470,7 +472,8 @@ const accessibility = (() => {
       $fontLevelIcons.append($fontLevelIcon);
 
       if ($fontLevelIcons.children.length === 4) {
-        $fontLevelIcons.innerHTML = '<div class="accessibility__btn--level"></div>';
+        $fontLevelIcons.innerHTML =
+          '<div class="accessibility__btn--level"></div>';
       }
     };
   })();
@@ -586,9 +589,14 @@ const gameUtils = (() => {
       timerId = setInterval(() => {
         _oxygen -= _inhaleAmount;
 
-        document
-          .querySelector('.oxygen-tank')
-          .style.setProperty('--amount', _oxygen);
+        const $tank = document.querySelector('.oxygen-tank');
+
+        if (!$tank) {
+          clearInterval(timerId);
+          return;
+        }
+
+        $tank.style.setProperty('--amount', _oxygen);
 
         if (_oxygen <= 0) {
           clearInterval(timerId);
