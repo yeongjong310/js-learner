@@ -149,6 +149,7 @@ const mainPage = (function () {
   <div class="arrow arrow-left scroll-del"></div>
   <div class="arrow arrow-right scroll-del"></div>
   <div class="scroll-up">GO DIVE !</div>
+  </div>
   ${
     !getUserSession()
       ? `<div class="overlay">
@@ -476,9 +477,10 @@ const gameUtils = (() => {
       `;
     const timer = setInterval(() => {
       const $loadingText = document.querySelector('.loading__text');
-      $loadingText.textContent = $loadingText.textContent.length >= 12
-        ? 'LOADING'
-        : $loadingText.textContent + ' .';
+      $loadingText.textContent =
+        $loadingText.textContent.length >= 12
+          ? 'LOADING'
+          : $loadingText.textContent + ' .';
     }, 250);
 
     setTimeout(() => {
