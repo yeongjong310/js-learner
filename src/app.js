@@ -442,9 +442,14 @@ const accessibility = (() => {
       <img src="./src/img/disabled.svg"/ alt="accessibility menu button" />
     </a>
     <div class="accessibility__menu">
-      <span class="a11y-hidden">접근성 메뉴</span>
+      <div class="accessibility__menu-title">접근성 메뉴</div>
       <ul>
-        <li><button class="accessibility__btn">텍스트 크기 조절</button></li>
+        <li>
+          <button class="accessibility__btn">텍스트 크기 조절</button>
+          <div class="accessibility__btn--level-wrapper">
+            <span class="accessibility__btn--level"></span>
+          </div>
+        </li>
         <li><button class="accessibility__btn">애니메이션 중지</button></li>
       </ul>
     </div>
@@ -462,11 +467,20 @@ const accessibility = (() => {
 
   // functions
   const biggerText = (() => {
+    const $fontLevelIcons = document.querySelector('.accessibility__btn--level-wrapper');
     const FONT_SIZES = ['16px', '18px', '20px'];
     let level = 0;
     return () => {
       level = (level + 1) % FONT_SIZES.length;
       document.documentElement.style.fontSize = FONT_SIZES[level];
+
+      const $fontLevelIcon = document.createElement('span');
+      $fontLevelIcon.className = 'accessibility__btn--level';
+      $fontLevelIcons.append($fontLevelIcon);
+
+      if ($fontLevelIcons.children.length === 4) {
+        $fontLevelIcons.innerHTML = '<div class="accessibility__btn--level"></div>';
+      }
     };
   })();
 

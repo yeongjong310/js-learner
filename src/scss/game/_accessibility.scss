@@ -1,5 +1,6 @@
 .accessibility {
   position: fixed;
+  align-items: center;
   right: 10px;
   top: 50%;
   transform: translate3d(0, -50%, 0);
@@ -22,22 +23,68 @@
     }
   }
   &__menu {
+    position: relative;
+    right: 10px;
+    opacity: 0.7;
     order: -1;
-    display: none;
+    width: 0;
+    overflow: hidden;
     list-style-type: none;
+    background-color: #fff;
+    border-radius: 20px;
+    transition: 1s;
+    &.on {
+      display: inline-block;
+      width: 370px;
+    }
+    &-title {
+      line-height: 30px;
+      text-align: center;
+      padding: 5px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
     ul {
       display: flex;
       list-style-type: none;
-      height: 100%;
+      height: 100px;
+      margin: 0 10px 10px 10px;
+      > :nth-child(1) {
+        margin-right: 10px;
+      }
     }
-    .accessibility__btn {
-      width: 150px;
-      height: 100%;
-      border-radius: 50% 0 0 50%;
-      border: 2px solid #fff;
+    li {
+      position: relative;
     }
-    &.on {
+  }
+  .accessibility__btn {
+    display: inline-block;
+    color: white;
+    width: 170px;
+    height: 100%;
+    background-color: #222;
+    border-radius: 10px;
+    transition: 0.3s;
+    box-shadow: 2px 2px 6px 0px rgba(0,0,0,0);
+    &--level-wrapper {
+      display: flex;
+      position: absolute;
+      right: 50%;
+      bottom: 10px;
+      transform: translate3d(50%, 0, 0);
+    }
+    &--level {
+      margin: 2px;
       display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: white;
     }
+  }
+
+  .accessibility__btn:hover {
+    box-shadow: 2px 2px 6px 0px rgba(0,0,0,0.6);
   }
 }
