@@ -1,8 +1,8 @@
 let user = {
   name: 'GUEST',
-  solved: 53,
+  solved: 73,
   correct: 49,
-  stageCleared: 2
+  stageCleared: new Set()
 };
 
 const mainPage = (function () {
@@ -39,7 +39,7 @@ const mainPage = (function () {
   const getUserSession = () => localStorage.getItem('userName');
   const getCorrectRate = () => Math.floor((user.correct / user.solved) * 100);
   const getStageClearRate = () =>
-    Math.floor((user.stageCleared / categories.length) * 100);
+    Math.floor((user.stageCleared.size / categories.length) * 100);
 
   const fetch = () => {
     document.body.style.setProperty(
@@ -101,7 +101,10 @@ const mainPage = (function () {
         </section>
       </div>
       <div class="user__more-btn" role="button">MORE</div>
-      <section class="user__more-info">MORE INFO</section>
+    </section>
+    <section class="user__more-info">
+      <p class="user__more-title">JS DIVER Version 2</p>
+      <p class="user__more-content">Coming Soon ...</p>
     </section>
   </section>
   <section class="ocean">
@@ -141,7 +144,12 @@ const mainPage = (function () {
   <div class="bird"></div>
   <div class="bird two"></div>
   <div class="bird three"></div>
-  <div for="checkbox" class="btn mode" role="button">HARD</div>
+  <div class="scroll-del-wrapper">
+  <div class="btn mode scroll-del" role="button">EASY MODE</div>
+  <div class="arrow arrow-left scroll-del"></div>
+  <div class="arrow arrow-right scroll-del"></div>
+  <div class="scroll-up">GO DIVE !</div>
+  </div>
   ${
     !getUserSession()
       ? `<div class="overlay">
@@ -186,62 +194,26 @@ const mainPage = (function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const throttle = (callback, delay) => {
+    let timerId = null;
+
+    return e => {
+      if (timerId) return;
+      callback(e);
+      timerId = setTimeout(() => {
+        timerId = null;
+      }, delay);
+    };
+  };
+
   return {
     init() {
       fetch();
 
-      const throttle = (callback, delay) => {
-        let timerId = null;
-
-        return e => {
-          if (timerId) return;
-          callback(e);
-          timerId = setTimeout(() => {
-            timerId = null;
-          }, delay);
-        };
-      };
-
       // 1. renderCategories
       (function renderCategories() {
         const $fragment = document.createDocumentFragment();
-        // const $shark = document.createElement('div');
-        // $shark.className = 'shark';
-        // $shark.innerHTML = `
-        //       <div class="shark__body">
-        //         <div class="shark__eye"></div>
-        //         <div class="shark__mouth">
-        //           <div class="mouth__tooth--1"></div>
-        //           <div class="mouth__tooth--2"></div>
-        //           <div class="mouth__tooth--3"></div>
-        //           <div class="mouth__tooth--4"></div>
-        //           <div class="mouth__tooth--5"></div>
-        //           <div class="mouth__tooth--6"></div>
-        //           <div class="mouth__tooth--7"></div>
-        //           <div class="mouth__tooth--8"></div>
-        //           <div class="mouth__tooth--9"></div>
-        //           <div class="mouth__tooth--10"></div>
-        //           <div class="mouth__tooth--11"></div>
-        //           <div class="mouth__tooth--12"></div>
-        //           <div class="mouth__tooth--13"></div>
-        //           <div class="mouth__tooth--14"></div>
-        //           <div class="mouth__tooth--15"></div>
-        //           <div class="mouth__tooth--16"></div>
-        //           <div class="mouth__tooth--17"></div>
-        //           <div class="mouth__tooth--18"></div>
-        //           <div class="mouth__tooth--19"></div>
-        //           <div class="mouth__tooth--20"></div>
-        //           <div class="mouth__tooth--21"></div>
-        //           <div class="mouth__tooth--22"></div>
-        //           <div class="mouth__tooth--23"></div>
-        //           <div class="mouth__tooth--24"></div>
-        //           <div class="mouth__tooth--25"></div>
-        //           <div class="mouth__tooth--26"></div>
-        //           <div class="mouth__tooth--27"></div>
-        //           <div class="mouth__tooth--28"></div>
-        //         </div>
-        //       </div>
-        // `;
+
         categories.forEach(({ name }, idx) => {
           const $category = document.createElement('div');
 
@@ -329,10 +301,10 @@ const mainPage = (function () {
             'click',
             throttle(() => {
               if (mode === 'HARD') {
-                // EASY MODE
+                // HARD MODE
                 mode = 'EASY';
                 document.body.classList.remove('night');
-                modeBtn.textContent = 'HARD';
+                modeBtn.textContent = 'EASY MODE';
                 sun.classList.remove('night');
                 moon.classList.remove('night');
                 stars.classList.remove('night');
@@ -341,10 +313,10 @@ const mainPage = (function () {
 
                 return;
               }
-              // HARD MODE
+              // EASY MODE
               mode = 'HARD';
               document.body.classList.add('night');
-              modeBtn.textContent = 'EASY';
+              modeBtn.textContent = 'HARD MODE';
               birds.forEach(bird => bird.classList.add('night'));
               sun.classList.add('night');
               moon.classList.add('night');
@@ -358,6 +330,20 @@ const mainPage = (function () {
           if (!e.target.matches('.category, .category__name')) return;
           gamePage.start(mode);
         });
+
+        window.addEventListener(
+          'scroll',
+          throttle(() => {
+            const currentY = window.scrollY;
+
+            document.querySelectorAll('.scroll-del')?.forEach(e => {
+              e.classList.toggle('disable', currentY > 200);
+            });
+            document
+              .querySelector('.scroll-up')
+              ?.classList.toggle('able', currentY > 200);
+          }, 50)
+        );
 
         document.querySelector('.profile').addEventListener(
           'click',
@@ -381,7 +367,24 @@ const mainPage = (function () {
           }, 700)
         );
 
-        if (!getUserSession()) {
+        document.querySelector('.user__more-btn').addEventListener(
+          'click',
+          throttle(() => {
+            const $toast = document.querySelector('.user__more-info');
+
+            $toast.classList.add('active');
+            setTimeout(() => {
+              $toast.classList.remove('active');
+            }, 2000);
+          }, 3000)
+        );
+
+        if (getUserSession()) {
+          setUser({ ...user, name: localStorage.getItem('userName') });
+          return;
+        }
+
+        (function login() {
           document.querySelector('.overlay').addEventListener('submit', e => {
             e.preventDefault();
             const userName = document
@@ -389,7 +392,7 @@ const mainPage = (function () {
               .value.trim();
 
             if (!userName) return;
-            setUser({ name: userName, session: true });
+            setUser({ ...user, name: userName });
             document.querySelector('.overlay').remove();
 
             (function greeting() {
@@ -404,7 +407,7 @@ const mainPage = (function () {
               }, 1500);
             })();
           });
-        }
+        })();
       })();
     },
 
@@ -549,9 +552,10 @@ const gameUtils = (() => {
       `;
     const timer = setInterval(() => {
       const $loadingText = document.querySelector('.loading__text');
-      $loadingText.textContent = $loadingText.textContent.length >= 12
-        ? 'LOADING'
-        : $loadingText.textContent + ' .';
+      $loadingText.textContent =
+        $loadingText.textContent.length >= 12
+          ? 'LOADING'
+          : $loadingText.textContent + ' .';
     }, 250);
 
     setTimeout(() => {
@@ -994,7 +998,6 @@ const gamePage = (function () {
     }
 
     problems.find(problem => problem.id === problemId).correct = true;
-    console.log(problems);
   };
 
   // move problem

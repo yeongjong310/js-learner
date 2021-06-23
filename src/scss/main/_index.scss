@@ -66,6 +66,10 @@ body.main {
         height: 80%;
       }
 
+      & .user__more-btn {
+        font-size: 1.3em;
+      }
+
       & .profile .line {
         margin: 0;
         position: absolute;
@@ -223,6 +227,8 @@ body.main {
         font-weight: 800;
         animation: blink 1.4s alternate infinite;
         cursor: pointer;
+        font-size: 0;
+        transition: font-size 0.5s;
 
         &:hover {
           background-color: rgba(255, 255, 255, 0.406);
@@ -230,9 +236,30 @@ body.main {
       }
 
       &-info {
-        width: 100%;
-        height: 300px;
-        display: none;
+        position: absolute;
+        top: 370px;
+        left: -25px;
+        width: 400px;
+        height: 100px;
+        border-radius: 10px;
+        text-align: center;
+        background: rgba(34, 34, 34, 0.7);
+        opacity: 0;
+        transition: opacity 0.7s ease;
+        padding: 15px;
+        color: rgba(255, 255, 255, 0.9);
+
+        &.active {
+          opacity: 1;
+        }
+      }
+
+      &-title {
+        font-size: 2rem;
+      }
+
+      &-content {
+        font-size: 1.7rem;
       }
     }
   }
@@ -275,24 +302,33 @@ body.main {
     z-index: -2;
   }
 
+  .scroll-del-wrapper {
+    position: absolute;
+    bottom: 7%;
+
+    width: 100%;
+    height: 70px;
+    overflow: hidden;
+  }
+
   .category {
     position: absolute;
     width: 170px;
     height: 170px;
-    background-color: #d2d2ff87;
+    background-color: #ffffff52;
     text-align: center;
     border-radius: 50%;
     transition: 0.15s;
     font-size: 1.8rem;
     font-weight: 800;
-    text-shadow: 1px 1px 3px #fff, 1px 1px 3px #fff, 1px 1px 3px #fff;
-    border: 2px solid darken($ocean, 2%);
+    text-shadow: 1px 1px 6px #fff, 1px 1px 6px #fff, 1px 1px 6px #fff;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 
     &:hover {
       font-weight: 800;
       font-size: 1.7rem;
-      font-size: 2rem;
+      font-size: 3rem;
       transform: scale(120%, 120%);
 
       & .shark__body {
@@ -544,207 +580,6 @@ body.main {
     }
   }
 
-  // // shark
-  // @mixin tooth($top: 50px, $left: 44px, $rotate: -37deg) {
-  //   position: absolute;
-  //   top: $top;
-  //   left: $left;
-  //   width: 0;
-  //   height: 0;
-  //   border-bottom: 23px solid $shark__teeth;
-  //   border-left: 10px solid transparent;
-  //   border-right: 10px solid transparent;
-  //   transform: rotate($rotate);
-  // }
-
-  // $bg: #246c9c;
-  // $shark__skin: #646f76;
-  // $shark__belly: #f6f5f1;
-  // $shark__eye: #222;
-  // $shark__mouth: #d99fa3;
-  // $shark__teeth: #fff;
-
-  // .shark {
-  //   position: absolute;
-  //   overflow: hidden;
-  //   bottom: 5%;
-  //   left: 10%;
-  //   width: 540px;
-  //   height: 322px;
-  //   border-radius: 0 0 240px 240px;
-  //   z-index: -2;
-
-  //   &__body {
-  //     position: absolute;
-  //     top: 100%;
-  //     left: 188px;
-  //     width: 278px;
-  //     height: 900px;
-  //     background: $shark__skin;
-  //     border-radius: 100%;
-  //     transform: rotate(-22deg);
-  //     transition: top 0.4s;
-  //     z-index: -1;
-  //     &:before {
-  //       position: absolute;
-  //       top: 24px;
-  //       left: 6px;
-  //       width: 75%;
-  //       height: 75%;
-  //       content: '';
-  //       background: $shark__belly;
-  //       border-radius: inherit;
-  //       transform: rotate(2deg);
-  //     }
-  //     .shark__eye {
-  //       position: absolute;
-  //       top: 204px;
-  //       right: 53px;
-  //       width: 12px;
-  //       height: 12px;
-  //       background: $shark__eye;
-  //       border-radius: 100%;
-  //       &:before,
-  //       &:after {
-  //         position: absolute;
-  //         content: '';
-  //       }
-  //       &:before {
-  //         top: -6px;
-  //         left: 3px;
-  //         width: 20px;
-  //         height: 4px;
-  //         background: inherit;
-  //         transform: rotate(5deg);
-  //       }
-  //       &:after {
-  //         top: 3px;
-  //         right: 3px;
-  //         width: 30%;
-  //         height: 30%;
-  //         background: #fff;
-  //         border-radius: inherit;
-  //       }
-  //     }
-  //     .shark__mouth {
-  //       overflow: hidden;
-  //       position: absolute;
-  //       top: 105px;
-  //       left: -30px;
-  //       width: 70%;
-  //       height: 40%;
-  //       background: $bg;
-  //       border-radius: inherit;
-  //       transform: rotate(6deg);
-  //       &:before,
-  //       &:after {
-  //         position: absolute;
-  //         height: 90%;
-  //         content: '';
-  //         border-radius: inherit;
-  //       }
-  //       &:before {
-  //         top: -6px;
-  //         left: 56px;
-  //         width: 75%;
-  //         background: $shark__mouth;
-  //       }
-  //       &:after {
-  //         top: 40px;
-  //         left: 28px;
-  //         width: 70%;
-  //         background: $shark__belly;
-  //       }
-  //       // Bottom Teeth
-  //       .mouth__tooth--1 {
-  //         @include tooth();
-  //       }
-  //       .mouth__tooth--2 {
-  //         @include tooth(38px, 54px, -22deg);
-  //       }
-  //       .mouth__tooth--3 {
-  //         @include tooth(26px, 69px, -8deg);
-  //       }
-  //       .mouth__tooth--4 {
-  //         @include tooth(21px, 87px, 6deg);
-  //       }
-  //       .mouth__tooth--5 {
-  //         @include tooth(26px, 108px, 30deg);
-  //       }
-  //       .mouth__tooth--6 {
-  //         @include tooth(40px, 124px, 50deg);
-  //       }
-  //       .mouth__tooth--7 {
-  //         @include tooth(56px, 135px, 64deg);
-  //       }
-  //       .mouth__tooth--8 {
-  //         @include tooth(73px, 144px, 68deg);
-  //       }
-  //       .mouth__tooth--9 {
-  //         @include tooth(92px, 150px, 75deg);
-  //       }
-  //       .mouth__tooth--10 {
-  //         @include tooth(109px, 154px, 75deg);
-  //       }
-  //       .mouth__tooth--11 {
-  //         @include tooth(129px, 158px, 86deg);
-  //       }
-  //       .mouth__tooth--12 {
-  //         @include tooth(148px, 160px, 86deg);
-  //       }
-  //       .mouth__tooth--13 {
-  //         @include tooth(167px, 162px, 93deg);
-  //       }
-  //       .mouth__tooth--14 {
-  //         @include tooth(184px, 162px, 93deg);
-  //       }
-  //       // Top Teeth
-  //       .mouth__tooth--15 {
-  //         @include tooth(177px, 180px, -87deg);
-  //       }
-  //       .mouth__tooth--16 {
-  //         @include tooth(160px, 177px, -87deg);
-  //       }
-  //       .mouth__tooth--17 {
-  //         @include tooth(140px, 174px, -87deg);
-  //       }
-  //       .mouth__tooth--18 {
-  //         @include tooth(121px, 173px, -85deg);
-  //       }
-  //       .mouth__tooth--19 {
-  //         @include tooth(100px, 170px, -87deg);
-  //       }
-  //       .mouth__tooth--20 {
-  //         @include tooth(80px, 162px, -95deg);
-  //       }
-  //       .mouth__tooth--21 {
-  //         @include tooth(60px, 155px, -100deg);
-  //       }
-  //       .mouth__tooth--22 {
-  //         @include tooth(42px, 146px, -105deg);
-  //       }
-  //       .mouth__tooth--23 {
-  //         @include tooth(25px, 137px, -120deg);
-  //       }
-  //       .mouth__tooth--24 {
-  //         @include tooth(13px, 126px, -135deg);
-  //       }
-  //       .mouth__tooth--25 {
-  //         @include tooth(4px, 108px, -150deg);
-  //       }
-  //       .mouth__tooth--26 {
-  //         @include tooth(-2px, 93px, -171deg);
-  //       }
-  //       .mouth__tooth--27 {
-  //         @include tooth(-2px, 74px, -171deg);
-  //       }
-  //       .mouth__tooth--28 {
-  //         @include tooth(4px, 57px, 173deg);
-  //       }
-  //     }
-  //   }
-  // }
-
   .overlay {
     position: absolute;
     left: 0;
@@ -797,8 +632,8 @@ body.main {
 
       &:hover,
       &:focus {
-        border: 4px solid #53c100;
-        color: #53c100;
+        border: 4px solid #d8ffbba3;
+        color: #d8ffbba3;
       }
     }
   }
@@ -1183,6 +1018,54 @@ body.main {
     }
     100% {
       transform: rotate(-40deg);
+    }
+  }
+
+  @keyframes arrowBlink {
+    to {
+      opacity: 0;
+    }
+  }
+
+  .arrow {
+    position: absolute;
+    bottom: 7%;
+    transform: rotate(90deg);
+    width: 50px;
+    height: 50px;
+    opacity: 1;
+    background: url('../img/arrow.svg');
+    animation: arrowBlink 0.75s infinite alternate;
+
+    &-left {
+      left: 20%;
+    }
+
+    &-right {
+      right: 20%;
+    }
+  }
+
+  .scroll-del {
+    bottom: 10px;
+    transition: bottom 0.4s ease;
+
+    &.disable {
+      bottom: 150%;
+    }
+  }
+
+  .scroll-up {
+    position: absolute;
+    font-size: 3rem;
+    bottom: -100%;
+    transition: bottom 0.4s ease;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    text-shadow: 1px 1px 6px #fff, 1px 1px 6px #fff, 1px 1px 6px #fff;
+
+    &.able {
+      bottom: 5px;
     }
   }
 }
