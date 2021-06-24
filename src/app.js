@@ -418,7 +418,7 @@ const mainPage = (function () {
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 // yj
 // 접근성
@@ -985,7 +985,7 @@ const gamePage = (function () {
 
   const startGame = () => {
     appendProblem();
-    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
+    // gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
   };
 
   // getReady game
@@ -1377,4 +1377,4 @@ const gamePage = (function () {
   };
 })();
 
-// gamePage.start();
+gamePage.start();
