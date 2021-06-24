@@ -916,7 +916,8 @@ const gamePage = (function () {
       id: 13,
       categoryId: 3,
       type: PROBLEM_TYPES.SHORT,
-      question: `'fruit'이라는 class를 가진 요소 모두를 선택할 수 있도록 빈칸을 작성해 주세요.`,
+      question:
+        "'fruit'이라는 class를 가진 요소 모두를 선택할 수 있도록 빈칸을 작성해 주세요.",
       sub: 'document.querySelectorAll( _____ )',
       options: []
     },
@@ -1013,7 +1014,7 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.OX,
       question:
         'this에 값을 할당하여 사용하거나 this의 값을 변수에 할당하여 사용할 수 있다.',
-      sub: ``,
+      sub: '',
       options: [
         { id: 1, content: 'O' },
         { id: 2, content: 'X' }
@@ -1400,9 +1401,11 @@ const gamePage = (function () {
           <legend>
             ${question}
           </legend>
-          <div>
-            ${sub}
-          </div>
+          <pre>
+            <code>
+              ${sub}
+            </code>
+          </pre>
           <section class="form__selections">
             ${options
               .map(
@@ -1438,9 +1441,11 @@ const gamePage = (function () {
           <legend>
             ${question}
           </legend>
-          <div>
-            ${sub}
-          </div>
+          <pre>
+            <code>
+              ${sub}
+            </code>
+          </pre>
           <section class="form__selections">
           ${options
             .map(
@@ -1476,9 +1481,11 @@ const gamePage = (function () {
           <legend>
             ${question}
           </legend>
-          <div>
-            ${sub}
-          </div>
+          <pre>
+            <code>
+              ${sub}
+            </code>
+          </pre>
           <section class="form__selections">
             ${options
               .map(
@@ -1512,9 +1519,11 @@ const gamePage = (function () {
           <legend>
             ${question}
           </legend>
-          <div class="sub">
-            ${sub}
-          </div>
+          <pre>
+            <code>
+              ${sub}
+            </code>
+          </pre>
           <section class="form__selections">
             <div class="input__answer">
               <img width='100' src='${SVG_CHARACTER_SRC}' />
@@ -1556,6 +1565,7 @@ const gamePage = (function () {
     $body.className = 'game';
     gameUtils.renderGameBackground();
     gameUtils.fetchGames();
+    accessibility.display();
     initializeStates();
     const $defaultProblemsSection = document.createElement('section');
     $defaultProblemsSection.className = 'problems';
