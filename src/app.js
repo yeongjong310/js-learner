@@ -667,12 +667,12 @@ const gameUtils = (() => {
       _oxygen = 100;
       _inhaleAmount = inhaleAmount;
       _endCallback = endCallback;
-      startInhaleOxygen();
     };
 
     return {
       init,
       minusOxygen,
+      startInhaleOxygen,
       stopInhaleOxygen
     };
   })();
@@ -808,6 +808,7 @@ const gamePage = (function () {
   // initialize states
   const initializeStates = () => {
     currentProblemIdx = 0;
+
     problems = [
       ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
     ].map(problem => ({
@@ -1085,6 +1086,7 @@ const gamePage = (function () {
   const startGame = () => {
     appendProblem();
     gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
+    gameUtils.oxygenTank.startInhaleOxygen();
   };
 
   // getReady game
