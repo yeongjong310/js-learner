@@ -137,7 +137,7 @@ body.game {
 
     .fly-slightly {
       position: relative;
-      top: -100px;
+      top: -70px;
     }
 
     .btn {
@@ -159,8 +159,6 @@ body.game {
 
   .input__answer {
     position: relative;
-    top: 150px;
-    width: 400px;
     height: 70px;
     margin: 0 auto;
     background-color: #f0f0f0;
@@ -210,16 +208,16 @@ body.game {
 
   @keyframes resultPopupSlowly {
     to {
-      transform: translate3d(-50%, -280%, 0);
+      transform: translate3d(-50%, -50%, 0);
     }
   }
 
   .result {
     position: absolute;
     border-radius: 20px;
-    top: 150%;
+    top: 50%;
     left: 50%;
-    transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, 150%, 0);
     width: 600px;
     height: 500px;
     transition: width 0.5s;
