@@ -418,41 +418,39 @@ const mainPage = (function () {
   };
 })();
 
-mainPage.render();
+// mainPage.render();
 
 // yj
 // 접근성
 const accessibility = (() => {
   let aniPlayState = 'running';
-  // render
-  (() => {
-    const $accessbility = document.createElement('article');
-    $accessbility.classList.add('accessibility');
-    $accessbility.innerHTML = `
-    <a class="accessibility__menu-btn" role="button">
-      <img src="./src/img/disabled.svg"/ alt="accessibility menu button" />
-    </a>
-    <div class="accessibility__menu">
-      <div class="accessibility__menu-title">접근성 메뉴</div>
-      <ul>
-        <li>
-          <button class="accessibility__btn">텍스트 크기 조절</button>
-          <div class="accessibility__btn--level-wrapper">
-            <span class="accessibility__btn--level"></span>
-          </div>
-        </li>
-        <li><button class="accessibility__btn">애니메이션 중지</button></li>
-      </ul>
-    </div>
-  `;
-    document.body.appendChild($accessbility);
-  })();
 
-  const $accessibilityMenu = document.querySelector('.accessibility__menu');
-  const $accessbilityMenuToggleBtn = document.querySelector(
+  // make button(DOM) for accessibility only one time
+  const $accessbility = document.createElement('article');
+  $accessbility.classList.add('accessibility');
+  $accessbility.innerHTML = `
+  <a class="accessibility__menu-btn" role="button">
+    <img src="./src/img/disabled.svg"/ alt="accessibility menu button" />
+  </a>
+  <div class="accessibility__menu">
+    <div class="accessibility__menu-title">접근성 메뉴</div>
+    <ul>
+      <li>
+        <button class="accessibility__btn">텍스트 크기 조절</button>
+        <div class="accessibility__btn--level-wrapper">
+          <span class="accessibility__btn--level"></span>
+        </div>
+      </li>
+      <li><button class="accessibility__btn">애니메이션 중지</button></li>
+    </ul>
+  </div>
+  `;
+
+  const $accessibilityMenu = $accessbility.querySelector('.accessibility__menu');
+  const $accessbilityMenuToggleBtn = $accessbility.querySelector(
     '.accessibility__menu-btn'
   );
-  const [$btnBiggerText, $btnContrast] = $accessibilityMenu.querySelectorAll(
+  const [$btnBiggerText, $btnToggleAni] = $accessbility.querySelectorAll(
     '.accessibility__btn'
   );
 
@@ -478,40 +476,38 @@ const accessibility = (() => {
     };
   })();
 
-  const pauseStartAnimation = () => {
+  const toggleAnimation = () => {
     if (aniPlayState === 'running') {
       aniPlayState = 'paused';
-      $btnContrast.textContent = '애니메이션 시작';
+      $btnToggleAni.textContent = '애니메이션 시작';
     } else {
       aniPlayState = 'running';
-      $btnContrast.textContent = '애니메이션 중지';
+      $btnToggleAni.textContent = '애니메이션 중지';
     }
+
     document.body.style.setProperty('--play-state', aniPlayState);
   };
 
   // handlers
   $accessibilityMenu.addEventListener('click', ({ target }) => {
     if (!target.matches('.accessibility__menu .accessibility__btn')) return;
-    target === $btnBiggerText ? biggerText() : pauseStartAnimation();
+    target === $btnBiggerText ? biggerText() : toggleAnimation();
   });
 
   $accessbilityMenuToggleBtn.addEventListener('click', () => {
     $accessibilityMenu.classList.toggle('on');
   });
+
+  return {
+    display() {
+      document.body.appendChild($accessbility);
+    }
+  };
 })();
 
 // 게임 유틸즈
 const gameUtils = (() => {
-  let timerId;
-  let _oxygen;
-
-  const initializeState = () => {
-    clearInterval(timerId);
-    _oxygen = 100;
-  };
-
   const renderGameBackground = () => {
-    initializeState();
     document.body.innerHTML = `
       <section class="ocean">
         <div class="bubbles">
@@ -547,66 +543,101 @@ const gameUtils = (() => {
         <aside class="oxygen-tank">
           <div class="oxygen"></div>
         </aside>
-      </section>
-      <div class="overlay">
-        <div class="loading">
-          <svg class="spinner" width="100" height="100">
-            <circle cx="50" cy="50" r="40"
-            stroke="rgba(100, 100, 100, 0.4)"
-            stroke-width="10"
-            fill='rgba(0, 0, 0, 0)' />
-            <circle cx="50" cy="50" r="40"
-            stroke="rgb(25, 132, 219)" stroke-width="10"
-            stroke-dasharray="314" stroke-dashoffset="270"
-            stroke-linecap="round" fill='rgba(0,0,0,0)' />
-          <div class="loading__text">LOADING</div>
-        </div>
-      </div>
-      `;
-    const timer = setInterval(() => {
-      const $loadingText = document.querySelector('.loading__text');
-      $loadingText.textContent =
-        $loadingText.textContent.length >= 12
-          ? 'LOADING'
-          : $loadingText.textContent + ' .';
-    }, 250);
+      </section>`;
+  };
+  const load = (() => {
+    let _timerId;
+    const $overlay = document.createElement('div');
+    $overlay.className = 'overlay';
+    $overlay.innerHTML = `
+      <div class="loading">
+        <svg class="spinner" width="100" height="100">
+          <circle cx="50" cy="50" r="40"
+          stroke="rgba(100, 100, 100, 0.4)"
+          stroke-width="10"
+          fill='rgba(0, 0, 0, 0)' />
+          <circle cx="50" cy="50" r="40"
+          stroke="rgb(25, 132, 219)" stroke-width="10"
+          stroke-dasharray="314" stroke-dashoffset="270"
+          stroke-linecap="round" fill='rgba(0,0,0,0)' />
+        <div class="loading__text">LOADING</div>
+      </div>`;
 
-    setTimeout(() => {
-      clearInterval(timer);
-    }, 2000);
+    return {
+      start() {
+        document.body.appendChild($overlay);
+        _timerId = setInterval(() => {
+          const $loadingText = document.querySelector('.loading__text');
+          $loadingText.textContent =
+            $loadingText.textContent.length >= 12
+              ? 'LOADING'
+              : $loadingText.textContent + ' .';
+        }, 250);
+      },
+      stop() {
+        setTimeout(() => {
+          clearInterval(_timerId);
+          document.body.removeChild($overlay);
+        }, 2000);
+      }
+    };
+  })();
+
+  const fetchGames = () => {
+    load.start();
+    setTimeout(load.stop, 2000);
   };
 
   const oxygenTank = (() => {
     let _inhaleAmount;
+    let _timerId;
+    let _oxygen = 100;
+    let _endCallback;
+
+    const stopInhaleOxygen = () => {
+      clearInterval(_timerId);
+    };
+
+    const startInhaleOxygen = () => {
+      const _inhale = () => {
+        _oxygen -= _inhaleAmount;
+      };
+
+      const _renderRestOxygenAmount = () => {
+        const $tank = document.querySelector('.oxygen-tank');
+        $tank.style.setProperty('--amount', _oxygen);
+      };
+
+      const _endGame = () => {
+        stopInhaleOxygen();
+        _endCallback();
+        document.querySelector('.ocean').classList.remove('active');
+      };
+
+      const _showAlmostEnd = () => {
+        document.querySelector('.ocean').classList.add('active');
+      };
+
+      _timerId = setInterval(() => {
+        _inhale();
+        _renderRestOxygenAmount();
+
+        if (_oxygen <= 30) _showAlmostEnd();
+        if (_oxygen <= 0) _endGame();
+      }, 100);
+    };
 
     const minusOxygen = () => {
       _oxygen -= 5;
     };
 
-    const init = (inhaleAmount, callback) => {
+    const init = (inhaleAmount, endCallback) => {
+      _oxygen = 100;
       _inhaleAmount = inhaleAmount;
-
-      timerId = setInterval(() => {
-        _oxygen -= _inhaleAmount;
-
-        const $tank = document.querySelector('.oxygen-tank');
-
-        if (!$tank) {
-          clearInterval(timerId);
-          return;
-        }
-
-        $tank.style.setProperty('--amount', _oxygen);
-
-        if (_oxygen <= 0) {
-          clearInterval(timerId);
-          callback(); // 게임 종료 콜백
-          document.querySelector('.ocean').classList.remove('active');
-        } else if (_oxygen <= 30) {
-          document.querySelector('.ocean').classList.add('active');
-        }
-      }, 100);
+      _endCallback = endCallback;
+      startInhaleOxygen();
     };
+
     return {
       init,
       minusOxygen
@@ -614,13 +645,16 @@ const gameUtils = (() => {
   })();
   return {
     renderGameBackground,
-    oxygenTank
+    oxygenTank,
+    fetchGames
   };
 })();
 
-// document.body.classList.add('game');
-// gameUtils.renderGameBackground();
-// gameUtils.oxygenTank.init(0);
+accessibility.display();
+document.body.classList.add('game');
+gameUtils.renderGameBackground();
+gameUtils.oxygenTank.init(1);
+// gameUtils.fetchGames();
 
 const gamePage = (function () {
   // data
@@ -1368,13 +1402,11 @@ const gamePage = (function () {
   // };
 
   return {
-    start(_mode) {
+    start() {
       // init();
       // renderProblem();
-      initializeGame(_mode);
+      initializeGame();
     },
     end() {}
   };
 })();
-
-// gamePage.start();
