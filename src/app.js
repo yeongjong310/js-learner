@@ -667,12 +667,13 @@ const gameUtils = (() => {
       _oxygen = 100;
       _inhaleAmount = inhaleAmount;
       _endCallback = endCallback;
-      startInhaleOxygen();
     };
 
     return {
       init,
-      minusOxygen
+      minusOxygen,
+      startInhaleOxygen,
+      stopInhaleOxygen
     };
   })();
   return {
@@ -807,8 +808,9 @@ const gamePage = (function () {
   // initialize states
   const initializeStates = () => {
     currentProblemIdx = 0;
+
     problems = [
-      ...PROBLEMS.filter(problem => problem.categoryId === categoryId)
+      ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
     ].map(problem => ({
       ...problem,
       completed: false,
@@ -820,7 +822,7 @@ const gamePage = (function () {
   // append problem section to $body
   const appendProblem = () => {
     const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
-    console.log(problems);
+
     const {
       id: problemId,
       type: problemType,
@@ -1007,7 +1009,6 @@ const gamePage = (function () {
     const timerId = setInterval(() => {
       if (count === 0) {
         clearInterval(timerId);
-        $body.querySelector('.overlay').remove();
         getReady();
         return;
       }
@@ -1021,6 +1022,7 @@ const gamePage = (function () {
     categoryId = _categoryId;
     $body.className = 'game';
     gameUtils.renderGameBackground();
+    gameUtils.fetchGames();
     initializeStates();
     const $defaultProblemsSection = document.createElement('section');
     $defaultProblemsSection.className = 'problems';
@@ -1055,7 +1057,7 @@ const gamePage = (function () {
     };
 
     gameEnd = true;
-
+    gameUtils.oxygenTank.stopInhaleOxygen();
     const { correctProblemCnt, totalProblemLength, stage } =
       _getComprehensiveResult();
     if (stage.cleared) user.stageCleared.add(stage.id);
@@ -1070,9 +1072,7 @@ const gamePage = (function () {
             ${stage.cleared ? 'Great!' : 'Try again ...'} ${user.name}
             <span>${stage.cleared ? '&#127881;' : '&#128517;'}</span>
           </div>
-          <div class="user-score">${result.correctProblemCnt} / ${
-      result.totalProblemLength
-    }</div>
+          <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
           <button class="close">HOME</button>
         </div>
       `;
@@ -1086,6 +1086,7 @@ const gamePage = (function () {
   const startGame = () => {
     appendProblem();
     gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
+    gameUtils.oxygenTank.startInhaleOxygen();
   };
 
   // getReady game
