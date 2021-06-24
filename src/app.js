@@ -634,6 +634,7 @@ const gamePage = (function () {
   const PROBLEMS = [
     {
       id: 1,
+      categoryId: 1,
       type: PROBLEM_TYPES.MULTIPLE_SINGLE,
       question:
         '하나의 값을 저장하기 위해 확보한 메모리 공간 자체 또는 그 메모리 공간을 식별하기 위해 붙인 이름을 의미하는 것은 다음 중 무엇인가?',
@@ -647,6 +648,7 @@ const gamePage = (function () {
     },
     {
       id: 2,
+      categoryId: 1,
       type: PROBLEM_TYPES.OX,
       question: '자바스크립트에서는 함수도 값이다.',
       sub: '',
@@ -657,6 +659,7 @@ const gamePage = (function () {
     },
     {
       id: 3,
+      categoryId: 1,
       type: PROBLEM_TYPES.MULTIPLE_SINGLE,
       question: '자바스크립트에서 다음 중 객체 타입이 아닌 것을 고르시오.',
       sub: '',
@@ -669,6 +672,7 @@ const gamePage = (function () {
     },
     {
       id: 4,
+      categoryId: 1,
       type: PROBLEM_TYPES.SHORT,
       question: '다음은 어떤 결과를 반환할까요?',
       sub: '[1, 2, 3, 4].reduce((acc, cur) => acc + cur ** 2, 1);',
@@ -676,6 +680,7 @@ const gamePage = (function () {
     },
     {
       id: 5,
+      categoryId: 1,
       type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
       question: '다음 중 옳은 것을 모두 고르시오',
       sub: '',
@@ -731,11 +736,14 @@ const gamePage = (function () {
   let problems;
   let gameEnd;
   let mode;
+  let categoryId;
 
   // initialize states
   const initializeStates = () => {
     currentProblemIdx = 0;
-    problems = [...PROBLEMS].map(problem => ({
+    problems = [
+      ...PROBLEMS.filter(problem => problem.categoryId === categoryId)
+    ].map(problem => ({
       ...problem,
       completed: false,
       correct: false
@@ -746,7 +754,7 @@ const gamePage = (function () {
   // append problem section to $body
   const appendProblem = () => {
     const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
-
+    console.log(problems);
     const {
       id: problemId,
       type: problemType,
@@ -942,8 +950,9 @@ const gamePage = (function () {
   };
 
   // initial game setting
-  const initializeGame = _mode => {
+  const initializeGame = (_mode, _categoryId) => {
     mode = _mode;
+    categoryId = _categoryId;
     $body.className = 'game';
     gameUtils.renderGameBackground();
     initializeStates();
@@ -957,22 +966,47 @@ const gamePage = (function () {
   const showResult = () => {
     if (gameEnd) return;
 
+    // returns {
+    //   correctProblemCnt: number,
+    //   totalProblemLength: number,
+    //   stage: {
+    //     id: number,
+    //     cleared: boolean
+    //   }
+    // }
+    const _getComprehensiveResult = () => {
+      const _correct = problems.filter(problem => problem.correct).length;
+      const _totalLength = problems.length;
+
+      return {
+        correctProblemCnt: _correct,
+        totalProblemLength: _totalLength,
+        stage: {
+          id: 1,
+          cleared: _correct / _totalLength > 0.5
+        }
+      };
+    };
+
     gameEnd = true;
-    const correctProblemCnt = problems.filter(
-      problem => problem.correct
-    ).length;
-    const totalProblemLength = problems.length;
+
+    const { correctProblemCnt, totalProblemLength, stage } =
+      _getComprehensiveResult();
+    if (stage.cleared) user.stageCleared.add(stage.id);
+
     const $resultSection = document.createElement('section');
     $resultSection.className = 'results';
     $resultSection.innerHTML = `
         <div class="overlay progress"></div>
         <div class="result">
           <div class="user-name">
-            <span>&#127881;</span>
-            Great! ${user.name}
-            <span>&#127881;</span>
+            <span>${stage.cleared ? '&#127881;' : '&#128517;'}</span>
+            ${stage.cleared ? 'Great!' : 'Try again ...'} ${user.name}
+            <span>${stage.cleared ? '&#127881;' : '&#128517;'}</span>
           </div>
-          <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
+          <div class="user-score">${result.correctProblemCnt} / ${
+      result.totalProblemLength
+    }</div>
           <button class="close">HOME</button>
         </div>
       `;
@@ -1107,274 +1141,12 @@ const gamePage = (function () {
     };
   };
 
-  // game initial settings
-  // const init = () => {
-  //   $body.className = 'game';
-  //   gameUtils.renderGameBackground();
-  //   // gameUtils.oxygenTank.init(0.5, renderResult);
-  // };
-
-  // const renderResult = () => {
-  // const checkCorrectness = () => {
-  //   const isEqual = (array1, array2) => {
-  //     if (array1.length !== array2.length) return false;
-  //     array1.sort();
-  //     array2.sort();
-  //     for (let i = 0; i < array1.length; i++) {
-  //       if (array1[i] !== array2[i]) return false;
-  //     }
-
-  //     return true;
-  //   };
-
-  //   userAnswers.forEach(userAnswer => {
-  //     const correctAnswer = ANSWERS.find(
-  //       answer => answer.problemId === userAnswer.problemId
-  //     );
-  //     userAnswer.correct = isEqual(correctAnswer.answers, userAnswer.answer);
-  //   });
-  // };
-
-  // checkCorrectness();
-
-  //   $body.appendChild($result);
-
-  //   $result.addEventListener('click', e => {
-  //     if (!e.target.matches('.overlay')) return;
-  //     mainPage.render();
-  //   });
-  // };
-
-  // const renderProblem = () => {
-  //   const nextProblem = idx => {
-  //     problems[currentProblemIdx].completed = true;
-  //     currentProblemIdx = idx + 1;
-  //     renderProblem();
-  //   };
-
-  //   // $body.innerHTML = '';
-
-  //   const $options = (() => {
-  //     const { id: problemId, type, options } = problems[currentProblemIdx];
-
-  //     switch (type) {
-  //       case PROBLEM_TYPES.MULTIPLE_SINGLE:
-  //         return options
-  //           .map(
-  //             ({ id, content }, idx) => `
-  //             <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
-  //               <div class="fish-leg"></div>
-  //               <div class="fish-face">
-  //                 <div class="fish-smile">
-  //                   <div class="fish-tongue"></div>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //             <input
-  //               type="radio"
-  //               id=question${problemId}-option${id}
-  //               data-problem-id=${problemId}
-  //               data-option-id=${id}
-  //               name="option"
-  //             />
-  //             <label class='multiple ${
-  //               idx % 2 === 0 ? 'even' : ''
-  //             }' for=question${problemId}-option${id}>
-  //               ${content}
-  //             </label>
-  //           `
-  //           )
-  //           .join('');
-  //       case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
-  //         return options
-  //           .map(
-  //             ({ id, content }, idx) => `
-  //             <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
-  //             <div class="fish-leg"></div>
-  //             <div class="fish-face">
-  //               <div class="fish-smile">
-  //                 <div class="fish-tongue"></div>
-  //               </div>
-  //             </div>
-  //           </div>
-  //             <input
-  //               type="checkbox"
-  //               id=problem${problemId}-option${id}
-  //               data-problem-id=${problemId}
-  //               data-option-id=${id}
-  //               name="option"
-  //             />
-  //             <label for=problem${problemId}-option${id}>
-  //               ${content}
-  //             </label>
-  //           `
-  //           )
-  //           .join('');
-  //       case PROBLEM_TYPES.OX:
-  //         return options
-  //           .map(
-  //             ({ id, content }) => `
-  //             <div class="starfish" style="display:inline-block; margin: 25px 50px;vertical-align:top;">
-  //             <div class="fish-leg"></div>
-  //             <div class="fish-face">
-  //               <div class="fish-smile">
-  //                 <div class="fish-tongue"></div>
-  //               </div>
-  //             </div>
-  //           </div>
-  //             <input
-  //               type="radio"
-  //               id=problem${problemId}-option${id}
-  //               data-problem-id=${problemId}
-  //               data-option-id=${id}
-  //               name="option"
-  //             />
-  //             <label class='multiple' for=problem${problemId}-option${id}>
-  //               ${content}
-  //             </label>
-  //           `
-  //           )
-  //           .join('');
-  //       case PROBLEM_TYPES.SHORT:
-  //         return `
-  //           <input
-  //             type="text"
-  //             placeholder="답을 입력하세요"
-  //             id=question${problemId}
-  //             data-problem-id=${problemId}
-  //           />
-  //         `;
-  //       default:
-  //         return '';
-  //     }
-  //   })();
-
-  //   // 문제 번호 링크
-  //   // const $problemLinks = (() => {
-  //   //   const CLASS_PROBLEM_LINKS = 'problem-links';
-  //   //   const $container = document.createElement('ol');
-  //   //   $container.className = CLASS_PROBLEM_LINKS;
-  //   //   $container.innerHTML = problems
-  //   //     .map(
-  //   //       (problem, idx) => `
-  //   //       <li data-problem-idx=${idx}>
-  //   //         <button ${problem.completed ? 'disabled' : ''}>
-  //   //           ${problem.id}
-  //   //         </button>
-  //   //       </li>
-  //   //     `
-  //   //     )
-  //   //     .join('');
-
-  //   //   $container.addEventListener('click', e => {
-  //   //     if (!e.target.matches(`ol.${CLASS_PROBLEM_LINKS} > li > button`)) {
-  //   //       return;
-  //   //     }
-  //   //     getProblemByIdx(+e.target.parentNode.dataset.problemIdx);
-  //   //   });
-  //   //   return $container;
-  //   // })();
-
-  //   const $container = document.createElement('section');
-  //   $container.className = 'problem';
-  //   const $form = document.createElement('form');
-  //   $form.className = 'form';
-  //   $form.innerHTML = `
-  //     <fieldset>
-  //       <legend>
-  //         ${problems[currentProblemIdx].question}
-  //       </legend>
-  //       <div>
-  //         ${problems[currentProblemIdx].sub}
-  //       </div>
-  //       ${$options}
-  //       <button type="submit">
-  //         제출
-  //       </button>
-  //     </fieldset>
-  //   `;
-  //   $container.appendChild($form);
-
-  //   // 문제 번호 링크 DOM에 추가
-  //   // $container.appendChild($problemLinks);
-  //   $body.appendChild($container);
-  //   isLoading = false;
-
-  //   $form.addEventListener('submit', e => {
-  //     e.preventDefault();
-
-  //     const currentProblemType = problems[currentProblemIdx].type;
-
-  //     let $inputs;
-  //     switch (currentProblemType) {
-  //       case PROBLEM_TYPES.SHORT:
-  //         $inputs = [...e.target.querySelectorAll('input[type=text]')];
-  //         break;
-  //       case PROBLEM_TYPES.MULTIPLE_MULTIPLE:
-  //         $inputs = [
-  //           ...e.target.querySelectorAll('input[type=checkbox]:checked')
-  //         ];
-  //         break;
-  //       case PROBLEM_TYPES.MULTIPLE_SINGLE:
-  //         $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
-  //         break;
-  //       case PROBLEM_TYPES.OX:
-  //         $inputs = [...e.target.querySelectorAll('input[type=radio]:checked')];
-  //         break;
-  //       default:
-  //         break;
-  //     }
-
-  //     const problemId = +$inputs[0].dataset.problemId;
-  //     const userAnswerForProblem = userAnswers.find(
-  //       userAnswer => userAnswer === problemId
-  //     );
-
-  //     // 문제에 대한 기존의 답이 있을 경우
-  //     // if (userAnswerForProblem) {
-  //     //   userAnswerForProblem.answer = [
-  //     //     ...userAnswerForProblem.answer,
-  //     //     ...(currentProblemType === PROBLEM_TYPES.SHORT
-  //     //       ? $inputs.map($input => $input.value)
-  //     //       : $inputs.map($input => $input.dataset.optionId))
-  //     //   ];
-  //     // }
-
-  //     // 문제에 대한 기존의 답이 없을 경우
-  //     userAnswers = [
-  //       ...userAnswers,
-  //       {
-  //         problemId: +$inputs[0].dataset.problemId,
-  //         answer: [
-  //           ...(currentProblemType === PROBLEM_TYPES.SHORT
-  //             ? $inputs.map($input => $input.value)
-  //             : $inputs.map($input => $input.dataset.optionId))
-  //         ],
-  //         correct: false
-  //       }
-  //     ];
-
-  //     $container.classList.add('completed');
-
-  //     // 마지막 문제일 경우, 테스트 결과 보여주기
-  //     if (!problems[currentProblemIdx + 1]) {
-  //       renderResult();
-  //       return;
-  //     }
-
-  //     // 마지막 문제가 아닐경우, 다음 문제 보여주기
-  //     nextProblem(currentProblemIdx);
-  //   });
-  // };
-
   return {
-    start(_mode) {
-      // init();
-      // renderProblem();
-      initializeGame(_mode);
+    start(_mode, _categoryId) {
+      initializeGame(_mode, _categoryId);
     },
     end() {}
   };
 })();
 
-gamePage.start();
+gamePage.start('EASY', 1);
