@@ -4,6 +4,91 @@ let user = {
   correct: 0,
   stageCleared: new Set()
 };
+// 접근성
+const accessibility = (() => {
+  let aniPlayState = 'running';
+
+  // make button(DOM) for accessibility only one time
+  const $accessbility = document.createElement('article');
+  $accessbility.classList.add('accessibility');
+  $accessbility.innerHTML = `
+  <a class="accessibility__menu-btn" role="button">
+    <img src="./src/img/disabled.svg"/ alt="accessibility menu button" />
+  </a>
+  <div class="accessibility__menu">
+    <div class="accessibility__menu-title">접근성 메뉴</div>
+    <ul>
+      <li>
+        <button class="accessibility__btn">텍스트 크기 조절</button>
+        <div class="accessibility__btn--level-wrapper">
+          <span class="accessibility__btn--level"></span>
+        </div>
+      </li>
+      <li><button class="accessibility__btn">애니메이션 중지</button></li>
+    </ul>
+  </div>
+  `;
+
+  const $accessibilityMenu = $accessbility.querySelector(
+    '.accessibility__menu'
+  );
+  const $accessbilityMenuToggleBtn = $accessbility.querySelector(
+    '.accessibility__menu-btn'
+  );
+  const [$btnBiggerText, $btnToggleAni] = $accessbility.querySelectorAll(
+    '.accessibility__btn'
+  );
+
+  // functions
+  const biggerText = (() => {
+    const $fontLevelIcons = document.querySelector(
+      '.accessibility__btn--level-wrapper'
+    );
+    const FONT_SIZES = ['16px', '18px', '20px'];
+    let level = 0;
+    return () => {
+      level = (level + 1) % FONT_SIZES.length;
+      document.documentElement.style.fontSize = FONT_SIZES[level];
+
+      const $fontLevelIcon = document.createElement('span');
+      $fontLevelIcon.className = 'accessibility__btn--level';
+      $fontLevelIcons.append($fontLevelIcon);
+
+      if ($fontLevelIcons.children.length === 4) {
+        $fontLevelIcons.innerHTML =
+          '<div class="accessibility__btn--level"></div>';
+      }
+    };
+  })();
+
+  const toggleAnimation = () => {
+    if (aniPlayState === 'running') {
+      aniPlayState = 'paused';
+      $btnToggleAni.textContent = '애니메이션 시작';
+    } else {
+      aniPlayState = 'running';
+      $btnToggleAni.textContent = '애니메이션 중지';
+    }
+    mainPage.toggleAnimationRun(aniPlayState);
+    document.body.style.setProperty('--play-state', aniPlayState);
+  };
+
+  // handlers
+  $accessibilityMenu.addEventListener('click', ({ target }) => {
+    if (!target.matches('.accessibility__menu .accessibility__btn')) return;
+    target === $btnBiggerText ? biggerText() : toggleAnimation();
+  });
+
+  $accessbilityMenuToggleBtn.addEventListener('click', () => {
+    $accessibilityMenu.classList.toggle('on');
+  });
+
+  return {
+    display() {
+      document.body.appendChild($accessbility);
+    }
+  };
+})();
 
 const mainPage = (function () {
   let mode = 'EASY';
@@ -194,7 +279,7 @@ const mainPage = (function () {
       : ''
   }
     `;
-    // accessibility();
+    accessibility.display();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -455,91 +540,6 @@ const mainPage = (function () {
 mainPage.render();
 
 // yj
-// 접근성
-const accessibility = (() => {
-  let aniPlayState = 'running';
-
-  // make button(DOM) for accessibility only one time
-  const $accessbility = document.createElement('article');
-  $accessbility.classList.add('accessibility');
-  $accessbility.innerHTML = `
-  <a class="accessibility__menu-btn" role="button">
-    <img src="./src/img/disabled.svg"/ alt="accessibility menu button" />
-  </a>
-  <div class="accessibility__menu">
-    <div class="accessibility__menu-title">접근성 메뉴</div>
-    <ul>
-      <li>
-        <button class="accessibility__btn">텍스트 크기 조절</button>
-        <div class="accessibility__btn--level-wrapper">
-          <span class="accessibility__btn--level"></span>
-        </div>
-      </li>
-      <li><button class="accessibility__btn">애니메이션 중지</button></li>
-    </ul>
-  </div>
-  `;
-
-  const $accessibilityMenu = $accessbility.querySelector(
-    '.accessibility__menu'
-  );
-  const $accessbilityMenuToggleBtn = $accessbility.querySelector(
-    '.accessibility__menu-btn'
-  );
-  const [$btnBiggerText, $btnToggleAni] = $accessbility.querySelectorAll(
-    '.accessibility__btn'
-  );
-
-  // functions
-  const biggerText = (() => {
-    const $fontLevelIcons = document.querySelector(
-      '.accessibility__btn--level-wrapper'
-    );
-    const FONT_SIZES = ['16px', '18px', '20px'];
-    let level = 0;
-    return () => {
-      level = (level + 1) % FONT_SIZES.length;
-      document.documentElement.style.fontSize = FONT_SIZES[level];
-
-      const $fontLevelIcon = document.createElement('span');
-      $fontLevelIcon.className = 'accessibility__btn--level';
-      $fontLevelIcons.append($fontLevelIcon);
-
-      if ($fontLevelIcons.children.length === 4) {
-        $fontLevelIcons.innerHTML =
-          '<div class="accessibility__btn--level"></div>';
-      }
-    };
-  })();
-
-  const toggleAnimation = () => {
-    if (aniPlayState === 'running') {
-      aniPlayState = 'paused';
-      $btnToggleAni.textContent = '애니메이션 시작';
-    } else {
-      aniPlayState = 'running';
-      $btnToggleAni.textContent = '애니메이션 중지';
-    }
-    mainPage.toggleAnimationRun(aniPlayState);
-    document.body.style.setProperty('--play-state', aniPlayState);
-  };
-
-  // handlers
-  $accessibilityMenu.addEventListener('click', ({ target }) => {
-    if (!target.matches('.accessibility__menu .accessibility__btn')) return;
-    target === $btnBiggerText ? biggerText() : toggleAnimation();
-  });
-
-  $accessbilityMenuToggleBtn.addEventListener('click', () => {
-    $accessibilityMenu.classList.toggle('on');
-  });
-
-  return {
-    display() {
-      document.body.appendChild($accessbility);
-    }
-  };
-})();
 
 // 게임 유틸즈
 const gameUtils = (() => {
@@ -722,7 +722,7 @@ const gamePage = (function () {
       sub: '',
       options: [
         { id: 1, content: 'O' },
-        { id: 2, continue: 'X' }
+        { id: 2, content: 'X' }
       ]
     },
     {
@@ -751,8 +751,14 @@ const gamePage = (function () {
       `,
       options: [
         { id: 1, content: 'function add(x, y) { return x + y }' },
-        { id: 2, content: 'const add = function(x, y) { return x + y; }' },
-        { id: 3, content: 'const add = new Function(‘x’, ‘y’, return x + y’)' },
+        {
+          id: 2,
+          content: 'const add = function(x, y) { return x + y; }'
+        },
+        {
+          id: 3,
+          content: 'const add = new Function(‘x’, ‘y’, return x + y’)'
+        },
         { id: 4, content: 'const add = (x, y) => x + y;' }
       ]
     },
@@ -821,26 +827,26 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: `let foo;
-            console.log(typeof foo); // undefined
+          content: `let foo; 
+            typeof foo // undefined
             `
         },
         {
           id: 2,
-          content: `foo = 3;
-            console.log(typeof foo); // number
+          content: `foo = 3; 
+            typeof foo // number
             `
         },
         {
           id: 3,
-          content: `foo = {};
-          console.log(typeof foo); // object
+          content: `foo = {}; 
+          typeof foo // object
           `
         },
         {
           id: 4,
-          content: `foo = [];
-        console.log(typeof foo); // array
+          content: `foo = []; 
+        typeof foo // array
         `
         }
       ]
@@ -910,9 +916,8 @@ const gamePage = (function () {
       id: 13,
       categoryId: 3,
       type: PROBLEM_TYPES.SHORT,
-      question:
-        '두 개의 문이 실행됐을 때 결과가 동일하도록 빈칸을 작성해 주세요.',
-      sub: '',
+      question: `'fruit'이라는 class를 가진 요소 모두를 선택할 수 있도록 빈칸을 작성해 주세요.`,
+      sub: 'document.querySelectorAll( _____ )',
       options: []
     },
     {
@@ -932,7 +937,7 @@ const gamePage = (function () {
       categoryId: 3,
       type: PROBLEM_TYPES.OX,
       question:
-        'HTML 어트리뷰트의 역할은 HTML 요소의 최신 상태를 지정하는 것이다.',
+        'HTML Attribute의 역할은 HTML 요소의 최신 상태를 지정하는 것이다.',
       sub: '',
       options: [
         { id: 1, content: 'O' },
@@ -948,19 +953,19 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: 'document.querySelector(‘.fruits’).children[0];'
+          content: '$element.children[0];'
         },
         {
           id: 2,
-          content: 'document.querySelector(‘.fruits’).firstElementChild;'
+          content: '$element.firstElementChild;'
         },
         {
           id: 3,
-          content: 'document.querySelector(‘.fruits’).lastElementChild;'
+          content: '$element.lastElementChild;'
         },
         {
           id: 4,
-          content: 'document.querySelector(‘.fruits’).firstChild;'
+          content: '$element.firstChild;'
         }
       ]
     },
@@ -1005,32 +1010,14 @@ const gamePage = (function () {
     {
       id: 19,
       categoryId: 4,
-      type: PROBLEM_TYPES.SHORT,
-      question: '4번에 들어갈 값을 적으시오',
-      sub: `
-      var value = 1;
-
-
-      const obj = {
-        value: 100,
-        foo() {
-          console.log("foo's this: ", this);	 // 1
-          console.log("foo's this.value: ", this.value); // 2
-
-
-          function bar() {
-            console.log("bar's this: ", this); // 3
-            console.log("bar's this.value: ", this.value); // 4
-          }
-
-
-          bar();
-        }
-      };
-
-      obj.foo();
-      `,
-      options: []
+      type: PROBLEM_TYPES.OX,
+      question:
+        'this에 값을 할당하여 사용하거나 this의 값을 변수에 할당하여 사용할 수 있다.',
+      sub: ``,
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
     },
     {
       id: 20,
@@ -1042,21 +1029,19 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: 'apply, call, bind 메서드는 Function.prototype의 메서드다.'
+          content: '이들은 모두 Function.prototype의 메서드다.'
         },
         {
           id: 2,
-          content:
-            'apply에 인수를 전달해줄 때에는 쉼표로 구분해 전달해주어야 한다.'
+          content: 'apply에는 인수를 쉼표로 구분해 전달해주어야 한다.'
         },
         {
           id: 3,
-          content: 'bind 메서드는 this를 바인딩만 해주고 함수 호출하지 않는다.'
+          content: 'bind는 함수 호출하지 않는다.'
         },
         {
           id: 4,
-          content:
-            'apply, call, bind 메서드는 모든 함수가 상속받아 사용할 수 있다.'
+          content: '모든 함수는 이 메서드들을 사용할 수 있다.'
         }
       ]
     },
@@ -1065,7 +1050,7 @@ const gamePage = (function () {
       categoryId: 4,
       type: PROBLEM_TYPES.OX,
       question:
-        'strict mode가 적용된 일반 함수 내부의 this에는 null이바인딩된다.',
+        'strict mode가 적용된 일반 함수 내부의 this에는 null이 바인딩된다.',
       sub: '',
       options: [
         { id: 1, content: 'O' },
@@ -1326,7 +1311,7 @@ const gamePage = (function () {
     },
     {
       problemId: 19,
-      answers: ['1']
+      answers: ['2']
     },
     {
       problemId: 20,
@@ -1567,7 +1552,7 @@ const gamePage = (function () {
   // initial game setting
   const initializeGame = (_mode, _categoryId) => {
     mode = _mode;
-    categoryId = _categoryId;
+    categoryId = +_categoryId;
     $body.className = 'game';
     gameUtils.renderGameBackground();
     gameUtils.fetchGames();
@@ -1598,7 +1583,7 @@ const gamePage = (function () {
         correctProblemCnt: _correct,
         totalProblemLength: _totalLength,
         stage: {
-          id: 1,
+          id: categoryId,
           cleared: _correct / _totalLength > 0.5
         }
       };
