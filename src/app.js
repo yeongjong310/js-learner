@@ -43,7 +43,7 @@ const accessibility = (() => {
 
   // functions
   const biggerText = (() => {
-    const $fontLevelIcons = document.querySelector(
+    const $fontLevelIcons = $accessbility.querySelector(
       '.accessibility__btn--level-wrapper'
     );
     const FONT_SIZES = ['16px', '18px', '20px'];
@@ -105,12 +105,12 @@ const mainPage = (function () {
     const $shark = document.querySelector('.shark');
     $shark.style.setProperty(
       'transform',
-      `scaleX(${_shark.x < shark.x ? -1 : 1})`
+      `translate3d(-50%, -50%, 0) scaleX(${_shark.x < shark.x ? -1 : 1})`
     );
 
     shark = _shark;
-    $shark.style.left = shark.x + 'px';
-    $shark.style.top = shark.y + 'px';
+    $shark.style.left = shark.x <= 0 ? 0 : shark.x + 'px';
+    $shark.style.top = shark.x <= 0 ? 0 : shark.y + 'px';
   };
 
   const categories = [
@@ -214,8 +214,8 @@ const mainPage = (function () {
       <p class="user__more-content">Coming Soon ...</p>
     </section>
   </section>
+  <div class="shark"></div>
   <section class="ocean">
-      <div class="shark"></div>
     <div
       class="bubble bubble-rising"
       style="width: 20px; height: 25px; left: 54%; bottom: 70%"
@@ -289,6 +289,7 @@ const mainPage = (function () {
             name="userName"
             id="userName"
             class="login-input"
+            placeholder="이름을 입력하세요"
             maxlength="15"
           />
           <button type="submit" class="login-btn">GO DIVE</button>
@@ -316,7 +317,15 @@ const mainPage = (function () {
   };
 
   const followingShark = throttle(e => {
-    setShark({ x: e.pageX - 100, y: e.pageY - 800 });
+    setShark({ x: e.pageX, y: e.pageY - 100 });
+  }, 50);
+
+  const registerShark = throttle(() => {
+    window.addEventListener('mousemove', followingShark);
+  }, 50);
+
+  const removeShark = throttle(() => {
+    window.removeEventListener('mousemove', followingShark);
   }, 50);
 
   return {
@@ -450,12 +459,11 @@ const mainPage = (function () {
 
         document
           .querySelector('.ocean')
-          .addEventListener('mousemove', followingShark);
+          .addEventListener('mouseenter', registerShark);
 
-        window.addEventListener(
-          'scroll',
-          throttle(e => {}, 50)
-        );
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseleave', removeShark);
 
         window.addEventListener(
           'scroll',
@@ -561,12 +569,20 @@ const mainPage = (function () {
         bubbleId = setInterval(bubblingFunc, 1000);
         document
           .querySelector('.ocean')
-          .addEventListener('mousemove', followingShark);
+          .addEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseleave', removeShark);
       } else {
         clearInterval(bubbleId);
         document
           .querySelector('.ocean')
-          .removeEventListener('mousemove', followingShark);
+          .removeEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .removeEventListener('mouseleave', removeShark);
       }
     },
 
