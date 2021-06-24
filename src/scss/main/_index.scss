@@ -321,7 +321,23 @@ body.main {
     font-weight: 800;
     text-shadow: 1px 1px 6px #fff, 1px 1px 6px #fff, 1px 1px 6px #fff;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 40px #fff;
     cursor: pointer;
+
+    &.solved {
+      box-shadow: 0 0 40px #53c100;
+
+      &::after {
+        content: 'SOLVED';
+        position: absolute;
+        font-size: 3rem;
+        top: -75px;
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
+        color: #53c100;
+        text-shadow: 0 0 20px #222;
+      }
+    }
 
     &:hover {
       font-weight: 800;

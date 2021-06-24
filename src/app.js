@@ -12,19 +12,19 @@ const mainPage = (function () {
   const categories = [
     {
       id: 1,
-      name: 'DOM'
+      name: 'DATA TYPE'
     },
     {
       id: 2,
-      name: 'THIS'
+      name: 'FUNCTION'
     },
     {
       id: 3,
-      name: 'CLOUSER'
+      name: 'DOM'
     },
     {
       id: 4,
-      name: 'LET/CONST'
+      name: 'THIS'
     },
     {
       id: 5,
@@ -221,7 +221,9 @@ const mainPage = (function () {
         categories.forEach(({ id, name }, idx) => {
           const $category = document.createElement('div');
           $category.id = id;
-          $category.className = 'category';
+          $category.className = `category ${
+            user.stageCleared.has(id) ? 'solved' : ''
+          }`;
           $category.setAttribute('role', 'button');
           $category.innerHTML = `
             <p class='category__name'>${name}</p>

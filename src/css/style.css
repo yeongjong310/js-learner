@@ -117,10 +117,10 @@ body.game .ocean.active {
 }
 @keyframes blinkRed {
   0%, 100% {
-    box-shadow: inset 0 0 80px 5px rgba(255, 0, 0, 0.8);
+    box-shadow: inset 0 0 100px 5px rgba(255, 0, 0, 0.8);
   }
   50% {
-    box-shadow: inset 0 0 150px 5px rgba(255, 0, 0, 0.8);
+    box-shadow: inset 0 0 250px 5px rgba(255, 0, 0, 0.8);
   }
 }
 body.game .ocean::after,
@@ -168,7 +168,7 @@ body.game .bubbles span {
 @keyframes bubble {
   0% {
     opacity: 0;
-    transform: translate3d(-20px, -10%, 0);
+    transform: translate3d(-20px, 0, 0);
   }
   25% {
     transform: translate3d(20px, 0, 0);
@@ -180,8 +180,8 @@ body.game .bubbles span {
     transform: translate3d(20px, 0, 0);
   }
   100% {
-    bottom: 100%;
-    transform: translate3d(-20px, 100%, 0);
+    bottom: 90%;
+    transform: translate3d(-20px, 0, 0);
   }
 }
 body.game .bubbles span:nth-child(1) {
@@ -531,103 +531,221 @@ body.game .fish4 {
     top: 60%;
   }
 }
-
-body.game .problem {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  margin: auto;
-  padding: 5em 10em;
+body.game .overlay {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+body.game .loading {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate3d(-50%, -50%, 0);
 }
-body.game .problem.completed {
-  opacity: 0;
-  transform: translate3d(-100%, 0, 0);
-  transition: all 0.5s;
-}
-body.game .problem-links {
-  display: flex;
-  justify-content: space-between;
-  list-style: none;
-  min-width: 1.25em;
-  margin: 0;
-  padding: 0;
-}
-body.game .problem-links > li > button {
-  padding: 0.8em;
-  width: 3em;
-  height: 3em;
+body.game .loading__text {
   text-align: center;
-  background-color: rebeccapurple;
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
+  color: #ffffff;
+  margin-top: 10px;
+}
+body.game .spinner {
+  animation: spinner infinite 2s linear;
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+body.game .problems {
   position: relative;
-}
-body.game .problem .form {
-  display: flex;
-  justify-content: center;
-  height: 100%;
   width: 100%;
-}
-body.game .problem .form > fieldset {
-  padding: 0;
-  margin: 0;
-  border: none;
+  height: 100%;
+  font-size: 2em;
   color: #fff;
-  font-size: 1.5em;
-  display: flex;
 }
-body.game .problem .form > fieldset > input[type=radio], body.game .problem .form > fieldset > input[type=checkbox] {
+body.game .countdown {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  opacity: 1;
+  animation: countingBlink 1s ease 1s infinite;
+  font-size: 4em;
+}
+@keyframes countingBlink {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes showup {
+  to {
+    opacity: 1;
+  }
+}
+body.game .problem {
   opacity: 0;
-}
-body.game .problem .form > fieldset > input[type=radio] ~ label, body.game .problem .form > fieldset > input[type=checkbox] ~ label {
-  text-align: center;
-  border: 1px solid #fff;
-  border-radius: 10px;
-  font-size: 0.8em;
-  max-height: 400px;
-  min-width: 200px;
-  cursor: pointer;
-  padding: 1em;
-}
-body.game .problem .form > fieldset > input[type=radio] ~ label > .multiple, body.game .problem .form > fieldset > input[type=checkbox] ~ label > .multiple {
-  margin-top: 160px;
-}
-body.game .problem .form > fieldset > input[type=radio] ~ label > .multiple.even, body.game .problem .form > fieldset > input[type=checkbox] ~ label > .multiple.even {
-  margin-top: 100px;
-}
-body.game .problem .form > fieldset > input[type=radio]:hover + label, body.game .problem .form > fieldset > input[type=radio]:checked + label, body.game .problem .form > fieldset > input[type=radio]:checked + label, body.game .problem .form > fieldset > input[type=checkbox]:hover + label, body.game .problem .form > fieldset > input[type=checkbox]:checked + label, body.game .problem .form > fieldset > input[type=checkbox]:checked + label {
-  background-color: pink;
-}
-body.game .result-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
+  padding: 5em;
+  animation: showup 0.6s forwards ease;
+  display: flex;
+  justify-content: center;
 }
-body.game .result-container > .overlay {
+body.game .problem.completed {
+  display: none;
+}
+body.game .form {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-content: space-around;
+  justify-content: center;
+}
+body.game .form > fieldset {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+body.game .form > fieldset > legend {
+  font-size: 1.5em;
+}
+body.game .form__selections {
+  height: auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+body.game .form__selection:focus-within {
+  background-color: #b7e2a8;
+}
+body.game .form__selection {
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  opacity: 0.8;
+  color: #222;
+  position: relative;
+  box-sizing: border-box;
+}
+body.game .form__selection > .jelly-fish, body.game .form__selection > input, body.game .form__selection > label {
+  display: block;
+}
+body.game .form__selection > .jelly-fish {
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  margin: 0 auto;
+  z-index: 1;
+}
+body.game .form__selection .sub {
+  font-size: 1em;
+  margin-top: 1em;
+}
+body.game .form__selection > label {
+  width: 250px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  padding: 50px 1em 1em;
+  word-break: keep-all;
+}
+body.game .form__selection > input[type=radio]:checked + label, body.game .form__selection > input[type=checkbox]:checked + label {
+  background-color: #b7e2a8;
+}
+body.game .form__selection > input[type=radio] + label, body.game .form__selection > input[type=checkbox] + label {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+body.game .form__selection:hover {
+  background-color: #b7e2a8;
+  transform: scale(95%);
+}
+body.game .form .fly-slightly {
+  position: relative;
+  top: -70px;
+}
+body.game .form .btn {
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  background: #cc5c5c;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 50px;
+  font-family: arial;
+  color: #f0f0f0;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+  width: 200px;
+  height: 70px;
+}
+body.game .input__answer {
+  position: relative;
+  height: 70px;
+  margin: 0 auto;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+}
+body.game .input__answer > img {
+  position: absolute;
+  top: -90px;
+  left: -23px;
+  transform: translate3d(-50%, 0, 0) rotate(-45deg);
+}
+body.game .input__short-type {
+  color: #222;
+  border: none;
+  font-size: 1.2em;
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  border-radius: 20px;
+  text-align: center;
+}
+body.game .input__short-type::placeholder {
+  color: #222;
+}
+body.game .overlay {
+  overflow: auto;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: #000;
-  opacity: 0.7;
+  opacity: 0;
+  animation: overlayDarker 1s forwards linear;
 }
-body.game .result-container > .result {
+@keyframes overlayDarker {
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes resultPopupSlowly {
+  to {
+    transform: translate3d(-50%, -50%, 0);
+  }
+}
+body.game .result {
   position: absolute;
   border-radius: 20px;
   top: 50%;
   left: 50%;
-  transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, 150%, 0);
   width: 600px;
   height: 500px;
   transition: width 0.5s;
@@ -636,13 +754,30 @@ body.game .result-container > .result {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  animation: resultPopupSlowly 0.8s forwards 1s ease;
+  z-index: 4;
 }
-body.game .result-container > .result > .user-name {
+body.game .result > .user-name {
   font-size: 50px;
 }
-body.game .result-container > .result > .user-score {
-  font-size: 2em;
+body.game .result > .user-score {
+  font-size: 4em;
   font-weight: 700;
+}
+body.game .result .close {
+  cursor: pointer;
+  text-align: center;
+  background: #53c100;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 50px;
+  font-family: arial;
+  color: #f0f0f0;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+  width: 200px;
+  height: 70px;
+  border: none;
 }
 
 body.game > .ocean .oxygen-tank {
@@ -688,9 +823,8 @@ body.main .progress-bar__background {
 body.main .progress-bar__progress {
   fill: none;
   stroke: #53c100;
-  stroke-dasharray: 100 100;
+  stroke-dasharray: 100;
   stroke-dashoffset: 100;
-  stroke-linecap: round;
   stroke-width: 1.8;
   transition: stroke-dashoffset 1s ease-in-out;
 }
@@ -704,8 +838,8 @@ body.main .profile-container {
 }
 body.main .profile-container svg {
   height: 150px;
-  transform: rotate(-90deg);
   width: 150px;
+  transform: rotate(-90deg);
 }
 body.main .profile-container.active .user {
   height: 300px;
@@ -715,6 +849,9 @@ body.main .profile-container.active .user__name {
 }
 body.main .profile-container.active .user__status {
   height: 80%;
+}
+body.main .profile-container.active .user__more-btn {
+  font-size: 1.3em;
 }
 body.main .profile-container.active .profile .line {
   margin: 0;
@@ -768,7 +905,7 @@ body.main .profile .line:last-child {
 body.main .user {
   position: absolute;
   top: 55px;
-  left: -20px;
+  left: -24px;
   width: 400px;
   height: 0;
   border-radius: 20px;
@@ -821,7 +958,7 @@ body.main .user__status-content {
   transform: translate3d(-50%, -50%, 0);
 }
 body.main .user__status-content .progress-title {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   text-align: center;
   margin-bottom: 0.4rem;
 }
@@ -847,16 +984,36 @@ body.main .user__more-btn {
   transform: translate3d(-50%, 0, 0);
   color: #fff;
   font-weight: 800;
-  animation: blink 1.4s alternate infinite;
+  animation: blink 1.4s alternate infinite var(--play-state);
   cursor: pointer;
+  font-size: 0;
+  transition: font-size 0.5s;
 }
 body.main .user__more-btn:hover {
   background-color: rgba(255, 255, 255, 0.406);
 }
 body.main .user__more-info {
-  width: 100%;
-  height: 300px;
-  display: none;
+  position: absolute;
+  top: 370px;
+  left: -25px;
+  width: 400px;
+  height: 100px;
+  border-radius: 10px;
+  text-align: center;
+  background: rgba(34, 34, 34, 0.7);
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  padding: 15px;
+  color: rgba(255, 255, 255, 0.9);
+}
+body.main .user__more-info.active {
+  opacity: 1;
+}
+body.main .user__more-title {
+  font-size: 2rem;
+}
+body.main .user__more-content {
+  font-size: 1.7rem;
 }
 body.main .btn {
   position: absolute;
@@ -867,7 +1024,6 @@ body.main .btn {
   font-size: 1.3rem;
   font-weight: 800;
   line-height: 50px;
-  font-family: arial;
   color: #f0f0f0;
   transform: translateX(-50%);
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
@@ -893,24 +1049,45 @@ body.main .ocean {
   background: linear-gradient(#58c8da, #022244);
   z-index: -2;
 }
+body.main .scroll-del-wrapper {
+  position: absolute;
+  bottom: 7%;
+  width: 100%;
+  height: 70px;
+  overflow: hidden;
+}
 body.main .category {
   position: absolute;
-  width: 120px;
-  height: 120px;
-  background-color: #d2d2ff87;
+  width: 170px;
+  height: 170px;
+  background-color: #ffffff52;
   text-align: center;
   border-radius: 50%;
   transition: 0.15s;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  text-shadow: 1px 1px 3px #fff, 1px 1px 3px #fff, 1px 1px 3px #fff;
-  border: 2px solid #9595ff;
+  text-shadow: 1px 1px 6px #fff, 1px 1px 6px #fff, 1px 1px 6px #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 40px #fff;
   cursor: pointer;
+}
+body.main .category.solved {
+  box-shadow: 0 0 40px #53c100;
+}
+body.main .category.solved::after {
+  content: "SOLVED";
+  position: absolute;
+  font-size: 3rem;
+  top: -75px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  color: #53c100;
+  text-shadow: 0 0 20px #222;
 }
 body.main .category:hover {
   font-weight: 800;
   font-size: 1.7rem;
-  font-size: 2rem;
+  font-size: 3rem;
   transform: scale(120%, 120%);
 }
 body.main .category:hover .shark__body {
@@ -936,9 +1113,10 @@ body.main .bubble {
   border: 1px solid #9595ff;
   background: #d2d2ff;
   opacity: 0.3;
+  transition: all 1s ease;
 }
 body.main .bubble-rising {
-  animation: rise 20s linear infinite;
+  animation: rise 20s linear infinite var(--play-state);
 }
 body.main .boat {
   position: absolute;
@@ -1136,7 +1314,7 @@ body.main .stars {
   border-radius: 100%;
   transition: top ease 0.25s;
   transition-delay: 0.25s;
-  box-shadow: 70px 70px 0 #96cae5, -100px 80px 0 #96cae5, 200px 10px 0 #96cae5, 130px 180px 0 #96cae5, -120px -10px 0 #96cae5, -200px 170px 0 #96cae5, -280px 110px 0 #96cae5, -320px 20px 0 #96cae5, 320px 170px 0 #96cae5, 430px 60px 0 #96cae5, 480px 190px 0 #96cae5;
+  box-shadow: 70px 70px 0 #96cae5, -100px 80px 0 #96cae5, 200px 10px 0 #96cae5, 130px 180px 0 #96cae5, -120px -10px 0 #96cae5, -200px 170px 0 #96cae5, -280px 110px 0 #96cae5, -320px 20px 0 #96cae5, 320px 170px 0 #96cae5, 430px 60px 0 #96cae5, 480px 140px 0 #96cae5, 780px 110px 0 #96cae5, 720px 90px 0 #96cae5;
   z-index: -3;
 }
 body.main .stars.night {
@@ -1188,8 +1366,8 @@ body.main .login-btn {
   color: #fff;
 }
 body.main .login-btn:hover, body.main .login-btn:focus {
-  border: 4px solid #53c100;
-  color: #53c100;
+  border: 4px solid #d8ffbba3;
+  color: #d8ffbba3;
 }
 @keyframes fadeOut {
   to {
@@ -1202,7 +1380,7 @@ body.main .greeting {
   padding-top: 200px;
   color: #022244;
   text-shadow: 1px 1px 5px #fff;
-  animation: fadeOut 1.5s linear;
+  animation: fadeOut 1.5s linear var(--play-state);
 }
 body.main .sea {
   margin: 70px auto 80px auto;
@@ -1215,7 +1393,7 @@ body.main .sea .bubble {
   border-radius: 50%;
   background-color: #6bafca;
   opacity: 0.9;
-  animation: bubble1-h-movement 1s ease-in infinite, bubble1-v-movement 300ms ease-in-out infinite alternate, bubble-scale-movement 300ms ease-in-out infinite alternate;
+  animation: bubble1-h-movement 1s ease-in infinite var(--play-state), bubble1-v-movement 300ms ease-in-out infinite alternate, bubble-scale-movement 300ms ease-in-out infinite alternate;
 }
 body.main .sea .bubble:after {
   position: absolute;
@@ -1249,7 +1427,7 @@ body.main .sea .submarine-wrapper {
   width: 300px;
   padding: 30px 50px 30px 150px;
   margin: 0 auto 0 auto;
-  animation: diving 3s ease-in-out infinite, diving-rotate 3s ease-in-out infinite;
+  animation: diving 3s ease-in-out infinite var(--play-state), diving-rotate 3s ease-in-out infinite;
 }
 body.main .sea .submarine-wrapper .submarine-body {
   width: 150px;
@@ -1319,7 +1497,7 @@ body.main .sea .submarine-wrapper .submarine-body .engine:after, body.main .sea 
   content: "";
   border-radius: 2px;
   background-color: white;
-  animation: spin 900ms linear infinite;
+  animation: spin 900ms linear infinite var(--play-state);
   opacity: 0.8;
 }
 body.main .sea .submarine-wrapper .submarine-body .engine:after {
@@ -1354,7 +1532,7 @@ body.main .sea .submarine-wrapper .helix:after {
   opacity: 0.8;
   background: linear-gradient(to bottom, #d93a54, #d93a54 50%, #e57a8c 50%, #e57a8c);
   background-size: 100% 20px;
-  animation: helix-movement 110ms linear infinite;
+  animation: helix-movement 110ms linear infinite var(--play-state);
 }
 body.main .sea .submarine-wrapper .hat {
   width: 65px;
@@ -1401,7 +1579,7 @@ body.main .sea .submarine-wrapper .hat .leds-wrapper .leds {
   height: 5px;
   border-radius: 50%;
   background-color: white;
-  animation: leds-off 500ms linear infinite;
+  animation: leds-off 500ms linear infinite var(--play-state);
 }
 body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:after, body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:before {
   content: "";
@@ -1511,6 +1689,46 @@ body.main .sea .submarine-wrapper .hat .leds-wrapper .leds:before {
     transform: rotate(-40deg);
   }
 }
+@keyframes arrowBlink {
+  to {
+    opacity: 0;
+  }
+}
+body.main .arrow {
+  position: absolute;
+  bottom: 7%;
+  transform: rotate(90deg);
+  width: 50px;
+  height: 50px;
+  opacity: 1;
+  background: url("../img/arrow.svg");
+  animation: arrowBlink 0.75s infinite alternate var(--play-state);
+}
+body.main .arrow-left {
+  left: 20%;
+}
+body.main .arrow-right {
+  right: 20%;
+}
+body.main .scroll-del {
+  bottom: 10px;
+  transition: bottom 0.4s ease;
+}
+body.main .scroll-del.disable {
+  bottom: 150%;
+}
+body.main .scroll-up {
+  position: absolute;
+  font-size: 3rem;
+  bottom: -100%;
+  transition: bottom 0.4s ease;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  text-shadow: 1px 1px 6px #fff, 1px 1px 6px #fff, 1px 1px 6px #fff;
+}
+body.main .scroll-up.able {
+  bottom: 5px;
+}
 
 *,
 *::after,
@@ -1522,6 +1740,11 @@ html,
 html * {
   padding: 0;
   margin: 0;
+  font-family: "Jua", sans-serif;
+}
+
+body {
+  --play-state: running;
 }
 
 body {
@@ -1531,12 +1754,13 @@ body {
 .a11y-hidden {
   /* 임시 */
   display: none;
-}
-
-.icon {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
+  overflow: hidden;
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
 }
 
 button {
