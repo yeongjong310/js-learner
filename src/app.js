@@ -12,19 +12,19 @@ const mainPage = (function () {
   const categories = [
     {
       id: 1,
-      name: 'DOM'
+      name: 'DATA TYPE'
     },
     {
       id: 2,
-      name: 'THIS'
+      name: 'FUNCTION'
     },
     {
       id: 3,
-      name: 'CLOUSER'
+      name: 'DOM'
     },
     {
       id: 4,
-      name: 'LET/CONST'
+      name: 'THIS'
     },
     {
       id: 5,
@@ -703,31 +703,6 @@ const gamePage = (function () {
       id: 1,
       categoryId: 1,
       type: PROBLEM_TYPES.MULTIPLE_SINGLE,
-      question:
-        '하나의 값을 저장하기 위해 확보한 메모리 공간 자체 또는 그 메모리 공간을 식별하기 위해 붙인 이름을 의미하는 것은 다음 중 무엇인가?',
-      sub: '',
-      options: [
-        { id: 1, content: '표현식' },
-        { id: 2, content: '변수' },
-        { id: 3, content: '객체' },
-        { id: 4, content: '스코프' }
-      ]
-    },
-    {
-      id: 2,
-      categoryId: 1,
-      type: PROBLEM_TYPES.OX,
-      question: '자바스크립트에서는 함수도 값이다.',
-      sub: '',
-      options: [
-        { id: 1, content: 'O' },
-        { id: 2, content: 'X' }
-      ]
-    },
-    {
-      id: 3,
-      categoryId: 1,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
       question: '자바스크립트에서 다음 중 객체 타입이 아닌 것을 고르시오.',
       sub: '',
       options: [
@@ -738,44 +713,546 @@ const gamePage = (function () {
       ]
     },
     {
+      id: 2,
+      categoryId: 2,
+      type: PROBLEM_TYPES.OX,
+      question: 'JS의 함수는 일급객체이다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, continue: 'X' }
+      ]
+    },
+    {
+      id: 3,
+      categoryId: 2,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question:
+        '다음은 함수를 정의하는 방법이다. 네가지 방식에서 모두 사용할 수 있는 것을 고르시오.',
+      sub: 'a) function add(x, y) { return x + y };\nb) const add = function(x, y) { return x + y; };\nc) const add = new Function(‘x’, ‘y’, return x + y’);\nd) const add = (x, y) => x + y;',
+      options: [
+        { id: 1, content: 'rest 파라미터' },
+        { id: 2, content: 'super' },
+        { id: 3, content: 'prototype' },
+        { id: 4, content: 'arguments' }
+      ]
+    },
+    {
       id: 4,
-      categoryId: 1,
+      categoryId: 2,
       type: PROBLEM_TYPES.SHORT,
-      question: '다음은 어떤 결과를 반환할까요?',
-      sub: '[1, 2, 3, 4].reduce((acc, cur) => acc + cur ** 2, 1);',
-      options: []
+      question: '다음 두 빈칸에 들어갈 동일한 내용을 작성하세요.',
+      sub: `
+      function add( 빈 칸 ) { return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);}
+      function add(1, 2, 3); // 6
+      function add(1, 2); // 3
+      `,
+      options: [
+        { id: 1, content: 'function add(x, y) { return x + y }' },
+        { id: 2, content: 'const add = function(x, y) { return x + y; }' },
+        { id: 3, content: 'const add = new Function(‘x’, ‘y’, return x + y’)' },
+        { id: 4, content: 'const add = (x, y) => x + y;' }
+      ]
     },
     {
       id: 5,
+      categoryId: 2,
+      type: PROBLEM_TYPES.OX,
+      question: '함수 표현식으로 함수를 정의하면 함수 호이스팅이 발생한다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 6,
+      categoryId: 2,
+      type: PROBLEM_TYPES.SHORT,
+      question:
+        '함수의 매개변수를 통해 다른 함수의 내부로 전달되는 함수를 영어로 “  “ 함수라고 한다.',
+      sub: '',
+      options: []
+    },
+    {
+      id: 7,
       categoryId: 1,
-      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
-      question: '다음 중 옳은 것을 모두 고르시오',
+      type: PROBLEM_TYPES.OX,
+      question:
+        'JS의 데이터 타입은 정수형 숫자, 실수형 숫자 , 문자열, 불리언, undefined, null, 객체 총 7가지로 나뉜다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 8,
+      categoryId: 1,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question: 'JS에서 데이터 타입이 필요한 이유로 적절하지 않은 것은?',
       sub: '',
       options: [
         {
           id: 1,
-          content: '클로저는 해당 함수와 그 함수의 렉시컬 환경의 조합이다.'
+          content:
+            '값을 저장할 때 확보해야 하는 메모리 공간의 크기를 결정하기 위해.'
         },
         {
           id: 2,
-          content: 'JS에서는 함수도 값이다.'
+          content:
+            '값을 참조할 때 한 번에 읽어 들여야 할 메모리 공간의 크기를 결정하기 위해.'
         },
         {
           id: 3,
-          content: 'JS의 배열은 기본적으로 희소배열이 아니다.'
+          content: '메모리에서 읽어 들인 2진수를 어떻게 해석할지 결정하기 위해'
+        },
+        { id: 4, content: '데이터 타입을 정적으로 고정시키기 위해.' }
+      ]
+    },
+    {
+      id: 9,
+      categoryId: 1,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question: '다음 중 실행 결과로 틀린 것을 고르세요.',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: `let foo;
+            console.log(typeof foo); // undefined
+            `
+        },
+        {
+          id: 2,
+          content: `foo = 3;
+            console.log(typeof foo); // number
+            `
+        },
+        {
+          id: 3,
+          content: `foo = {};
+          console.log(typeof foo); // object
+          `
         },
         {
           id: 4,
-          content: '브라우저는 싱글 스레드다.'
+          content: `foo = [];
+        console.log(typeof foo); // array
+        `
         }
+      ]
+    },
+    {
+      id: 10,
+      categoryId: 1,
+      type: PROBLEM_TYPES.OX,
+      question: 'Symbol은 es6에서 추가된 새로운 객체 타입의 값이다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 11,
+      categoryId: 1,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question: '다음 중 결과가 다른 하나를 고르세요.',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: "Number('0')"
+        },
+        {
+          id: 2,
+          content: 'parseInt(‘0’)'
+        },
+        {
+          id: 3,
+          content: '‘0’ * 1'
+        },
+        {
+          id: 4,
+          content: '0 + ‘’'
+        }
+      ]
+    },
+    {
+      id: 12,
+      categoryId: 3,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question: '노드 타입이 아닌 것을 고르세요.',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: '문서 노드'
+        },
+        {
+          id: 2,
+          content: '요소 노드'
+        },
+        {
+          id: 3,
+          content: '어트리뷰트 노드'
+        },
+        {
+          id: 4,
+          content: '데이터 노드'
+        }
+      ]
+    },
+    {
+      id: 13,
+      categoryId: 3,
+      type: PROBLEM_TYPES.SHORT,
+      question:
+        '두 개의 문이 실행됐을 때 결과가 동일하도록 빈칸을 작성해 주세요.',
+      sub: '',
+      options: []
+    },
+    {
+      id: 14,
+      categoryId: 3,
+      type: PROBLEM_TYPES.OX,
+      question:
+        '크로스 사이트 스크립팅 공격(XSS)에 방어할 수 있도록 innerHTML을 사용할 것을 권장한다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 15,
+      categoryId: 3,
+      type: PROBLEM_TYPES.OX,
+      question:
+        'HTML 어트리뷰트의 역할은 HTML 요소의 최신 상태를 지정하는 것이다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 16,
+      categoryId: 3,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question: '다음 중 결과가 다른 하나를 고르세요.',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: 'document.querySelector(‘.fruits’).children[0];'
+        },
+        {
+          id: 2,
+          content: 'document.querySelector(‘.fruits’).firstElementChild;'
+        },
+        {
+          id: 3,
+          content: 'document.querySelector(‘.fruits’).lastElementChild;'
+        },
+        {
+          id: 4,
+          content: 'document.querySelector(‘.fruits’).firstChild;'
+        }
+      ]
+    },
+    {
+      id: 17,
+      categoryId: 4,
+      type: PROBLEM_TYPES.OX,
+      question:
+        '‘this’ 키워드를 통해 자신이 속한 객체 또는 자신이 생성할 인스턴스의 프로퍼티나 메서드를 참조할 수 있다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 18,
+      categoryId: 4,
+      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      question: '옳은 것을 모두 고르시오',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: 'JS의 ‘this’ 키워드는 평가될 때 정적으로 바인딩된다.'
+        },
+        {
+          id: 2,
+          content: '‘strict mode’는 ‘this’ 바인딩에 영향을 준다.'
+        },
+        {
+          id: 3,
+          content: '전역에서 ‘this’를 참조할 수 있다.'
+        },
+        {
+          id: 4,
+          content:
+            '일반 함수로 호출된 경우 ‘this’는 전역 객체가 바인딩되지 않는다.'
+        }
+      ]
+    },
+    {
+      id: 19,
+      categoryId: 4,
+      type: PROBLEM_TYPES.SHORT,
+      question: '4번에 들어갈 값을 적으시오',
+      sub: `
+      var value = 1;
+
+
+      const obj = {
+        value: 100,
+        foo() {
+          console.log("foo's this: ", this);	 // 1
+          console.log("foo's this.value: ", this.value); // 2
+
+
+          function bar() {
+            console.log("bar's this: ", this); // 3
+            console.log("bar's this.value: ", this.value); // 4
+          }
+
+
+          bar();
+        }
+      };
+
+      obj.foo();
+      `,
+      options: []
+    },
+    {
+      id: 20,
+      categoryId: 4,
+      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      question:
+        'Function.prototype.apply/call/bind에 대한 내용 중 옳은 것을 모두 고르시오',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: 'apply, call, bind 메서드는 Function.prototype의 메서드다.'
+        },
+        {
+          id: 2,
+          content:
+            'apply에 인수를 전달해줄 때에는 쉼표로 구분해 전달해주어야 한다.'
+        },
+        {
+          id: 3,
+          content: 'bind 메서드는 this를 바인딩만 해주고 함수 호출하지 않는다.'
+        },
+        {
+          id: 4,
+          content:
+            'apply, call, bind 메서드는 모든 함수가 상속받아 사용할 수 있다.'
+        }
+      ]
+    },
+    {
+      id: 21,
+      categoryId: 4,
+      type: PROBLEM_TYPES.OX,
+      question:
+        'strict mode가 적용된 일반 함수 내부의 this에는 null이바인딩된다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
+      ]
+    },
+    {
+      id: 22,
+      categoryId: 5,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question:
+        '프로그램의 흐름을 이벤트 중심으로 제어하는 프로그래밍 방식을 고르세요.',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: '이벤트 드리븐 프로그래밍'
+        },
+        {
+          id: 2,
+          content: '객체 지향 프로그래밍'
+        },
+        {
+          id: 3,
+          content: '함수형 프로그래밍'
+        },
+        {
+          id: 4,
+          content: '우리형 프로그래밍'
+        }
+      ]
+    },
+    {
+      id: 23,
+      categoryId: 5,
+      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      question:
+        'HTML 요소가 포커스를 받았을 때 발생하는 이벤트를 모두 고르세요.',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: 'focus'
+        },
+        {
+          id: 2,
+          content: 'focusin'
+        },
+        {
+          id: 3,
+          content: 'blur'
+        },
+        {
+          id: 4,
+          content: 'focusout'
+        }
+      ]
+    },
+    {
+      id: 24,
+      categoryId: 5,
+      type: PROBLEM_TYPES.SHORT,
+      question: '$button이 클릭 됐을 때 실행결과를 작성하세요',
+      sub: `
+      $button.onclick = function () {
+        console.log(‘button 1’);
+      };
+      $button.onclick = function () {
+        console.log(‘button 2’);
+      };
+      `,
+      options: []
+    },
+    {
+      id: 25,
+      categoryId: 5,
+      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      question: '올바른 이벤트 전파 단계를 고르세요',
+      sub: '',
+      options: [
+        {
+          id: 1,
+          content: 'capturing phase -> target phase -> bubbling phase'
+        },
+        {
+          id: 2,
+          content: 'target phase -> bubbling phase -> capturing phase'
+        },
+        {
+          id: 3,
+          content: 'bubbling phase -> capturing phase -> target phase'
+        },
+        {
+          id: 4,
+          content: 'target phase -> capturing phase -> bubbling phase'
+        }
+      ]
+    },
+    {
+      id: 26,
+      categoryId: 5,
+      type: PROBLEM_TYPES.OX,
+      question:
+        '이벤트 핸들러 프로퍼티 방식으로 등록한 이벤트 핸들러에서 this는 항상 이벤트를 바인딩한 DOM 요소를 가리킨다.',
+      sub: '',
+      options: [
+        { id: 1, content: 'O' },
+        { id: 2, content: 'X' }
       ]
     }
   ];
 
+  // {
+  //   id: 1,
+  //   categoryId: 1,
+  //   type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+  //   question:
+  //     '하나의 값을 저장하기 위해 확보한 메모리 공간 자체 또는 그 메모리 공간을 식별하기 위해 붙인 이름을 의미하는 것은 다음 중 무엇인가?',
+  //   sub: '',
+  //   options: [
+  //     { id: 1, content: '표현식' },
+  //     { id: 2, content: '변수' },
+  //     { id: 3, content: '객체' },
+  //     { id: 4, content: '스코프' }
+  //   ] // 변수
+  // },
+  // {
+  //   id: 2,
+  //   categoryId: 1,
+  //   type: PROBLEM_TYPES.OX,
+  //   question: '자바스크립트에서는 함수도 값이다.',
+  //   sub: '',
+  //   options: [
+  //     { id: 1, content: 'O' },
+  //     { id: 2, content: 'X' }
+  //   ]
+  // }, // 함수
+  // {
+  //   id: 3,
+  //   categoryId: 1,
+  //   type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+  //   question: '자바스크립트에서 다음 중 객체 타입이 아닌 것을 고르시오.',
+  //   sub: '',
+  //   options: [
+  //     { id: 1, content: '배열' },
+  //     { id: 2, content: '객체' },
+  //     { id: 3, content: '함수' },
+  //     { id: 4, content: '심벌' }
+  //   ]
+  // }, // 데이터 타입
+  // {
+  //   id: 4,
+  //   categoryId: 1,
+  //   type: PROBLEM_TYPES.SHORT,
+  //   question: '다음은 어떤 결과를 반환할까요?',
+  //   sub: '[1, 2, 3, 4].reduce((acc, cur) => acc + cur ** 2, 1);',
+  //   options: []
+  // }, // 배열 고차
+  // {
+  //   id: 5,
+  //   categoryId: 1,
+  //   type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+  //   question: '다음 중 옳은 것을 모두 고르시오',
+  //   sub: '',
+  //   options: [
+  //     {
+  //       id: 1,
+  //       content: '클로저는 해당 함수와 그 함수의 렉시컬 환경의 조합이다.'
+  //     },
+  //     {
+  //       id: 2,
+  //       content: 'JS에서는 함수도 값이다.'
+  //     },
+  //     {
+  //       id: 3,
+  //       content: 'JS의 배열은 기본적으로 희소배열이 아니다.'
+  //     },
+  //     {
+  //       id: 4,
+  //       content: '브라우저는 싱글 스레드다.'
+  //     }
+  //   ]
+  // } // 짬뽕
+  // ];
+
   const ANSWERS = [
     {
       problemId: 1,
-      answers: ['2']
+      answers: ['4']
     },
     {
       problemId: 2,
@@ -783,32 +1260,122 @@ const gamePage = (function () {
     },
     {
       problemId: 3,
-      answers: ['4']
+      answers: ['1']
     },
     {
       problemId: 4,
-      answers: ['31']
+      answers: ['...args']
     },
     {
       problemId: 5,
+      answers: ['2']
+    },
+    {
+      problemId: 6,
+      answers: ['callback']
+    },
+    {
+      problemId: 7,
+      answers: ['2']
+    },
+    {
+      problemId: 8,
+      answers: ['4']
+    },
+    {
+      problemId: 9,
+      answers: ['4']
+    },
+    {
+      problemId: 10,
+      answers: ['2']
+    },
+    {
+      problemId: 11,
+      answers: ['4']
+    },
+    {
+      problemId: 12,
+      answers: ['4']
+    },
+    {
+      problemId: 13,
+      answers: ['.fruit']
+    },
+    {
+      problemId: 14,
+      answers: ['2']
+    },
+    {
+      problemId: 15,
+      answers: ['2']
+    },
+    {
+      problemId: 16,
+      answers: ['4']
+    },
+    {
+      problemId: 17,
+      answers: ['1']
+    },
+    {
+      problemId: 18,
+      answers: ['2', '3']
+    },
+    {
+      problemId: 19,
+      answers: ['1']
+    },
+    {
+      problemId: 20,
+      answers: ['1', '4']
+    },
+    {
+      problemId: 21,
+      answers: ['1']
+    },
+    {
+      problemId: 22,
+      answers: ['1']
+    },
+    {
+      problemId: 23,
       answers: ['1', '2']
+    },
+    {
+      problemId: 24,
+      answers: ['button 2']
+    },
+    {
+      problemId: 25,
+      answers: ['1']
+    },
+    {
+      problemId: 26,
+      answers: ['1']
     }
   ];
 
-  // elements
+  // ELEMENTS
   const $body = document.body;
 
-  // states
+  // STATES
   let currentProblemIdx;
   let problems;
   let gameEnd;
   let mode;
   let categoryId;
 
-  // initialize states
+  // START THE GAME: 게임을 시작한다.
+  const startGame = () => {
+    appendProblem();
+    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
+    gameUtils.oxygenTank.startInhaleOxygen();
+  };
+
+  // INITIALIZE STATES: 상태를 초기화한다.
   const initializeStates = () => {
     currentProblemIdx = 0;
-
     problems = [
       ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
     ].map(problem => ({
@@ -982,27 +1549,6 @@ const gamePage = (function () {
     registerFormEvent($innerForm);
   };
 
-  // append problem control
-  // const appendControl = () => {
-  //   const $sectionControl = document.createElement('section');
-  //   $sectionControl.className = 'problem-control';
-  //   const $nextBtn = document.createElement('button');
-  //   // const $prevBtn = document.createElement('button');
-
-  //   $nextBtn.className = 'next';
-  //   $nextBtn.textContent = '>>';
-  //   // $prevBtn.className = 'prev';
-  //   // $prevBtn.textContent = '<<';
-
-  //   // $prevBtn.addEventListener('click', moveProblem.prev);
-  //   $nextBtn.addEventListener('click', moveProblem.next);
-
-  //   $sectionControl.appendChild($nextBtn);
-  //   // $sectionControl.appendChild($prevBtn);
-
-  //   $body.appendChild($sectionControl);
-  // };
-
   // load game
   const loadGame = () => {
     let count = 1;
@@ -1081,12 +1627,6 @@ const gamePage = (function () {
     $resultSection.querySelector('.close').addEventListener('click', () => {
       mainPage.render();
     });
-  };
-
-  const startGame = () => {
-    appendProblem();
-    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
-    gameUtils.oxygenTank.startInhaleOxygen();
   };
 
   // getReady game
