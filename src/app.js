@@ -1,12 +1,14 @@
 let user = {
   name: 'GUEST',
-  solved: 73,
-  correct: 49,
+  solved: 0,
+  correct: 0,
   stageCleared: new Set()
 };
 
 const mainPage = (function () {
   let mode = 'EASY';
+  let bubbleId;
+  let bubblingFunc;
   const categories = [
     {
       id: 1,
@@ -37,17 +39,17 @@ const mainPage = (function () {
   };
 
   const getUserSession = () => localStorage.getItem('userName');
-  const getCorrectRate = () => Math.floor((user.correct / user.solved) * 100);
+  const getCorrectRate = () =>
+    user.solved ? Math.floor((user.correct / user.solved) * 100) : 0;
   const getStageClearRate = () =>
     Math.floor((user.stageCleared.size / categories.length) * 100);
 
   const fetch = () => {
-    mode = 'EASY';
     document.body.style.setProperty(
       'overflow-y',
       getUserSession() ? 'scroll' : 'hidden'
     );
-    document.body.className = 'main';
+    document.body.className = `main ${mode === 'HARD' ? 'night' : ''}`;
     document.body.innerHTML = `
     <section class="profile-container">
     <div role="button" class="btn profile">
@@ -58,7 +60,7 @@ const mainPage = (function () {
     <section class="user">
       <h2 class="user__name">${user.name}</h2>
       <div class="user__status">
-        <section class="user__status-circle">
+        <section class="user__status-circle status-stage">
           <svg xmlns="http://www.w3.org/2000/svg" class="user__status-svg" viewBox="-1 -1 34 34">
             <circle
               cx="16"
@@ -79,7 +81,7 @@ const mainPage = (function () {
             <span class="progress-rate">${getStageClearRate()}%</span>
           </div>
         </section>
-        <section class="user__status-circle">
+        <section class="user__status-circle status-problem">
           <svg viewBox="-1 -1 34 34">
             <circle
               cx="16"
@@ -126,7 +128,7 @@ const mainPage = (function () {
       style="width: 35px; height: 35px; left: 79%; bottom: 56%"
     ></div>
   </section>
-  <div class="boat">
+  <div class="boat ${mode === 'HARD' ? 'night' : ''}">
     <div class="cabin"></div>
     <div class="top"></div>
     <div class="pole"></div>
@@ -137,14 +139,14 @@ const mainPage = (function () {
       <div class="leaf left"></div>
     </div>
   </div>
-  <div class="sun">
+  <div class="sun ${mode === 'HARD' ? 'night' : ''}">
     <div class="cloud"></div>
   </div>
-  <div class="moon"></div>
-  <div class="stars"></div>
-  <div class="bird"></div>
-  <div class="bird two"></div>
-  <div class="bird three"></div>
+  <div class="moon ${mode === 'HARD' ? 'night' : ''}"></div>
+  <div class="stars ${mode === 'HARD' ? 'night' : ''}"></div>
+  <div class="bird ${mode === 'HARD' ? 'night' : ''}"></div>
+  <div class="bird two ${mode === 'HARD' ? 'night' : ''}"></div>
+  <div class="bird three ${mode === 'HARD' ? 'night' : ''}"></div>
   <div class="scroll-del-wrapper">
   <div class="btn mode scroll-del" role="button">EASY MODE</div>
   <div class="arrow arrow-left scroll-del"></div>
@@ -192,6 +194,7 @@ const mainPage = (function () {
       : ''
   }
     `;
+    // accessibility();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -215,9 +218,9 @@ const mainPage = (function () {
       (function renderCategories() {
         const $fragment = document.createDocumentFragment();
 
-        categories.forEach(({ name }, idx) => {
+        categories.forEach(({ id, name }, idx) => {
           const $category = document.createElement('div');
-
+          $category.id = id;
           $category.className = 'category';
           $category.setAttribute('role', 'button');
           $category.innerHTML = `
@@ -233,7 +236,7 @@ const mainPage = (function () {
       })();
 
       // 2. bubble logic
-      (function startBubbleMaking() {
+      bubblingFunc = (function startBubbleMaking() {
         const $ocean = document.querySelector('.ocean');
         const numBubbles = 30;
         const minSize = 20;
@@ -269,9 +272,8 @@ const mainPage = (function () {
         }
 
         // Start adding bubbles.
-        (function startBubbles() {
+        return (function () {
           let i = 0;
-          let timerId;
 
           function addBubble() {
             if (i < numBubbles) {
@@ -280,13 +282,16 @@ const mainPage = (function () {
               return;
             }
 
-            clearInterval(timerId);
+            clearInterval(bubbleId);
           }
 
           // Add a bubble every 1s.
-          timerId = setInterval(addBubble, 1000);
+          // bubbleId = setInterval(addBubble, 1000);
+
+          return addBubble;
         })();
       })();
+      bubbleId = setInterval(bubblingFunc, 1000);
 
       // 3. addEventListeners
       (function bindEventListeners() {
@@ -329,7 +334,7 @@ const mainPage = (function () {
 
         document.querySelector('.ocean').addEventListener('click', e => {
           if (!e.target.matches('.category, .category__name')) return;
-          gamePage.start(mode);
+          gamePage.start(mode, e.target.closest('.category').id);
         });
 
         window.addEventListener(
@@ -380,6 +385,25 @@ const mainPage = (function () {
           }, 3000)
         );
 
+        // mouseover를 넣을까, mouseenter를 넣을까 고민을 많이 함
+        // mouseover의 경우, 버블링 때문에 circle 안의 모든 원소들에 hover를 할 때마다 이벤트가 발생
+        // 하지만 mouseenter의 경우 버블링이 일어나지 않기 때문에 원하는대로 한번씩만 이벤트가 발생하여 더 효과적이라고 판단
+        document.querySelectorAll('.user__status-circle').forEach($el => {
+          $el.addEventListener('mouseenter', e => {
+            e.target.querySelector('.progress-title').textContent =
+              e.target.classList.contains('status-stage')
+                ? `${user.stageCleared.size} / ${categories.length}`
+                : `${user.correct} / ${user.solved}`;
+          });
+        });
+
+        document.querySelectorAll('.user__status-circle').forEach($el => {
+          $el.addEventListener('mouseleave', e => {
+            e.target.querySelector('.progress-title').textContent =
+              e.target.classList.contains('status-stage') ? 'STAGE' : 'CORRECT';
+          });
+        });
+
         if (getUserSession()) {
           setUser({ ...user, name: localStorage.getItem('userName') });
           return;
@@ -410,6 +434,14 @@ const mainPage = (function () {
           });
         })();
       })();
+    },
+
+    toggleAnimationRun(animationState) {
+      if (animationState === 'running') {
+        bubbleId = setInterval(bubblingFunc, 1000);
+      } else {
+        clearInterval(bubbleId);
+      }
     },
 
     render() {
@@ -446,7 +478,9 @@ const accessibility = (() => {
   </div>
   `;
 
-  const $accessibilityMenu = $accessbility.querySelector('.accessibility__menu');
+  const $accessibilityMenu = $accessbility.querySelector(
+    '.accessibility__menu'
+  );
   const $accessbilityMenuToggleBtn = $accessbility.querySelector(
     '.accessibility__menu-btn'
   );
@@ -484,7 +518,7 @@ const accessibility = (() => {
       aniPlayState = 'running';
       $btnToggleAni.textContent = '애니메이션 중지';
     }
-
+    mainPage.toggleAnimationRun(aniPlayState);
     document.body.style.setProperty('--play-state', aniPlayState);
   };
 

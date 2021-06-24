@@ -13,8 +13,6 @@ body.main {
   $gray: #8b9a97;
   $dark-blue: #194a63;
 
-  $progress-bar-stroke-width: 1.8;
-
   position: relative;
   width: 100%;
   min-width: 520px;
@@ -26,7 +24,7 @@ body.main {
   .progress-bar__background {
     fill: none;
     stroke: #fff;
-    stroke-width: $progress-bar-stroke-width;
+    stroke-width: 1.8;
   }
 
   .progress-bar__progress {
@@ -34,7 +32,7 @@ body.main {
     stroke: #53c100;
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
-    stroke-width: $progress-bar-stroke-width;
+    stroke-width: 1.8;
     transition: stroke-dashoffset 1s ease-in-out;
   }
 
@@ -225,7 +223,7 @@ body.main {
         transform: translate3d(-50%, 0, 0);
         color: #fff;
         font-weight: 800;
-        animation: blink 1.4s alternate infinite;
+        animation: blink 1.4s alternate infinite var(--play-state);
         cursor: pointer;
         font-size: 0;
         transition: font-size 0.5s;
@@ -361,9 +359,10 @@ body.main {
     border: 1px solid $border;
     background: $bubbles;
     opacity: 0.3;
+    transition: all 1s ease;
 
     &-rising {
-      animation: rise 20s linear infinite;
+      animation: rise 20s linear infinite var(--play-state);
     }
   }
 
@@ -649,7 +648,7 @@ body.main {
     padding-top: 200px;
     color: #022244;
     text-shadow: 1px 1px 5px #fff;
-    animation: fadeOut 1.5s linear;
+    animation: fadeOut 1.5s linear var(--play-state);
   }
 
   // submarine
@@ -668,7 +667,7 @@ body.main {
       border-radius: 50%;
       background-color: lighten($color1, 25%);
       opacity: 0.9;
-      animation: bubble1-h-movement 1s ease-in infinite,
+      animation: bubble1-h-movement 1s ease-in infinite var(--play-state),
         bubble1-v-movement 300ms ease-in-out infinite alternate,
         bubble-scale-movement 300ms ease-in-out infinite alternate;
 
@@ -707,7 +706,7 @@ body.main {
       width: 300px;
       padding: 30px 50px 30px 150px;
       margin: 0 auto 0 auto;
-      animation: diving 3s ease-in-out infinite,
+      animation: diving 3s ease-in-out infinite var(--play-state),
         diving-rotate 3s ease-in-out infinite;
 
       .submarine-body {
@@ -787,7 +786,7 @@ body.main {
             content: '';
             border-radius: 2px;
             background-color: white;
-            animation: spin 900ms linear infinite;
+            animation: spin 900ms linear infinite var(--play-state);
             opacity: 0.8;
           }
           &:after {
@@ -831,7 +830,7 @@ body.main {
             lighten($color2, 15%)
           );
           background-size: 100% 20px;
-          animation: helix-movement 110ms linear infinite;
+          animation: helix-movement 110ms linear infinite var(--play-state);
         }
       }
 
@@ -886,7 +885,7 @@ body.main {
             height: 5px;
             border-radius: 50%;
             background-color: white;
-            animation: leds-off 500ms linear infinite;
+            animation: leds-off 500ms linear infinite var(--play-state);
 
             &:after,
             &:before {
@@ -1035,7 +1034,7 @@ body.main {
     height: 50px;
     opacity: 1;
     background: url('../img/arrow.svg');
-    animation: arrowBlink 0.75s infinite alternate;
+    animation: arrowBlink 0.75s infinite alternate var(--play-state);
 
     &-left {
       left: 20%;
