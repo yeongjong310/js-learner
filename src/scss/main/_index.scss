@@ -1083,4 +1083,26 @@ body.main {
       bottom: 5px;
     }
   }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(10deg);
+    }
+
+    to {
+      transform: rotate(-10deg);
+    }
+  }
+
+  .shark {
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    background: url('../img/shark.svg');
+    z-index: 0;
+    transition: all 2s cubic-bezier(0.19, 1, 0.22, 1);
+    // animation: rotate 0.7s ease-in-out infinite alternate;
+  }
 }

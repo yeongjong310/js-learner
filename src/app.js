@@ -1,3 +1,5 @@
+/* eslint-disable no-confusing-arrow */
+/* eslint-disable implicit-arrow-linebreak */
 let user = {
   name: 'GUEST',
   solved: 0,
@@ -94,6 +96,23 @@ const mainPage = (function () {
   let mode = 'EASY';
   let bubbleId;
   let bubblingFunc;
+  let shark = {
+    x: 0,
+    y: 0
+  };
+
+  const setShark = _shark => {
+    const $shark = document.querySelector('.shark');
+    $shark.style.setProperty(
+      'transform',
+      `scaleX(${_shark.x < shark.x ? -1 : 1})`
+    );
+
+    shark = _shark;
+    $shark.style.left = shark.x + 'px';
+    $shark.style.top = shark.y + 'px';
+  };
+
   const categories = [
     {
       id: 1,
@@ -196,6 +215,7 @@ const mainPage = (function () {
     </section>
   </section>
   <section class="ocean">
+      <div class="shark"></div>
     <div
       class="bubble bubble-rising"
       style="width: 20px; height: 25px; left: 54%; bottom: 70%"
@@ -294,6 +314,10 @@ const mainPage = (function () {
       }, delay);
     };
   };
+
+  const followingShark = throttle(e => {
+    setShark({ x: e.pageX - 100, y: e.pageY - 800 });
+  }, 50);
 
   return {
     init() {
@@ -424,6 +448,15 @@ const mainPage = (function () {
           gamePage.start(mode, e.target.closest('.category').id);
         });
 
+        document
+          .querySelector('.ocean')
+          .addEventListener('mousemove', followingShark);
+
+        window.addEventListener(
+          'scroll',
+          throttle(e => {}, 50)
+        );
+
         window.addEventListener(
           'scroll',
           throttle(() => {
@@ -526,8 +559,14 @@ const mainPage = (function () {
     toggleAnimationRun(animationState) {
       if (animationState === 'running') {
         bubbleId = setInterval(bubblingFunc, 1000);
+        document
+          .querySelector('.ocean')
+          .addEventListener('mousemove', followingShark);
       } else {
         clearInterval(bubbleId);
+        document
+          .querySelector('.ocean')
+          .removeEventListener('mousemove', followingShark);
       }
     },
 
