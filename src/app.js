@@ -575,10 +575,8 @@ const gameUtils = (() => {
         }, 250);
       },
       stop() {
-        setTimeout(() => {
-          clearInterval(_timerId);
-          document.body.removeChild($overlay);
-        }, 2000);
+        clearInterval(_timerId);
+        document.body.removeChild($overlay);
       }
     };
   })();
