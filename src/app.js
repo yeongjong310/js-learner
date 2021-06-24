@@ -672,7 +672,8 @@ const gameUtils = (() => {
 
     return {
       init,
-      minusOxygen
+      minusOxygen,
+      stopInhaleOxygen
     };
   })();
   return {
@@ -808,7 +809,7 @@ const gamePage = (function () {
   const initializeStates = () => {
     currentProblemIdx = 0;
     problems = [
-      ...PROBLEMS.filter(problem => problem.categoryId === categoryId)
+      ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
     ].map(problem => ({
       ...problem,
       completed: false,
@@ -820,7 +821,7 @@ const gamePage = (function () {
   // append problem section to $body
   const appendProblem = () => {
     const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
-    console.log(problems);
+
     const {
       id: problemId,
       type: problemType,
@@ -1007,7 +1008,6 @@ const gamePage = (function () {
     const timerId = setInterval(() => {
       if (count === 0) {
         clearInterval(timerId);
-        $body.querySelector('.overlay').remove();
         getReady();
         return;
       }
@@ -1021,6 +1021,7 @@ const gamePage = (function () {
     categoryId = _categoryId;
     $body.className = 'game';
     gameUtils.renderGameBackground();
+    gameUtils.fetchGames();
     initializeStates();
     const $defaultProblemsSection = document.createElement('section');
     $defaultProblemsSection.className = 'problems';
@@ -1055,7 +1056,7 @@ const gamePage = (function () {
     };
 
     gameEnd = true;
-
+    gameUtils.oxygenTank.stopInhaleOxygen();
     const { correctProblemCnt, totalProblemLength, stage } =
       _getComprehensiveResult();
     if (stage.cleared) user.stageCleared.add(stage.id);
@@ -1070,9 +1071,7 @@ const gamePage = (function () {
             ${stage.cleared ? 'Great!' : 'Try again ...'} ${user.name}
             <span>${stage.cleared ? '&#127881;' : '&#128517;'}</span>
           </div>
-          <div class="user-score">${result.correctProblemCnt} / ${
-      result.totalProblemLength
-    }</div>
+          <div class="user-score">${correctProblemCnt} / ${totalProblemLength}</div>
           <button class="close">HOME</button>
         </div>
       `;
