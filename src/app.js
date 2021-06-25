@@ -362,19 +362,14 @@ const mainPage = (function () {
         const minSize = 20;
         const maxSize = 40;
 
-        // Get the size of a bubble.
-        // Randomized between minSize and maxSize.
         function bubbleSize() {
           return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
         }
 
-        // Get the location of a bubble.
-        // Between left=2% and left=98%.
         function bubbleLocation() {
           return Math.floor(Math.random() * 96) + 2;
         }
 
-        // Create a bubble using the previous two functions.
         function createBubble() {
           const size = bubbleSize();
           const location = bubbleLocation();
@@ -391,24 +386,17 @@ const mainPage = (function () {
           $ocean.appendChild($bubble);
         }
 
-        // Start adding bubbles.
-        return (function () {
+        return (() => {
           let i = 0;
 
-          function addBubble() {
+          return () => {
             if (i < numBubbles) {
               createBubble();
               i++;
               return;
             }
-
             clearInterval(bubbleId);
-          }
-
-          // Add a bubble every 1s.
-          // bubbleId = setInterval(addBubble, 1000);
-
-          return addBubble;
+          };
         })();
       })();
       bubbleId = setInterval(bubblingFunc, 1000);
