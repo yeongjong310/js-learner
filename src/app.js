@@ -1324,26 +1324,6 @@ const gamePage = (function () {
   let mode;
   let categoryId;
 
-  // START THE GAME: 게임을 시작한다.
-  const startGame = () => {
-    appendProblem();
-    // gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
-    // gameUtils.oxygenTank.startInhaleOxygen();
-  };
-
-  // INITIALIZE STATES: 상태를 초기화한다.
-  const initializeStates = () => {
-    currentProblemIdx = 0;
-    problems = [
-      ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
-    ].map(problem => ({
-      ...problem,
-      completed: false,
-      correct: false
-    }));
-    gameEnd = false;
-  };
-
   // append problem section to $body
   const appendProblem = () => {
     const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
@@ -1367,180 +1347,152 @@ const gamePage = (function () {
 
     if (problemType === PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER) {
       $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
-            ${options
-              .map(
-                ({ id: optionId, content }, idx) => `
-              <div class="form__selection ${
-                idx % 2 === 0 ? 'fly-slightly' : ''
-              }">
-                <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}"/>
-                <input
-                  type='radio'
-                  id=question${problemId}-option${optionId}
-                  data-option-id=${optionId}
-                  name='option'
-                  class="a11y-hidden"
-                />
-                <label
-                  for=question${problemId}-option${optionId}
-                >
-                  ${content}
-                </label>
-              </div>
-            `
-              )
-              .join('')}
-            </section>
-            <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
+              ${options
+                .map(
+                  ({ id: optionId, content }, idx) => `
+                <div class="form__selection ${
+                  idx % 2 === 0 ? 'fly-slightly' : ''
+                }">
+                  <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}"/>
+                  <input
+                    type='radio'
+                    id=question${problemId}-option${optionId}
+                    data-option-id=${optionId}
+                    name='option'
+                    class="a11y-hidden"
+                  />
+                  <label
+                    for=question${problemId}-option${optionId}
+                  >
+                    ${content}
+                  </label>
+                </div>
+              `
+                )
+                .join('')}
+              </section>
+              <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
     }
     if (problemType === PROBLEM_TYPES.MULTIPLE_QUESTION_MULTIPLE_ANSWER) {
       $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
-          ${options
-            .map(
-              ({ id: optionId, content }, idx) => `
-              <div class="form__selection ${
-                idx % 2 === 0 ? 'fly-slightly' : ''
-              }">
-                <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
-                <input
-                  type='checkbox'
-                  id=question${problemId}-option${optionId}
-                  data-option-id=${optionId}
-                  name='option'
-                  class="a11y-hidden"
-                />
-                <label
-                  for=question${problemId}-option${optionId}
-                >
-                  ${content}
-                </label>
-              </div>
-          `
-            )
-            .join('')}
-            </section>
-            <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
-    }
-    if (problemType === PROBLEM_TYPES.OX) {
-      $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
             ${options
               .map(
-                ({ id: optionId, content }) => `
-              <div class="form__selection">
-                <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
-                <input
-                  type='radio'
-                  id=question${problemId}-option${optionId}
-                  data-option-id=${optionId}
-                  name='option'
-                  class="a11y-hidden"
-                />
-                <label
-                  for=question${problemId}-option${optionId}
-                >
-                  ${content}
-                </label>
-              </div>
+                ({ id: optionId, content }, idx) => `
+                <div class="form__selection ${
+                  idx % 2 === 0 ? 'fly-slightly' : ''
+                }">
+                  <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
+                  <input
+                    type='checkbox'
+                    id=question${problemId}-option${optionId}
+                    data-option-id=${optionId}
+                    name='option'
+                    class="a11y-hidden"
+                  />
+                  <label
+                    for=question${problemId}-option${optionId}
+                  >
+                    ${content}
+                  </label>
+                </div>
             `
               )
               .join('')}
-          </section>
-          <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
+              </section>
+              <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
+    }
+    if (problemType === PROBLEM_TYPES.OX) {
+      $innerForm.innerHTML = `
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
+              ${options
+                .map(
+                  ({ id: optionId, content }) => `
+                <div class="form__selection">
+                  <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
+                  <input
+                    type='radio'
+                    id=question${problemId}-option${optionId}
+                    data-option-id=${optionId}
+                    name='option'
+                    class="a11y-hidden"
+                  />
+                  <label
+                    for=question${problemId}-option${optionId}
+                  >
+                    ${content}
+                  </label>
+                </div>
+              `
+                )
+                .join('')}
+            </section>
+            <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
     }
     if (problemType === PROBLEM_TYPES.SHORT_ANSWER) {
       $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
-            <div class="input__answer">
-              <img width='70' src='${SVG_CHARACTER_SRC}' />
-              <input
-                type="text"
-                placeholder="답을 입력하세요"
-                id=question${problemId}
-                class='input__short-type'
-              />
-            </div>
-          </section>
-          <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
+              <div class="input__answer">
+                <img width='70' src='${SVG_CHARACTER_SRC}' />
+                <input
+                  type="text"
+                  placeholder="답을 입력하세요"
+                  id=question${problemId}
+                  class='input__short-type'
+                />
+              </div>
+            </section>
+            <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
     }
 
     $sectionProblem.appendChild($innerForm);
     $defaultProblemsSection.appendChild($sectionProblem);
     registerFormEvent($innerForm);
-  };
-
-  // load game
-  const loadGame = () => {
-    let count = 1;
-    const timerId = setInterval(() => {
-      if (count === 0) {
-        clearInterval(timerId);
-        getReady();
-        return;
-      }
-      count--;
-    }, 1000);
-  };
-
-  // initial game setting
-  const initializeGame = (_mode, _categoryId) => {
-    mode = _mode;
-    categoryId = +_categoryId;
-    $body.className = 'game';
-    gameUtils.renderGameBackground();
-    gameUtils.fetchGames();
-    accessibility.display();
-    initializeStates();
-    const $defaultProblemsSection = document.createElement('section');
-    $defaultProblemsSection.className = 'problems';
-    $body.appendChild($defaultProblemsSection);
-    loadGame();
   };
 
   // show result
@@ -1598,6 +1550,26 @@ const gamePage = (function () {
     });
   };
 
+  // START THE GAME: 게임을 시작한다.
+  const startGame = () => {
+    appendProblem();
+    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
+    gameUtils.oxygenTank.startInhaleOxygen();
+  };
+
+  // INITIALIZE STATES: 상태를 초기화한다.
+  const initializeStates = () => {
+    currentProblemIdx = 0;
+    problems = [
+      ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
+    ].map(problem => ({
+      ...problem,
+      completed: false,
+      correct: false
+    }));
+    gameEnd = false;
+  };
+
   // getReady game
   const getReady = () => {
     let count = 3;
@@ -1616,6 +1588,34 @@ const gamePage = (function () {
       $countdownDiv.textContent = count === 0 ? 'GO DIVE!' : count;
       count--;
     }, 1000);
+  };
+
+  // load game
+  const loadGame = () => {
+    let count = 1;
+    const timerId = setInterval(() => {
+      if (count === 0) {
+        clearInterval(timerId);
+        getReady();
+        return;
+      }
+      count--;
+    }, 1000);
+  };
+
+  // initial game setting
+  const initializeGame = (_mode, _categoryId) => {
+    mode = _mode;
+    categoryId = +_categoryId;
+    $body.className = 'game';
+    gameUtils.renderGameBackground();
+    gameUtils.fetchGames();
+    accessibility.display();
+    initializeStates();
+    const $defaultProblemsSection = document.createElement('section');
+    $defaultProblemsSection.className = 'problems';
+    $body.appendChild($defaultProblemsSection);
+    loadGame();
   };
 
   // hide existing problem
@@ -1726,5 +1726,3 @@ const gamePage = (function () {
     end() {}
   };
 })();
-
-// gamePage.start();
