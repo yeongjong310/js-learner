@@ -1103,11 +1103,10 @@ body.main {
   .shark {
     position: absolute;
     top: 300%;
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     background: url('../img/shark.svg');
     z-index: -1;
-    transition: all 2s cubic-bezier(0.19, 1, 0.22, 1);
-    // animation: rotate 0.7s ease-in-out infinite alternate;
+    transition: all 3s cubic-bezier(0.19, 1, 0.22, 1);
   }
 }
