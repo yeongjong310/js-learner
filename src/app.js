@@ -775,10 +775,10 @@ const gamePage = (function () {
       question:
         '다음은 함수를 정의하는 방법이다. 네가지 방식에서 모두 사용할 수 있는 것을 고르시오.',
       sub: `
-      <div>a) function add(x, y) { return x + y };</div>
-      <div>b) const add = function(x, y) { return x + y; };</div>
-      <div>c) const add = new Function(‘x’, ‘y’, return x + y’);</div>
-      <div>d) const add = (x, y) => x + y;</div>`,
+      a) function add(x, y) { return x + y };
+      b) const add = function(x, y) { return x + y; };
+      c) const add = new Function(‘x’, ‘y’, return x + y’);
+      d) const add = (x, y) => x + y;`,
       options: [
         { id: 1, content: 'rest 파라미터' },
         { id: 2, content: 'super' },
@@ -791,12 +791,11 @@ const gamePage = (function () {
       categoryId: 2,
       type: PROBLEM_TYPES.SHORT_ANSWER,
       question: '다음 두 빈칸에 들어갈 동일한 내용을 작성하세요.',
-      sub: `
-      <div style="text-align:initial">function add ( 빈 칸 ) { </div>
-      <div style="text-align:initial">&nbsp&nbsp return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);</div>
-      <div style="text-align:initial">}</div>
-      <div style="text-align:initial">function add(1, 2, 3); // 6</div>
-      <div style="text-align:initial">function add(1, 2); // 3</div>
+      sub: `function add ( 빈 칸 ) {
+        return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);
+      }
+      function add(1, 2, 3); // 6
+      function add(1, 2); // 3
       `,
       options: [
         { id: 1, content: 'function add(x, y) { return x + y }' },
