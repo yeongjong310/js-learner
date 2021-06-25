@@ -1,3 +1,5 @@
+/* eslint-disable no-confusing-arrow */
+/* eslint-disable implicit-arrow-linebreak */
 let user = {
   name: 'GUEST',
   solved: 0,
@@ -41,7 +43,7 @@ const accessibility = (() => {
 
   // functions
   const biggerText = (() => {
-    const $fontLevelIcons = document.querySelector(
+    const $fontLevelIcons = $accessbility.querySelector(
       '.accessibility__btn--level-wrapper'
     );
     const FONT_SIZES = ['16px', '18px', '20px'];
@@ -94,6 +96,23 @@ const mainPage = (function () {
   let mode = 'EASY';
   let bubbleId;
   let bubblingFunc;
+  let shark = {
+    x: 0,
+    y: 0
+  };
+
+  const setShark = _shark => {
+    const $shark = document.querySelector('.shark');
+    $shark.style.setProperty(
+      'transform',
+      `translate3d(-50%, -50%, 0) scaleX(${_shark.x < shark.x ? -1 : 1})`
+    );
+
+    shark = _shark;
+    $shark.style.left = shark.x <= 0 ? 0 : shark.x + 'px';
+    $shark.style.top = shark.x <= 0 ? 0 : shark.y + 'px';
+  };
+
   const categories = [
     {
       id: 1,
@@ -195,6 +214,7 @@ const mainPage = (function () {
       <p class="user__more-content">Coming Soon ...</p>
     </section>
   </section>
+  <div class="shark"></div>
   <section class="ocean">
     <div
       class="bubble bubble-rising"
@@ -269,6 +289,7 @@ const mainPage = (function () {
             name="userName"
             id="userName"
             class="login-input"
+            placeholder="이름을 입력하세요"
             maxlength="15"
           />
           <button type="submit" class="login-btn">GO DIVE</button>
@@ -294,6 +315,18 @@ const mainPage = (function () {
       }, delay);
     };
   };
+
+  const followingShark = throttle(e => {
+    setShark({ x: e.pageX, y: e.pageY - 100 });
+  }, 50);
+
+  const registerShark = throttle(() => {
+    window.addEventListener('mousemove', followingShark);
+  }, 50);
+
+  const removeShark = throttle(() => {
+    window.removeEventListener('mousemove', followingShark);
+  }, 50);
 
   return {
     init() {
@@ -329,19 +362,14 @@ const mainPage = (function () {
         const minSize = 20;
         const maxSize = 40;
 
-        // Get the size of a bubble.
-        // Randomized between minSize and maxSize.
         function bubbleSize() {
           return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
         }
 
-        // Get the location of a bubble.
-        // Between left=2% and left=98%.
         function bubbleLocation() {
           return Math.floor(Math.random() * 96) + 2;
         }
 
-        // Create a bubble using the previous two functions.
         function createBubble() {
           const size = bubbleSize();
           const location = bubbleLocation();
@@ -358,24 +386,17 @@ const mainPage = (function () {
           $ocean.appendChild($bubble);
         }
 
-        // Start adding bubbles.
-        return (function () {
+        return (() => {
           let i = 0;
 
-          function addBubble() {
+          return () => {
             if (i < numBubbles) {
               createBubble();
               i++;
               return;
             }
-
             clearInterval(bubbleId);
-          }
-
-          // Add a bubble every 1s.
-          // bubbleId = setInterval(addBubble, 1000);
-
-          return addBubble;
+          };
         })();
       })();
       bubbleId = setInterval(bubblingFunc, 1000);
@@ -423,6 +444,14 @@ const mainPage = (function () {
           if (!e.target.matches('.category, .category__name')) return;
           gamePage.start(mode, e.target.closest('.category').id);
         });
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseleave', removeShark);
 
         window.addEventListener(
           'scroll',
@@ -526,8 +555,22 @@ const mainPage = (function () {
     toggleAnimationRun(animationState) {
       if (animationState === 'running') {
         bubbleId = setInterval(bubblingFunc, 1000);
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseleave', removeShark);
       } else {
         clearInterval(bubbleId);
+        document
+          .querySelector('.ocean')
+          .removeEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .removeEventListener('mouseleave', removeShark);
       }
     },
 
@@ -731,11 +774,15 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.MULTIPLE_SINGLE,
       question:
         '다음은 함수를 정의하는 방법이다. 네가지 방식에서 모두 사용할 수 있는 것을 고르시오.',
-      sub: 'a) function add(x, y) { return x + y };\nb) const add = function(x, y) { return x + y; };\nc) const add = new Function(‘x’, ‘y’, return x + y’);\nd) const add = (x, y) => x + y;',
+      sub: `
+      <div>a) function add(x, y) { return x + y };</div>
+      <div>b) const add = function(x, y) { return x + y; };</div>
+      <div>c) const add = new Function(‘x’, ‘y’, return x + y’);</div>
+      <div>d) const add = (x, y) => x + y;</div>`,
       options: [
         { id: 1, content: 'rest 파라미터' },
         { id: 2, content: 'super' },
-        { id: 3, content: 'prototype' },
+        { id: 3, content: 'prototype 프로퍼티' },
         { id: 4, content: 'arguments' }
       ]
     },
@@ -745,9 +792,11 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.SHORT,
       question: '다음 두 빈칸에 들어갈 동일한 내용을 작성하세요.',
       sub: `
-      function add( 빈 칸 ) { return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);}
-      function add(1, 2, 3); // 6
-      function add(1, 2); // 3
+      <div style="text-align:initial">function add ( 빈 칸 ) { </div>
+      <div style="text-align:initial">&nbsp&nbsp return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);</div>
+      <div style="text-align:initial">}</div>
+      <div style="text-align:initial">function add(1, 2, 3); // 6</div>
+      <div style="text-align:initial">function add(1, 2); // 3</div>
       `,
       options: [
         { id: 1, content: 'function add(x, y) { return x + y }' },
@@ -954,19 +1003,19 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: '$element.children[0];'
+          content: '$element.\nchildren[0];'
         },
         {
           id: 2,
-          content: '$element.firstElementChild;'
+          content: '$element.\nfirstElementChild;'
         },
         {
           id: 3,
-          content: '$element.lastElementChild;'
+          content: '$element.\nlastElementChild;'
         },
         {
           id: 4,
-          content: '$element.firstChild;'
+          content: '$element.\nfirstChild;'
         }
       ]
     },
@@ -991,7 +1040,7 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: 'JS의 ‘this’ 키워드는 평가될 때 정적으로 바인딩된다.'
+          content: '‘this’는 평가될 때 정적으로 바인딩된다.'
         },
         {
           id: 2,
@@ -999,12 +1048,12 @@ const gamePage = (function () {
         },
         {
           id: 3,
-          content: '전역에서 ‘this’를 참조할 수 있다.'
+          content: '전역에서도 ‘this’를 참조할 수 있다.'
         },
         {
           id: 4,
           content:
-            '일반 함수로 호출된 경우 ‘this’는 전역 객체가 바인딩되지 않는다.'
+            '일반 함수가 호출될 때 ‘this’는 전역 객체와 바인딩되지 않는다.'
         }
       ]
     },
@@ -1116,12 +1165,12 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.SHORT,
       question: '$button이 클릭 됐을 때 실행결과를 작성하세요',
       sub: `
-      $button.onclick = function () {
+      <div>$button.onclick = function () {
         console.log(‘button 1’);
-      };
-      $button.onclick = function () {
+      };</div>
+      <div>$button.onclick = function () {
         console.log(‘button 2’);
-      };
+      };</div>
       `,
       options: []
     },
@@ -1134,19 +1183,31 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: 'capturing phase -> target phase -> bubbling phase'
+          content: `
+          1.capturing\n
+          2.target\n
+          3.bubbling`
         },
         {
           id: 2,
-          content: 'target phase -> bubbling phase -> capturing phase'
+          content: `
+          1.target\n
+          2.bubbling\n
+          3.capturing`
         },
         {
           id: 3,
-          content: 'bubbling phase -> capturing phase -> target phase'
+          content: `
+          1.bubbling\n
+          2.capturing\n
+          3.target`
         },
         {
           id: 4,
-          content: 'target phase -> capturing phase -> bubbling phase'
+          content: `
+          1. target\n
+          2. capturing\n
+          3. bubbling`
         }
       ]
     },
@@ -1748,6 +1809,7 @@ const gamePage = (function () {
   return {
     start(_mode, _categoryId) {
       initializeGame(_mode, _categoryId);
+      accessibility.display();
     },
     end() {}
   };

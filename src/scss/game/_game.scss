@@ -113,9 +113,9 @@ body.game {
       }
 
       & > label {
-        width: 250px;
+        width: calc(250px + 2em);
         height: 100%;
-        max-height: 270px;
+        max-height: 350px;
         overflow-y: scroll;
         display: flex;
         align-items: center;
@@ -123,7 +123,11 @@ body.game {
         border-radius: 20px;
         padding: 50px 1em 1em;
         word-break: keep-all;
-        // word-wrap: break-word;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
 
       & > input[type='radio'],
