@@ -1,3 +1,5 @@
+/* eslint-disable no-confusing-arrow */
+/* eslint-disable implicit-arrow-linebreak */
 let user = {
   name: 'GUEST',
   solved: 0,
@@ -41,7 +43,7 @@ const accessibility = (() => {
 
   // functions
   const biggerText = (() => {
-    const $fontLevelIcons = document.querySelector(
+    const $fontLevelIcons = $accessbility.querySelector(
       '.accessibility__btn--level-wrapper'
     );
     const FONT_SIZES = ['16px', '18px', '20px'];
@@ -94,6 +96,23 @@ const mainPage = (function () {
   let mode = 'EASY';
   let bubbleId;
   let bubblingFunc;
+  let shark = {
+    x: 0,
+    y: 0
+  };
+
+  const setShark = _shark => {
+    const $shark = document.querySelector('.shark');
+    $shark.style.setProperty(
+      'transform',
+      `translate3d(-50%, -50%, 0) scaleX(${_shark.x < shark.x ? -1 : 1})`
+    );
+
+    shark = _shark;
+    $shark.style.left = shark.x <= 0 ? 0 : shark.x + 'px';
+    $shark.style.top = shark.x <= 0 ? 0 : shark.y + 'px';
+  };
+
   const categories = [
     {
       id: 1,
@@ -195,6 +214,7 @@ const mainPage = (function () {
       <p class="user__more-content">Coming Soon ...</p>
     </section>
   </section>
+  <div class="shark"></div>
   <section class="ocean">
     <div
       class="bubble bubble-rising"
@@ -269,6 +289,7 @@ const mainPage = (function () {
             name="userName"
             id="userName"
             class="login-input"
+            placeholder="이름을 입력하세요"
             maxlength="15"
           />
           <button type="submit" class="login-btn">GO DIVE</button>
@@ -294,6 +315,18 @@ const mainPage = (function () {
       }, delay);
     };
   };
+
+  const followingShark = throttle(e => {
+    setShark({ x: e.pageX, y: e.pageY - 100 });
+  }, 50);
+
+  const registerShark = throttle(() => {
+    window.addEventListener('mousemove', followingShark);
+  }, 50);
+
+  const removeShark = throttle(() => {
+    window.removeEventListener('mousemove', followingShark);
+  }, 50);
 
   return {
     init() {
@@ -329,19 +362,14 @@ const mainPage = (function () {
         const minSize = 20;
         const maxSize = 40;
 
-        // Get the size of a bubble.
-        // Randomized between minSize and maxSize.
         function bubbleSize() {
           return Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
         }
 
-        // Get the location of a bubble.
-        // Between left=2% and left=98%.
         function bubbleLocation() {
           return Math.floor(Math.random() * 96) + 2;
         }
 
-        // Create a bubble using the previous two functions.
         function createBubble() {
           const size = bubbleSize();
           const location = bubbleLocation();
@@ -358,24 +386,17 @@ const mainPage = (function () {
           $ocean.appendChild($bubble);
         }
 
-        // Start adding bubbles.
-        return (function () {
+        return (() => {
           let i = 0;
 
-          function addBubble() {
+          return () => {
             if (i < numBubbles) {
               createBubble();
               i++;
               return;
             }
-
             clearInterval(bubbleId);
-          }
-
-          // Add a bubble every 1s.
-          // bubbleId = setInterval(addBubble, 1000);
-
-          return addBubble;
+          };
         })();
       })();
       bubbleId = setInterval(bubblingFunc, 1000);
@@ -423,6 +444,14 @@ const mainPage = (function () {
           if (!e.target.matches('.category, .category__name')) return;
           gamePage.start(mode, e.target.closest('.category').id);
         });
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseleave', removeShark);
 
         window.addEventListener(
           'scroll',
@@ -526,8 +555,22 @@ const mainPage = (function () {
     toggleAnimationRun(animationState) {
       if (animationState === 'running') {
         bubbleId = setInterval(bubblingFunc, 1000);
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .addEventListener('mouseleave', removeShark);
       } else {
         clearInterval(bubbleId);
+        document
+          .querySelector('.ocean')
+          .removeEventListener('mouseenter', registerShark);
+
+        document
+          .querySelector('.ocean')
+          .removeEventListener('mouseleave', removeShark);
       }
     },
 

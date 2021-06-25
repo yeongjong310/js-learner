@@ -323,6 +323,7 @@ body.main {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     box-shadow: 0 0 40px #fff;
     cursor: pointer;
+    z-index: 2;
 
     &.solved {
       box-shadow: 0 0 40px #53c100;
@@ -632,6 +633,11 @@ body.main {
       font-size: 1.5rem;
       background-color: transparent;
       font-weight: 800;
+
+      &::placeholder {
+        color: rgb(186, 186, 186);
+        font-weight: 400;
+      }
     }
 
     &-btn {
@@ -1082,5 +1088,25 @@ body.main {
     &.able {
       bottom: 5px;
     }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(10deg);
+    }
+
+    to {
+      transform: rotate(-10deg);
+    }
+  }
+
+  .shark {
+    position: absolute;
+    top: 300%;
+    width: 100px;
+    height: 100px;
+    background: url('../img/shark.svg');
+    z-index: -1;
+    transition: all 3s cubic-bezier(0.19, 1, 0.22, 1);
   }
 }

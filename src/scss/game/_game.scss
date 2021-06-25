@@ -123,7 +123,11 @@ body.game {
         border-radius: 20px;
         padding: 50px 1em 1em;
         word-break: keep-all;
-        // word-wrap: break-word;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
 
       & > input[type='radio'],
