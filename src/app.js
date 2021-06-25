@@ -774,11 +774,15 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.MULTIPLE_SINGLE,
       question:
         '다음은 함수를 정의하는 방법이다. 네가지 방식에서 모두 사용할 수 있는 것을 고르시오.',
-      sub: 'a) function add(x, y) { return x + y };\nb) const add = function(x, y) { return x + y; };\nc) const add = new Function(‘x’, ‘y’, return x + y’);\nd) const add = (x, y) => x + y;',
+      sub: `
+      <div>a) function add(x, y) { return x + y };</div>
+      <div>b) const add = function(x, y) { return x + y; };</div>
+      <div>c) const add = new Function(‘x’, ‘y’, return x + y’);</div>
+      <div>d) const add = (x, y) => x + y;</div>`,
       options: [
         { id: 1, content: 'rest 파라미터' },
         { id: 2, content: 'super' },
-        { id: 3, content: 'prototype' },
+        { id: 3, content: 'prototype 프로퍼티' },
         { id: 4, content: 'arguments' }
       ]
     },
@@ -788,9 +792,11 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.SHORT,
       question: '다음 두 빈칸에 들어갈 동일한 내용을 작성하세요.',
       sub: `
-      function add( 빈 칸 ) { return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);}
-      function add(1, 2, 3); // 6
-      function add(1, 2); // 3
+      <div style="text-align:initial">function add ( 빈 칸 ) { </div>
+      <div style="text-align:initial">&nbsp&nbsp return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);</div>
+      <div style="text-align:initial">}</div>
+      <div style="text-align:initial">function add(1, 2, 3); // 6</div>
+      <div style="text-align:initial">function add(1, 2); // 3</div>
       `,
       options: [
         { id: 1, content: 'function add(x, y) { return x + y }' },
@@ -996,19 +1002,19 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: '$element.children[0];'
+          content: '$element.\nchildren[0];'
         },
         {
           id: 2,
-          content: '$element.firstElementChild;'
+          content: '$element.\nfirstElementChild;'
         },
         {
           id: 3,
-          content: '$element.lastElementChild;'
+          content: '$element.\nlastElementChild;'
         },
         {
           id: 4,
-          content: '$element.firstChild;'
+          content: '$element.\nfirstChild;'
         }
       ]
     },
@@ -1033,7 +1039,7 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: 'JS의 ‘this’ 키워드는 평가될 때 정적으로 바인딩된다.'
+          content: '‘this’는 평가될 때 정적으로 바인딩된다.'
         },
         {
           id: 2,
@@ -1041,12 +1047,12 @@ const gamePage = (function () {
         },
         {
           id: 3,
-          content: '전역에서 ‘this’를 참조할 수 있다.'
+          content: '전역에서도 ‘this’를 참조할 수 있다.'
         },
         {
           id: 4,
           content:
-            '일반 함수로 호출된 경우 ‘this’는 전역 객체가 바인딩되지 않는다.'
+            '일반 함수가 호출될 때 ‘this’는 전역 객체와 바인딩되지 않는다.'
         }
       ]
     },
@@ -1158,12 +1164,12 @@ const gamePage = (function () {
       type: PROBLEM_TYPES.SHORT,
       question: '$button이 클릭 됐을 때 실행결과를 작성하세요',
       sub: `
-      $button.onclick = function () {
+      <div>$button.onclick = function () {
         console.log(‘button 1’);
-      };
-      $button.onclick = function () {
+      };</div>
+      <div>$button.onclick = function () {
         console.log(‘button 2’);
-      };
+      };</div>
       `,
       options: []
     },
@@ -1176,19 +1182,31 @@ const gamePage = (function () {
       options: [
         {
           id: 1,
-          content: 'capturing phase -> target phase -> bubbling phase'
+          content: `
+          1.capturing\n
+          2.target\n
+          3.bubbling`
         },
         {
           id: 2,
-          content: 'target phase -> bubbling phase -> capturing phase'
+          content: `
+          1.target\n
+          2.bubbling\n
+          3.capturing`
         },
         {
           id: 3,
-          content: 'bubbling phase -> capturing phase -> target phase'
+          content: `
+          1.bubbling\n
+          2.capturing\n
+          3.target`
         },
         {
           id: 4,
-          content: 'target phase -> capturing phase -> bubbling phase'
+          content: `
+          1. target\n
+          2. capturing\n
+          3. bubbling`
         }
       ]
     },
@@ -1781,6 +1799,7 @@ const gamePage = (function () {
   return {
     start(_mode, _categoryId) {
       initializeGame(_mode, _categoryId);
+      accessibility.display();
     },
     end() {}
   };
