@@ -115,9 +115,9 @@ body.game {
       }
 
       & > label {
-        width: 250px;
+        width: calc(250px + 2em);
         height: 100%;
-        max-height: 270px;
+        max-height: 350px;
         overflow-y: scroll;
         display: flex;
         align-items: center;
