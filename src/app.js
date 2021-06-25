@@ -737,17 +737,17 @@ const gameUtils = (() => {
 const gamePage = (function () {
   // data
   const PROBLEM_TYPES = {
-    MULTIPLE_SINGLE: 0,
-    MULTIPLE_MULTIPLE: 1,
+    MULTIPLE_QUESTION_SINGLE_ANSWER: 0,
+    MULTIPLE_QUESTION_MULTIPLE_ANSWER: 1,
     OX: 2,
-    SHORT: 3
+    SHORT_ANSWER: 3
   };
 
   const PROBLEMS = [
     {
       id: 1,
       categoryId: 1,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: '자바스크립트에서 다음 중 객체 타입이 아닌 것을 고르시오.',
       sub: '',
       options: [
@@ -771,14 +771,14 @@ const gamePage = (function () {
     {
       id: 3,
       categoryId: 2,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question:
         '다음은 함수를 정의하는 방법이다. 네가지 방식에서 모두 사용할 수 있는 것을 고르시오.',
       sub: `
-      <div>a) function add(x, y) { return x + y };</div>
-      <div>b) const add = function(x, y) { return x + y; };</div>
-      <div>c) const add = new Function(‘x’, ‘y’, return x + y’);</div>
-      <div>d) const add = (x, y) => x + y;</div>`,
+      a) function add(x, y) { return x + y };
+      b) const add = function(x, y) { return x + y; };
+      c) const add = new Function(‘x’, ‘y’, return x + y’);
+      d) const add = (x, y) => x + y;`,
       options: [
         { id: 1, content: 'rest 파라미터' },
         { id: 2, content: 'super' },
@@ -789,14 +789,13 @@ const gamePage = (function () {
     {
       id: 4,
       categoryId: 2,
-      type: PROBLEM_TYPES.SHORT,
+      type: PROBLEM_TYPES.SHORT_ANSWER,
       question: '다음 두 빈칸에 들어갈 동일한 내용을 작성하세요.',
-      sub: `
-      <div style="text-align:initial">function add ( 빈 칸 ) { </div>
-      <div style="text-align:initial">&nbsp&nbsp return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);</div>
-      <div style="text-align:initial">}</div>
-      <div style="text-align:initial">function add(1, 2, 3); // 6</div>
-      <div style="text-align:initial">function add(1, 2); // 3</div>
+      sub: `function add ( 빈 칸 ) {
+        return [ 빈 칸 ].reduce((acc, cur) => acc + cur, 0);
+      }
+      function add(1, 2, 3); // 6
+      function add(1, 2); // 3
       `,
       options: [
         { id: 1, content: 'function add(x, y) { return x + y }' },
@@ -825,7 +824,7 @@ const gamePage = (function () {
     {
       id: 6,
       categoryId: 2,
-      type: PROBLEM_TYPES.SHORT,
+      type: PROBLEM_TYPES.SHORT_ANSWER,
       question:
         '함수의 매개변수를 통해 다른 함수의 내부로 전달되는 함수를 영어로 “  “ 함수라고 한다.',
       sub: '',
@@ -846,7 +845,7 @@ const gamePage = (function () {
     {
       id: 8,
       categoryId: 1,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: 'JS에서 데이터 타입이 필요한 이유로 적절하지 않은 것은?',
       sub: '',
       options: [
@@ -870,7 +869,7 @@ const gamePage = (function () {
     {
       id: 9,
       categoryId: 1,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: '다음 중 실행 결과로 틀린 것을 고르세요.',
       sub: '',
       options: [
@@ -914,7 +913,7 @@ const gamePage = (function () {
     {
       id: 11,
       categoryId: 1,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: '다음 중 결과가 다른 하나를 고르세요.',
       sub: '',
       options: [
@@ -939,7 +938,7 @@ const gamePage = (function () {
     {
       id: 12,
       categoryId: 3,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: '노드 타입이 아닌 것을 고르세요.',
       sub: '',
       options: [
@@ -964,7 +963,7 @@ const gamePage = (function () {
     {
       id: 13,
       categoryId: 3,
-      type: PROBLEM_TYPES.SHORT,
+      type: PROBLEM_TYPES.SHORT_ANSWER,
       question:
         "'fruit'이라는 class를 가진 요소 모두를 선택할 수 있도록 빈칸을 작성해 주세요.",
       sub: 'document.querySelectorAll( _____ )',
@@ -997,7 +996,7 @@ const gamePage = (function () {
     {
       id: 16,
       categoryId: 3,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: '다음 중 결과가 다른 하나를 고르세요.',
       sub: '',
       options: [
@@ -1034,7 +1033,7 @@ const gamePage = (function () {
     {
       id: 18,
       categoryId: 4,
-      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_MULTIPLE_ANSWER,
       question: '옳은 것을 모두 고르시오',
       sub: '',
       options: [
@@ -1072,7 +1071,7 @@ const gamePage = (function () {
     {
       id: 20,
       categoryId: 4,
-      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_MULTIPLE_ANSWER,
       question:
         'Function.prototype.apply/call/bind에 대한 내용 중 옳은 것을 모두 고르시오',
       sub: '',
@@ -1110,7 +1109,7 @@ const gamePage = (function () {
     {
       id: 22,
       categoryId: 5,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question:
         '프로그램의 흐름을 이벤트 중심으로 제어하는 프로그래밍 방식을 고르세요.',
       sub: '',
@@ -1136,7 +1135,7 @@ const gamePage = (function () {
     {
       id: 23,
       categoryId: 5,
-      type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_MULTIPLE_ANSWER,
       question:
         'HTML 요소가 포커스를 받았을 때 발생하는 이벤트를 모두 고르세요.',
       sub: '',
@@ -1162,7 +1161,7 @@ const gamePage = (function () {
     {
       id: 24,
       categoryId: 5,
-      type: PROBLEM_TYPES.SHORT,
+      type: PROBLEM_TYPES.SHORT_ANSWER,
       question: '$button이 클릭 됐을 때 실행결과를 작성하세요',
       sub: `
       <div>$button.onclick = function () {
@@ -1177,7 +1176,7 @@ const gamePage = (function () {
     {
       id: 25,
       categoryId: 5,
-      type: PROBLEM_TYPES.MULTIPLE_SINGLE,
+      type: PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER,
       question: '올바른 이벤트 전파 단계를 고르세요',
       sub: '',
       options: [
@@ -1224,79 +1223,6 @@ const gamePage = (function () {
       ]
     }
   ];
-
-  // {
-  //   id: 1,
-  //   categoryId: 1,
-  //   type: PROBLEM_TYPES.MULTIPLE_SINGLE,
-  //   question:
-  //     '하나의 값을 저장하기 위해 확보한 메모리 공간 자체 또는 그 메모리 공간을 식별하기 위해 붙인 이름을 의미하는 것은 다음 중 무엇인가?',
-  //   sub: '',
-  //   options: [
-  //     { id: 1, content: '표현식' },
-  //     { id: 2, content: '변수' },
-  //     { id: 3, content: '객체' },
-  //     { id: 4, content: '스코프' }
-  //   ] // 변수
-  // },
-  // {
-  //   id: 2,
-  //   categoryId: 1,
-  //   type: PROBLEM_TYPES.OX,
-  //   question: '자바스크립트에서는 함수도 값이다.',
-  //   sub: '',
-  //   options: [
-  //     { id: 1, content: 'O' },
-  //     { id: 2, content: 'X' }
-  //   ]
-  // }, // 함수
-  // {
-  //   id: 3,
-  //   categoryId: 1,
-  //   type: PROBLEM_TYPES.MULTIPLE_SINGLE,
-  //   question: '자바스크립트에서 다음 중 객체 타입이 아닌 것을 고르시오.',
-  //   sub: '',
-  //   options: [
-  //     { id: 1, content: '배열' },
-  //     { id: 2, content: '객체' },
-  //     { id: 3, content: '함수' },
-  //     { id: 4, content: '심벌' }
-  //   ]
-  // }, // 데이터 타입
-  // {
-  //   id: 4,
-  //   categoryId: 1,
-  //   type: PROBLEM_TYPES.SHORT,
-  //   question: '다음은 어떤 결과를 반환할까요?',
-  //   sub: '[1, 2, 3, 4].reduce((acc, cur) => acc + cur ** 2, 1);',
-  //   options: []
-  // }, // 배열 고차
-  // {
-  //   id: 5,
-  //   categoryId: 1,
-  //   type: PROBLEM_TYPES.MULTIPLE_MULTIPLE,
-  //   question: '다음 중 옳은 것을 모두 고르시오',
-  //   sub: '',
-  //   options: [
-  //     {
-  //       id: 1,
-  //       content: '클로저는 해당 함수와 그 함수의 렉시컬 환경의 조합이다.'
-  //     },
-  //     {
-  //       id: 2,
-  //       content: 'JS에서는 함수도 값이다.'
-  //     },
-  //     {
-  //       id: 3,
-  //       content: 'JS의 배열은 기본적으로 희소배열이 아니다.'
-  //     },
-  //     {
-  //       id: 4,
-  //       content: '브라우저는 싱글 스레드다.'
-  //     }
-  //   ]
-  // } // 짬뽕
-  // ];
 
   const ANSWERS = [
     {
@@ -1415,26 +1341,6 @@ const gamePage = (function () {
   let mode;
   let categoryId;
 
-  // START THE GAME: 게임을 시작한다.
-  const startGame = () => {
-    appendProblem();
-    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
-    gameUtils.oxygenTank.startInhaleOxygen();
-  };
-
-  // INITIALIZE STATES: 상태를 초기화한다.
-  const initializeStates = () => {
-    currentProblemIdx = 0;
-    problems = [
-      ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
-    ].map(problem => ({
-      ...problem,
-      completed: false,
-      correct: false
-    }));
-    gameEnd = false;
-  };
-
   // append problem section to $body
   const appendProblem = () => {
     const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
@@ -1456,149 +1362,149 @@ const gamePage = (function () {
     $innerForm.setAttribute('data-problem-id', problemId);
     $innerForm.setAttribute('data-problem-type', problemType);
 
-    if (problemType === PROBLEM_TYPES.MULTIPLE_SINGLE) {
+    if (problemType === PROBLEM_TYPES.MULTIPLE_QUESTION_SINGLE_ANSWER) {
       $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
+              ${options
+                .map(
+                  ({ id: optionId, content }, idx) => `
+                <div class="form__selection ${
+                  idx % 2 === 0 ? 'fly-slightly' : ''
+                }">
+                  <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}"/>
+                  <input
+                    type='radio'
+                    id=question${problemId}-option${optionId}
+                    data-option-id=${optionId}
+                    name='option'
+                    class="a11y-hidden"
+                  />
+                  <label
+                    for=question${problemId}-option${optionId}
+                  >
+                    ${content}
+                  </label>
+                </div>
+              `
+                )
+                .join('')}
+              </section>
+              <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
+    }
+    if (problemType === PROBLEM_TYPES.MULTIPLE_QUESTION_MULTIPLE_ANSWER) {
+      $innerForm.innerHTML = `
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
             ${options
               .map(
                 ({ id: optionId, content }, idx) => `
-              <div class="form__selection ${
-                idx % 2 === 0 ? 'fly-slightly' : ''
-              }">
-                <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}"/>
-                <input
-                  type='radio'
-                  id=question${problemId}-option${optionId}
-                  data-option-id=${optionId}
-                  name='option'
-                  class="a11y-hidden"
-                />
-                <label
-                  for=question${problemId}-option${optionId}
-                >
-                  ${content}
-                </label>
-              </div>
+                <div class="form__selection ${
+                  idx % 2 === 0 ? 'fly-slightly' : ''
+                }">
+                  <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
+                  <input
+                    type='checkbox'
+                    id=question${problemId}-option${optionId}
+                    data-option-id=${optionId}
+                    name='option'
+                    class="a11y-hidden"
+                  />
+                  <label
+                    for=question${problemId}-option${optionId}
+                  >
+                    ${content}
+                  </label>
+                </div>
             `
               )
               .join('')}
-            </section>
-            <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
-    }
-    if (problemType === PROBLEM_TYPES.MULTIPLE_MULTIPLE) {
-      $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
-          ${options
-            .map(
-              ({ id: optionId, content }, idx) => `
-              <div class="form__selection ${
-                idx % 2 === 0 ? 'fly-slightly' : ''
-              }">
-                <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
-                <input
-                  type='checkbox'
-                  id=question${problemId}-option${optionId}
-                  data-option-id=${optionId}
-                  name='option'
-                  class="a11y-hidden"
-                />
-                <label
-                  for=question${problemId}-option${optionId}
-                >
-                  ${content}
-                </label>
-              </div>
-          `
-            )
-            .join('')}
-            </section>
-            <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
+              </section>
+              <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
     }
     if (problemType === PROBLEM_TYPES.OX) {
       $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
-            ${options
-              .map(
-                ({ id: optionId, content }) => `
-              <div class="form__selection">
-                <img width="100" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
-                <input
-                  type='radio'
-                  id=question${problemId}-option${optionId}
-                  data-option-id=${optionId}
-                  name='option'
-                  class="a11y-hidden"
-                />
-                <label
-                  for=question${problemId}-option${optionId}
-                >
-                  ${content}
-                </label>
-              </div>
-            `
-              )
-              .join('')}
-          </section>
-          <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
+              ${options
+                .map(
+                  ({ id: optionId, content }) => `
+                <div class="form__selection">
+                  <img width="70" class="jelly-fish" src="${SVG_CHARACTER_SRC}" />
+                  <input
+                    type='radio'
+                    id=question${problemId}-option${optionId}
+                    data-option-id=${optionId}
+                    name='option'
+                    class="a11y-hidden"
+                  />
+                  <label
+                    for=question${problemId}-option${optionId}
+                  >
+                    ${content}
+                  </label>
+                </div>
+              `
+                )
+                .join('')}
+            </section>
+            <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
     }
-    if (problemType === PROBLEM_TYPES.SHORT) {
+    if (problemType === PROBLEM_TYPES.SHORT_ANSWER) {
       $innerForm.innerHTML = `
-        <fieldset>
-          <legend>
-            ${question}
-          </legend>
-          <pre>
-            <code>
-              ${sub}
-            </code>
-          </pre>
-          <section class="form__selections">
-            <div class="input__answer">
-              <img width='100' src='${SVG_CHARACTER_SRC}' />
-              <input
-                type="text"
-                placeholder="답을 입력하세요"
-                id=question${problemId}
-                class='input__short-type'
-              />
-            </div>
-          </section>
-          <button class="btn next" type='submit'>SKIP</button>
-        </fielset>
-      `;
+          <fieldset>
+            <legend>
+              ${question}
+            </legend>
+            <pre>
+              <code>
+                ${sub}
+              </code>
+            </pre>
+            <section class="form__selections">
+              <div class="input__answer">
+                <img width='70' src='${SVG_CHARACTER_SRC}' />
+                <input
+                  type="text"
+                  placeholder="답을 입력하세요"
+                  id=question${problemId}
+                  class='input__short-type'
+                />
+              </div>
+            </section>
+            <button class="btn next" type='submit'>SKIP</button>
+          </fielset>
+        `;
     }
 
     $sectionProblem.appendChild($innerForm);
@@ -1606,46 +1512,20 @@ const gamePage = (function () {
     registerFormEvent($innerForm);
   };
 
-  // load game
-  const loadGame = () => {
-    let count = 1;
-    const timerId = setInterval(() => {
-      if (count === 0) {
-        clearInterval(timerId);
-        getReady();
-        return;
-      }
-      count--;
-    }, 1000);
-  };
-
-  // initial game setting
-  const initializeGame = (_mode, _categoryId) => {
-    mode = _mode;
-    categoryId = +_categoryId;
-    $body.className = 'game';
-    gameUtils.renderGameBackground();
-    gameUtils.fetchGames();
-    accessibility.display();
-    initializeStates();
-    const $defaultProblemsSection = document.createElement('section');
-    $defaultProblemsSection.className = 'problems';
-    $body.appendChild($defaultProblemsSection);
-    loadGame();
-  };
-
   // show result
   const showResult = () => {
     if (gameEnd) return;
 
-    // returns {
-    //   correctProblemCnt: number,
-    //   totalProblemLength: number,
-    //   stage: {
-    //     id: number,
-    //     cleared: boolean
-    //   }
-    // }
+    /*
+    @returns {
+      correctProblemCnt: number,
+      totalProblemLength: number,
+      stage: {
+        id: number,
+        cleared: boolean
+      }
+    }
+    */
     const _getComprehensiveResult = () => {
       const _correct = problems.filter(problem => problem.correct).length;
       const _totalLength = problems.length;
@@ -1687,6 +1567,26 @@ const gamePage = (function () {
     });
   };
 
+  // START THE GAME: 게임을 시작한다.
+  const startGame = () => {
+    appendProblem();
+    gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
+    gameUtils.oxygenTank.startInhaleOxygen();
+  };
+
+  // INITIALIZE STATES: 상태를 초기화한다.
+  const initializeStates = () => {
+    currentProblemIdx = 0;
+    problems = [
+      ...PROBLEMS.filter(problem => problem.categoryId === +categoryId)
+    ].map(problem => ({
+      ...problem,
+      completed: false,
+      correct: false
+    }));
+    gameEnd = false;
+  };
+
   // getReady game
   const getReady = () => {
     let count = 3;
@@ -1705,6 +1605,34 @@ const gamePage = (function () {
       $countdownDiv.textContent = count === 0 ? 'GO DIVE!' : count;
       count--;
     }, 1000);
+  };
+
+  // load game
+  const loadGame = () => {
+    let count = 1;
+    const timerId = setInterval(() => {
+      if (count === 0) {
+        clearInterval(timerId);
+        getReady();
+        return;
+      }
+      count--;
+    }, 1000);
+  };
+
+  // initial game setting
+  const initializeGame = (_mode, _categoryId) => {
+    mode = _mode;
+    categoryId = +_categoryId;
+    $body.className = 'game';
+    gameUtils.renderGameBackground();
+    gameUtils.fetchGames();
+    accessibility.display();
+    initializeStates();
+    const $defaultProblemsSection = document.createElement('section');
+    $defaultProblemsSection.className = 'problems';
+    $body.appendChild($defaultProblemsSection);
+    loadGame();
   };
 
   // hide existing problem
@@ -1728,10 +1656,12 @@ const gamePage = (function () {
     const problemType = +dataset.problemType;
     let userAnswers = [];
 
-    if (problemType === PROBLEM_TYPES.SHORT) {
+    if (problemType === PROBLEM_TYPES.SHORT_ANSWER) {
       const $userAnswer = e.target.querySelector('input[type=text]');
       if ($userAnswer) userAnswers = [$userAnswer.value];
-    } else if (problemType === PROBLEM_TYPES.MULTIPLE_MULTIPLE) {
+    } else if (
+      problemType === PROBLEM_TYPES.MULTIPLE_QUESTION_MULTIPLE_ANSWER
+    ) {
       const $userAnswers = [
         ...e.target.querySelectorAll('input[type=checkbox]:checked')
       ];
