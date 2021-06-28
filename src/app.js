@@ -6,7 +6,7 @@ let user = {
   correct: 0,
   stageCleared: new Set()
 };
-// 접근성
+
 const accessibility = (() => {
   let aniPlayState = 'running';
 
@@ -41,7 +41,6 @@ const accessibility = (() => {
     '.accessibility__btn'
   );
 
-  // functions
   const biggerText = (() => {
     const $fontLevelIcons = $accessbility.querySelector(
       '.accessibility__btn--level-wrapper'
@@ -75,7 +74,6 @@ const accessibility = (() => {
     document.body.style.setProperty('--play-state', aniPlayState);
   };
 
-  // handlers
   $accessibilityMenu.addEventListener('click', ({ target }) => {
     if (!target.matches('.accessibility__menu .accessibility__btn')) return;
     target === $btnBiggerText ? biggerText() : toggleAnimation();
@@ -101,18 +99,6 @@ const mainPage = (function () {
     y: 0
   };
 
-  const setShark = _shark => {
-    const $shark = document.querySelector('.shark');
-    $shark.style.setProperty(
-      'transform',
-      `translate3d(-50%, -50%, 0) scaleX(${_shark.x < shark.x ? -1 : 1})`
-    );
-
-    shark = _shark;
-    $shark.style.left = shark.x <= 0 ? 0 : shark.x + 'px';
-    $shark.style.top = shark.x <= 0 ? 0 : shark.y + 'px';
-  };
-
   const categories = [
     {
       id: 1,
@@ -135,6 +121,17 @@ const mainPage = (function () {
       name: 'EVENT'
     }
   ];
+
+  const setShark = _shark => {
+    const $shark = document.querySelector('.shark');
+    $shark.style.setProperty(
+      'transform',
+      `translate3d(-50%, -50%, 0) scaleX(${_shark.x < shark.x ? -1 : 1})`
+    );
+    shark = _shark;
+    $shark.style.left = shark.x <= 0 ? 0 : shark.x + 'px';
+    $shark.style.top = shark.x <= 0 ? 0 : shark.y + 'px';
+  };
 
   const setUser = _user => {
     user = _user;
@@ -317,7 +314,7 @@ const mainPage = (function () {
   };
 
   const followingShark = throttle(e => {
-    setShark({ x: e.pageX, y: e.pageY - 100 });
+    setShark({ x: e.pageX, y: e.pageY - 50 });
   }, 50);
 
   const registerShark = throttle(() => {
@@ -332,7 +329,6 @@ const mainPage = (function () {
     init() {
       fetch();
 
-      // 1. renderCategories
       (function renderCategories() {
         const $fragment = document.createDocumentFragment();
 
@@ -350,12 +346,9 @@ const mainPage = (function () {
           $category.style.setProperty('left', Math.random() * 50 + 20 + '%');
           $fragment.appendChild($category);
         });
-        // $fragment.append($shark);
-
         document.querySelector('.ocean').appendChild($fragment);
       })();
 
-      // 2. bubble logic
       bubblingFunc = (function startBubbleMaking() {
         const $ocean = document.querySelector('.ocean');
         const numBubbles = 30;
@@ -401,7 +394,6 @@ const mainPage = (function () {
       })();
       bubbleId = setInterval(bubblingFunc, 1000);
 
-      // 3. addEventListeners
       (function bindEventListeners() {
         (function modeToggleBtn() {
           const modeBtn = document.querySelector('.mode');
@@ -415,7 +407,6 @@ const mainPage = (function () {
             'click',
             throttle(() => {
               if (mode === 'HARD') {
-                // HARD MODE
                 mode = 'EASY';
                 document.body.classList.remove('night');
                 modeBtn.textContent = 'EASY MODE';
@@ -427,7 +418,6 @@ const mainPage = (function () {
 
                 return;
               }
-              // EASY MODE
               mode = 'HARD';
               document.body.classList.add('night');
               modeBtn.textContent = 'HARD MODE';
@@ -501,9 +491,6 @@ const mainPage = (function () {
           }, 3000)
         );
 
-        // mouseover를 넣을까, mouseenter를 넣을까 고민을 많이 함
-        // mouseover의 경우, 버블링 때문에 circle 안의 모든 원소들에 hover를 할 때마다 이벤트가 발생
-        // 하지만 mouseenter의 경우 버블링이 일어나지 않기 때문에 원하는대로 한번씩만 이벤트가 발생하여 더 효과적이라고 판단
         document.querySelectorAll('.user__status-circle').forEach($el => {
           $el.addEventListener('mouseenter', e => {
             e.target.querySelector('.progress-title').textContent =
@@ -558,20 +545,19 @@ const mainPage = (function () {
         document
           .querySelector('.ocean')
           .addEventListener('mouseenter', registerShark);
-
         document
           .querySelector('.ocean')
           .addEventListener('mouseleave', removeShark);
-      } else {
-        clearInterval(bubbleId);
-        document
-          .querySelector('.ocean')
-          .removeEventListener('mouseenter', registerShark);
 
-        document
-          .querySelector('.ocean')
-          .removeEventListener('mouseleave', removeShark);
+        return;
       }
+      clearInterval(bubbleId);
+      document
+        .querySelector('.ocean')
+        .removeEventListener('mouseenter', registerShark);
+      document
+        .querySelector('.ocean')
+        .removeEventListener('mouseleave', removeShark);
     },
 
     render() {
@@ -582,9 +568,6 @@ const mainPage = (function () {
 
 mainPage.render();
 
-// yj
-
-// 게임 유틸즈
 const gameUtils = (() => {
   const renderGameBackground = () => {
     document.body.innerHTML = `
@@ -728,14 +711,7 @@ const gameUtils = (() => {
   };
 })();
 
-// accessibility.display();
-// document.body.classList.add('game');
-// gameUtils.renderGameBackground();
-// gameUtils.oxygenTank.init(1);
-// gameUtils.fetchGames();
-
 const gamePage = (function () {
-  // data
   const PROBLEM_TYPES = {
     MULTIPLE_QUESTION_SINGLE_ANSWER: 0,
     MULTIPLE_QUESTION_MULTIPLE_ANSWER: 1,
@@ -1331,17 +1307,14 @@ const gamePage = (function () {
     }
   ];
 
-  // ELEMENTS
   const $body = document.body;
 
-  // STATES
   let currentProblemIdx;
   let problems;
   let gameEnd;
   let mode;
   let categoryId;
 
-  // append problem section to $body
   const appendProblem = () => {
     const SVG_CHARACTER_SRC = './src/img/jelly-fish.svg';
 
@@ -1512,7 +1485,6 @@ const gamePage = (function () {
     registerFormEvent($innerForm);
   };
 
-  // show result
   const showResult = () => {
     if (gameEnd) return;
 
@@ -1567,14 +1539,12 @@ const gamePage = (function () {
     });
   };
 
-  // START THE GAME: 게임을 시작한다.
   const startGame = () => {
     appendProblem();
     gameUtils.oxygenTank.init(mode === 'HARD' ? 5 : 0.2, showResult);
     gameUtils.oxygenTank.startInhaleOxygen();
   };
 
-  // INITIALIZE STATES: 상태를 초기화한다.
   const initializeStates = () => {
     currentProblemIdx = 0;
     problems = [
@@ -1587,7 +1557,6 @@ const gamePage = (function () {
     gameEnd = false;
   };
 
-  // getReady game
   const getReady = () => {
     let count = 3;
     const $defaultProblemsSection = $body.querySelector('.problems');
@@ -1607,7 +1576,6 @@ const gamePage = (function () {
     }, 1000);
   };
 
-  // load game
   const loadGame = () => {
     let count = 1;
     const timerId = setInterval(() => {
@@ -1620,7 +1588,6 @@ const gamePage = (function () {
     }, 1000);
   };
 
-  // initial game setting
   const initializeGame = (_mode, _categoryId) => {
     mode = _mode;
     categoryId = +_categoryId;
@@ -1635,21 +1602,18 @@ const gamePage = (function () {
     loadGame();
   };
 
-  // hide existing problem
   const hideExistingProblem = () => {
     const $allProblems = [...$body.querySelectorAll('.problem')];
     const $currentProblem = $allProblems[$allProblems.length - 1];
     $currentProblem.classList.add('completed');
   };
 
-  // check selection
   const checkSelection = e => {
     if (e.target.value || e.target.checked) {
       e.currentTarget.querySelector('.next').textContent = 'SUBMIT';
     }
   };
 
-  // check correctness
   const checkCorrect = e => {
     const { dataset } = e.target;
     const problemId = +dataset.problemId;
@@ -1702,7 +1666,6 @@ const gamePage = (function () {
     gameUtils.oxygenTank.minusOxygen();
   };
 
-  // move problem
   const moveProblem = (() => ({
     next() {
       if (currentProblemIdx > problems.length - 1) return;
@@ -1719,7 +1682,6 @@ const gamePage = (function () {
     }
   }))();
 
-  // register form event
   const registerFormEvent = $form => {
     $form.onsubmit = e => {
       e.preventDefault();

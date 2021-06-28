@@ -1102,6 +1102,7 @@ body.main {
 
   .shark {
     position: absolute;
+    pointer-events: none;
     top: 300%;
     width: 100px;
     height: 100px;
