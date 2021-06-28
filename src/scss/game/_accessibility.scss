@@ -5,6 +5,7 @@
   top: 50%;
   transform: translate3d(0, -50%, 0);
   display: flex;
+  z-index: 5;
   &__menu-btn {
     display: flex;
     border-radius: 50%;
